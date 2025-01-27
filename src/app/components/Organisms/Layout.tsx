@@ -1,23 +1,29 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useWindowSize } from "../../utils/hooks";
 
 export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
+  const windowWidth: number = useWindowSize();
   const [isSideBarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (windowWidth > 639) {
+      setIsSidebarOpen(true);
+    }
+  },[windowWidth])
   const toggleOpenSidebar = () => {
-    setIsSidebarOpen(!isSideBarOpen)
-  }
+    setIsSidebarOpen(!isSideBarOpen);
+  };
 
   return (
     <html lang="en">
       <body>
-        <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <nav className="fixed top-0 z-50 w-full border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
           <div className="px-3 py-3 lg:px-5 lg:pl-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center justify-start rtl:justify-end">
@@ -73,22 +79,22 @@ export default function Layout({
                     </button>
                   </div>
                   <div
-                    className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
+                    className="z-50 hidden my-4 text-base list-none divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
                     id="dropdown-user"
                   >
                     <div className="px-4 py-3" role="none">
-                      <p
+                      <div
                         className="text-sm text-gray-900 dark:text-white"
                         role="none"
                       >
                         Neil Sims
-                      </p>
-                      <p
+                      </div>
+                      <div
                         className="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
                         role="none"
                       >
                         neil.sims@flowbite.com
-                      </p>
+                      </div>
                     </div>
                     <ul className="py-1" role="none">
                       <li>
@@ -139,10 +145,10 @@ export default function Layout({
           id="logo-sidebar"
           className={`fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform ${
             isSideBarOpen ? "translate-x-0" : "-translate-x-full"
-          } bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700`}
+          } border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700`}
           aria-label="Sidebar"
         >
-          <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+          <div className="h-full px-3 pb-4 overflow-y-auto dark:bg-gray-800">
             <ul className="space-y-2 font-medium">
               <li>
                 <a
@@ -285,7 +291,7 @@ export default function Layout({
         </aside>
 
         <div className="p-4 sm:ml-64">
-          <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg bg-white mt-14">
+          <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg mt-14">
             <div className="grid grid-cols-3 gap-4 mb-4">{children}</div>
           </div>
         </div>
