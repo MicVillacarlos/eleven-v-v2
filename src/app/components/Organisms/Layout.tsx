@@ -14,8 +14,11 @@ export default function Layout({
   useEffect(() => {
     if (windowWidth > 639) {
       setIsSidebarOpen(true);
+    } else {
+      setIsSidebarOpen(false);
     }
-  },[windowWidth])
+  }, [windowWidth]);
+  
   const toggleOpenSidebar = () => {
     setIsSidebarOpen(!isSideBarOpen);
   };
