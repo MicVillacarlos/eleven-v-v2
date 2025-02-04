@@ -6,8 +6,9 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
+    //will replace this soon with conditional logic. If user === admin ? go to admin pages : go to users/lodger pages
     router.replace("/admin/dashboard");
   }, [router]);
 
-  return null; // Optionally show a loader or blank page
+  return null; // Add here Skeleton Page Soon
 }
