@@ -1,14 +1,21 @@
-"use client"
+"use client";
+
 import { useEffect } from "react";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    //will replace this soon with conditional logic. If user === admin ? go to admin pages : go to users/lodger pages
-    router.replace("/admin/dashboard");
+    const token = localStorage.getItem("authToken");
+
+    if (token) {
+      router.replace("/admin/dashboard");
+    } else {
+      router.replace("/login");
+      localStorage.removeItem("authToken")
+    }
   }, [router]);
 
-  return null; // Add here Skeleton Page Soon
+  return <div className="h-screen w-screen flex item-center justify-center">Redirecting...</div> 
 }
