@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
 
   try {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-    const response = await fetch(`${backendUrl}/validate-token/${token}`);
+    const response = await fetch(`${backendUrl}/admin/auth/validate-token/${token}`);
     const data = await response.json();
 
     if (!data.success) {
