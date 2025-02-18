@@ -5,15 +5,13 @@ export async function middleware(req: NextRequest) {
   const loginUrl = new URL("/login", req.url);
 
   if (!token) {
-    console.log("No token found, redirecting to login");
     return NextResponse.redirect(loginUrl);
   }
 
   try {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-    const response = await fetch(`${backendUrl}/admin/auth/validate-token/${token}`);
+    const response = await fetch(`${backendUrl}/validate-token/${token}`);
     const data = await response.json();
-    console.log("API response:", data);
 
     if (!data.success) {
       return NextResponse.redirect(loginUrl);
@@ -23,7 +21,6 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  console.log("Token is valid, proceeding...");
   return NextResponse.next();
 }
 
