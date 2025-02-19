@@ -4,7 +4,7 @@ import Layout from "../../components/Organisms/Layout";
 const Dashboard = () => {
   return (
     <Layout>
-      <div>dashbaord</div>
+      <div>dashbOASrd</div>
     </Layout>
   );
 };

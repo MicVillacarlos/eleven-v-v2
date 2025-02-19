@@ -14,15 +14,6 @@ export default function Layout({
   const [isSideBarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-
-    if (!token) {
-      router.replace("/login");
-      localStorage.removeItem("authToken");
-    }
-  }, [router]);
-
-  useEffect(() => {
     if (windowWidth > 639) {
       setIsSidebarOpen(true);
     } else {

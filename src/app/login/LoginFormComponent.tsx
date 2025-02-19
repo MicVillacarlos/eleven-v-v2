@@ -26,9 +26,7 @@ const LoginPageFormComponent = () => {
       const response = await loginUser(email, password);
       console.log("Response:", response);
       if (response?.token) {
-        console.log("===here===");
-        localStorage.setItem("authToken", response.token);
-        Cookies.set("authToken", response.token, { expires: 1 });
+        Cookies.set("authToken", response.token, { expires: 1, path: '/' });
         router.replace("/admin/dashboard");
       } else {
         setError("Login failed. Please try again.");
