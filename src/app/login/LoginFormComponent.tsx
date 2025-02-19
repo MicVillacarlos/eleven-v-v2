@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { MailIcon } from "../components/svg/mailIcon";
 import { loginUser } from "../../lib/admin/api/auth/auth";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const LoginPageFormComponent = () => {
   const [email, setEmail] = useState<string>("");
@@ -23,9 +24,11 @@ const LoginPageFormComponent = () => {
     event.preventDefault();
     try {
       const response = await loginUser(email, password);
-
+      console.log("Response:", response);
       if (response?.token) {
+        console.log("===here===");
         localStorage.setItem("authToken", response.token);
+        Cookies.set("authToken", response.token, { expires: 1 });
         router.replace("/admin/dashboard");
       } else {
         setError("Login failed. Please try again.");
@@ -92,7 +95,7 @@ const LoginPageFormComponent = () => {
             )}
           </div>
         </div>
-        
+
         <button
           type="submit"
           className="text-white bg-[#205072] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 w-full"
