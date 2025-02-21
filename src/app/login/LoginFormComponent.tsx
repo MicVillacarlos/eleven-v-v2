@@ -87,7 +87,7 @@ const LoginPageFormComponent = () => {
               className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
               onClick={togglePasswordVisibility}
             >
-              {showPassword ? <EyeOffIcon /> : <EyeOnIcon />}
+              {showPassword ? <EyeOnIcon /> : <EyeOffIcon />}
             </div>
           </div>
 
