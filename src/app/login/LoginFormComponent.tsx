@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { LockIcon } from "../components/svg/LockIcon";
 import { EyeOffIcon } from "../components/svg/EyeOffIcon";
 import { EyeOnIcon } from "../components/svg/EyeOnIcon";
+import PrimaryButton from "../components/Atoms/PrimaryButton";
 
 const LoginPageFormComponent = () => {
   const [email, setEmail] = useState<string>("");
@@ -90,12 +91,7 @@ const LoginPageFormComponent = () => {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="text-white bg-[#205072] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 w-full"
-          >
-            Login
-          </button>
+          <PrimaryButton type="submit">Login</PrimaryButton>
         </form>
       </div>
     </div>
