@@ -1,6 +1,6 @@
 import React from "react";
 import Layout from "../../components/Organisms/Layout";
-import PrimaryButton from "../../components/Atoms/PrimaryButton";
+import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
 
 const Settings = () => {
   return (

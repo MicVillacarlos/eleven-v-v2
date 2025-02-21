@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import { LockIcon } from "../components/svg/LockIcon";
 import { EyeOffIcon } from "../components/svg/EyeOffIcon";
 import { EyeOnIcon } from "../components/svg/EyeOnIcon";
-import PrimaryButton from "../components/Atoms/PrimaryButton";
+import PrimaryButton from "../components/Atoms/buttons/PrimaryButton";
 
 const LoginPageFormComponent = () => {
   const [email, setEmail] = useState<string>("");
