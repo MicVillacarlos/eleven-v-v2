@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useWindowSize } from "../../utils/hooks";
-import { DashboardIcon } from "../svg/DashboardIcon";
-import { HamburgerIcon } from "../svg/HamburgerIcon";
+import { useWindowSize } from "../../../utils/hooks";
+import { DashboardIcon } from "../../svg/DashboardIcon";
+import { HamburgerIcon } from "../../svg/HamburgerIcon";
 
 export default function Layout({
   children,

@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../../components/Organisms/Layout";
+import Layout from "../../components/Organisms/layout/Layout";
 
 const Dashboard = () => {
   return (
