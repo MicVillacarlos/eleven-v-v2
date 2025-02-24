@@ -4,7 +4,7 @@ type PrimaryButtonProps = {
   type?: "submit" | "reset" | "button" | undefined;
   children: string;
   width?: string;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 const PrimaryButton = (props: PrimaryButtonProps) => {

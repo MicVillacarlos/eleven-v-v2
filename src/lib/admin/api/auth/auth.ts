@@ -20,19 +20,22 @@ async function request<T = any>(
   });
 
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || "An error occurred");
+    const errorText = await response.json();
+    throw { ...errorText, status: response.status };
   }
+
   return response.json();
 }
+
 
 export async function loginUser(
   email: string,
   password: string
 ): Promise<LoginResponse> {
 
-  return request<LoginResponse>("/admin/auth/login", {
+  const result = request<LoginResponse>("/admin/auth/login", {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
+  return result
 }

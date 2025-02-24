@@ -4,7 +4,7 @@ import { IconProps } from "./type";
 const CloseIcon: FC<IconProps> = ({
   size = 20,
   color = "currentColor",
-  className = "text-gray-500 dark:text-gray-400",
+  className = "text-gray-500",
 }) => {
   return (
     <svg
