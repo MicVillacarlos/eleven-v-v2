@@ -1,3 +1,5 @@
+import { Key } from "react";
+
 export interface Room {
   room_number: string;
   _id: string;
