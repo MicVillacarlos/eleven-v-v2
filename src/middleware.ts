@@ -7,18 +7,18 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  try {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-    const response = await fetch(`${backendUrl}/admin/auth/validate-token/${token}`);
-    const data = await response.json();
+  // try {
+  //   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  //   const response = await fetch(`${backendUrl}/admin/auth/validate-token/${token}`);
+  //   const data = await response.json();
 
-    if (data.success !== true) {
-      return NextResponse.redirect(loginUrl);
-    }
-  } catch (error) {
-    console.log("Token validation error:", error);
-    return NextResponse.redirect(loginUrl);
-  }
+  //   if (data.success !== true) {
+  //     return NextResponse.redirect(loginUrl);
+  //   }
+  // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // } catch (error) {
+  //   return NextResponse.redirect(loginUrl);
+  // }
 
   return NextResponse.next();
 }

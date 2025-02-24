@@ -1,14 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { MailIcon } from "../components/svg/MailIcon";
-import { loginUser } from "../../lib/admin/api/auth/auth";
+import React, { useState } from "react";
+import { MailIcon } from "../../svg/MailIcon";
+import { loginUser } from "../../../../lib/admin/api/auth/auth";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { LockIcon } from "../components/svg/LockIcon";
-import { EyeOffIcon } from "../components/svg/EyeOffIcon";
-import { EyeOnIcon } from "../components/svg/EyeOnIcon";
-import PrimaryButton from "../components/Atoms/buttons/PrimaryButton";
-import Toast from "../components/Atoms/toasts/Toast";
+import { LockIcon } from "../../svg/LockIcon";
+import { EyeOffIcon } from "../../svg/EyeOffIcon";
+import { EyeOnIcon } from "../../svg/EyeOnIcon";
+import PrimaryButton from "../../Atoms/buttons/PrimaryButton";
+import { useToastContext } from "../../../utils/providers/ToastProvider";
 
 const LoginPageFormComponent = () => {
   const [email, setEmail] = useState<string>("");
@@ -16,26 +16,7 @@ const LoginPageFormComponent = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const router = useRouter();
-
-  //toast
-  const [isShowToast, setIsShowToast] = useState<boolean>(false);
-  const [toastData, setToastData] = useState<{
-    type: "success" | "danger" | "warning" | "";
-    message: string;
-  }>({ type: "", message: "" });
-  
-
-  //toast timer
-  useEffect(() => {
-    if (isShowToast) {
-      const timer = setTimeout(() => {
-        setIsShowToast(false);
-        setToastData({ type: "", message: "" });
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [isShowToast]);
+  const { showToast } = useToastContext();
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -47,14 +28,12 @@ const LoginPageFormComponent = () => {
       const response = await loginUser(email, password);
       if (response?.token) {
         Cookies.set("authToken", response.token, { expires: 1, path: "/" });
-        setIsShowToast(true);
-        setToastData({ type: "success", message: "Login Successful" });
+        showToast("Login Sucessful!", "success");
         router.replace("/admin/dashboard");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      setIsShowToast(true);
-      setToastData({ type: "danger", message: error.message });
+      showToast(error.message, "danger");
     }
   };
 
@@ -117,11 +96,6 @@ const LoginPageFormComponent = () => {
           </form>
         </div>
       </div>
-      <Toast
-        isShow={isShowToast}
-        type={toastData.type}
-        message={toastData.message}
-      />
     </>
   );
 };

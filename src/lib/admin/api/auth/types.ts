@@ -1,8 +1,4 @@
-export interface RequestOptions extends RequestInit {
-  token?: string;
-}
-
-export interface LoginResponse {
+export interface LoginType {
   token: string;
   user: {
     id: string;
