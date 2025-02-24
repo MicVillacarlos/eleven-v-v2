@@ -87,7 +87,7 @@ export default function Layout({
 
       <div className="p-4 sm:ml-64">
         <div className="p-4 mt-10">
-          <div className="grid grid-cols-3 gap-4 mb-4">{children}</div>
+          <div className="mb-4">{children}</div>
         </div>
       </div>
     </div>

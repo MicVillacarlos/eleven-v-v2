@@ -4,6 +4,8 @@ import Layout from "../../components/Organisms/layout/Layout";
 import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
 import Modal from "../../components/Organisms/modal/Modal";
 import { useToastContext } from "../../utils/providers/ToastProvider";
+import PageHeader from "../../components/Atoms/text/PageHeader";
+import Table from "../../components/Organisms/table/Table";
 
 const Settings = () => {
   const { showToast } = useToastContext();
@@ -13,7 +15,6 @@ const Settings = () => {
 
   const onHandleAddRooom = useCallback(() => {
     setIsViewAddRoom(true);
-    showToast("You are winning!", "success")
   }, []);
 
   const onCloseModalHandler = useCallback(() => {
@@ -22,7 +23,15 @@ const Settings = () => {
 
   return (
     <Layout>
-      <PrimaryButton onClick={onHandleAddRooom}>Add Room</PrimaryButton>
+      {/* -------------- Header --------------*/}
+      <div className="flex w-full justify-between items-end">
+        <PageHeader>Rooms</PageHeader>
+        <div className="lg:w-[150px]">
+          <PrimaryButton onClick={onHandleAddRooom}>Add Room</PrimaryButton>
+        </div>
+      </div>
+      <Table />
+
       <Modal
         title="Add Room"
         content={modalContent}
