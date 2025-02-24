@@ -1,9 +1,11 @@
-import LoginPageFormComponent from "./components/Organisms/forms/LoginFormComponent";
+"use client";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
-  return (
-    <div className="bg-white h-screen">
-      <LoginPageFormComponent />
-    </div>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/login");
+  }, [router]);
 }
