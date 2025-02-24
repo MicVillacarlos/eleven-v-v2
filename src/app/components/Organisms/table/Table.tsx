@@ -1,14 +1,18 @@
 import React from "react";
 import { SearchIcon } from "../../svg/SearchIcon";
-import { HouseType } from "../../../../lib/admin/api/room/types";
 
-interface TableProps {
-  isNoQuery?: boolean;
-  data: HouseType[];
-  columns: { key: string; label: string }[];
+interface Column<T> {
+  key: keyof T;
+  label: string;
 }
 
-const Table = ({ data, columns, isNoQuery }: TableProps) => {
+interface TableProps<T> {
+  isNoQuery?: boolean;
+  data: T[];
+  columns: Column<T>[];
+}
+
+const Table = <T,>({ data, columns, isNoQuery }: TableProps<T>) => {
   return (
     <div className="relative overflow-x-auto">
       <div className="pb-4">
@@ -34,7 +38,7 @@ const Table = ({ data, columns, isNoQuery }: TableProps) => {
           <thead className="text-xs uppercase bg-[#205072] text-white">
             <tr>
               {columns.map((col) => (
-                <th key={col.key} scope="col" className="px-6 py-3">
+                <th key={String(col.key)} scope="col" className="px-6 py-3">
                   {col.label}
                 </th>
               ))}
@@ -44,8 +48,8 @@ const Table = ({ data, columns, isNoQuery }: TableProps) => {
             {data.map((item, index) => (
               <tr key={index} className="bg-white border-b border-gray-200">
                 {columns.map((col) => (
-                  <td key={col.key} className="px-6 py-4">
-                    {item[col.key]}
+                  <td key={String(col.key)} className="px-6 py-4">
+                    {item[col.key] as React.ReactNode}
                   </td>
                 ))}
               </tr>
