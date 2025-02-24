@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useWindowSize } from "../../../utils/hooks";
+import { useWindowSize } from "../../../utils/hooks/hooks";
 import { DashboardIcon } from "../../svg/DashboardIcon";
 import { HamburgerIcon } from "../../svg/HamburgerIcon";
 

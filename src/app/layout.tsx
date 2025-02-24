@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ToastProvider } from "./utils/providers/ToastProvider";
 
 export const metadata: Metadata = {
   title: "Eleven V",
@@ -11,11 +12,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   return (
     <html lang="en">
       <body>
-        {children}
+        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
   );
