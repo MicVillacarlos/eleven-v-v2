@@ -14,5 +14,6 @@ export interface HouseType {
 }
 
 export interface GetRoomApiResponse {
-  data: HouseType[]
+  data: HouseType[];
+  count: number;
 }
