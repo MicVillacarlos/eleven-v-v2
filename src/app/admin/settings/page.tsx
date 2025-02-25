@@ -26,8 +26,8 @@ const Settings = () => {
 
   const tableColumns: Column<HouseType>[] = [
     { key: "room_type", label: "House Type" },
-    { key: "price", label: "Price" },
-    { key: "total_rooms", label: "Total Rooms" },
+    { key: "price", label: "Price", justify: "right", type:"money"},
+    { key: "total_rooms", label: "Total Rooms", justify: "right" },
   ];
 
   const fetchData = async () => {
@@ -63,7 +63,7 @@ const Settings = () => {
       current: Math.max(1, prevState.current - 1),
     }));
   }, []);
-  
+
   const onSelectTablePage = useCallback((page: number) => {
     setPagination((prevState) => ({
       ...prevState,
@@ -82,7 +82,7 @@ const Settings = () => {
   return (
     <Layout>
       {/* -------------- Header --------------*/}
-      <div className="flex w-full justify-between items-end">
+      <div className="flex w-full justify-between items-center mb-3">
         <TableHeader> Rooms </TableHeader>
         <div className="lg:w-[150px]">
           <PrimaryButton onClick={onHandleAddRooom}>Add Room</PrimaryButton>

@@ -1,6 +1,8 @@
 export interface Column<T> {
   key: keyof T;
   label: string;
+  type?: "money";
+  justify?: "center" | "left" | "right";
 }
 
 export interface TableProps<T> {

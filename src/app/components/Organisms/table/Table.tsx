@@ -4,7 +4,7 @@ import { EditIcon } from "../../svg/EditIcon";
 import { NextIcon } from "../../svg/NextIcon";
 import { PreviousIcon } from "../../svg/PreviousIcon";
 import { TableProps } from "./type";
-import { paginationPages } from "../../../helpers/helpers";
+import { moneyFormat, paginationPages } from "../../../helpers/helpers";
 
 const Table = <T,>({
   data,
@@ -16,6 +16,19 @@ const Table = <T,>({
   pagination,
 }: TableProps<T>) => {
   const pages = paginationPages(pagination.limit, pagination.total);
+
+  const getCellContent = <T,>(
+    item: T,
+    col: { key: keyof T; type?: string }
+  ) => {
+    const value = item[col.key];
+
+    if (col.type === "money" && typeof value === "number") {
+      return moneyFormat(value);
+    }
+
+    return value as React.ReactNode;
+  };
 
   return (
     <div className="relative overflow-x-auto">
@@ -31,30 +44,44 @@ const Table = <T,>({
             <input
               type="text"
               id="table-search"
-              className="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+              className="block pt-2 ps-10 text-base text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Search for items"
             />
           </div>
         )}
       </div>
       <div className="relative overflow-x-auto rounded-t-md">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-          <thead className="text-xs uppercase bg-[#205072] text-white">
+        <table className="w-full text-base text-left rtl:text-right text-gray-500">
+          <thead className="text-sm uppercase bg-[#205072] text-white">
             <tr>
-              {columns.map((col) => (
-                <th key={String(col.key)} scope="col" className="px-6 py-3">
-                  {col.label}
-                </th>
-              ))}
+              {columns.map((col) => {
+                return (
+                  <th
+                    key={String(col.key)}
+                    scope="col"
+                    className={`px-6 py-3 ${
+                      col.justify === "right" ? "text-right" : "text-left"
+                    }`}
+                  >
+                    {col.label}
+                  </th>
+                );
+              })}
               <th className="px-6 py-3 flex justify-center">Actions</th>
             </tr>
           </thead>
+
           <tbody>
             {data.map((item, index) => (
               <tr key={index} className="bg-white border-b border-gray-200">
                 {columns.map((col) => (
-                  <td key={String(col.key)} className="px-6 py-4">
-                    {item[col.key] as React.ReactNode}
+                  <td
+                    key={String(col.key)}
+                    className={`px-6 py-4 ${
+                      col.justify === "right" ? "text-right" : "text-left"
+                    }`}
+                  >
+                    {getCellContent(item, col)}
                   </td>
                 ))}
                 <td className="flex justify-center px-6 py-4">
@@ -68,7 +95,7 @@ const Table = <T,>({
         </table>
 
         <nav aria-label="Page navigation">
-          <ul className="flex items-center justify-end w-full -space-x-px h-8 text-sm mt-5">
+          <ul className="flex items-center justify-end w-full -space-x-px h-8 text-base mt-5">
             <li>
               <a
                 onClick={handlePrevNavigation}
