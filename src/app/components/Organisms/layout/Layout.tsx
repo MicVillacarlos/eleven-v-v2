@@ -34,8 +34,26 @@ export default function Layout({
     },
     {
       key: 2,
+      label: "Lodgers",
+      href: "lodgers",
+      icon: <DashboardIcon />,
+    },
+    {
+      key: 3,
+      label: "Bills",
+      href: "bills",
+      icon: <DashboardIcon />,
+    },
+    {
+      key: 4,
       label: "Settings",
       href: "settings",
+      icon: <DashboardIcon />,
+    },
+    {
+      key: 5,
+      label: "Logout",
+      href: "Logout",
       icon: <DashboardIcon />,
     },
   ];

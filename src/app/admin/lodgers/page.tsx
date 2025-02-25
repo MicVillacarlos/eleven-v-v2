@@ -1,12 +1,12 @@
 import React from "react";
 import Layout from "../../components/Organisms/layout/Layout";
 
-const Bills = () => {
+const Lodgers = () => {
   return (
     <Layout>
-      <div>Bills</div>
+      <div>Lodgers</div>
     </Layout>
   );
 };
 
-export default Bills;
+export default Lodgers;
