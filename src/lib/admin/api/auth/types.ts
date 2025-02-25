@@ -6,3 +6,8 @@ export interface LoginType {
     email: string;
   };
 }
+
+export interface UpdatePasswordType {
+  success: boolean;
+  message: string;
+}

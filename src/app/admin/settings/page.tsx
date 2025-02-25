@@ -9,6 +9,8 @@ import Modal from "../../components/Organisms/modal/Modal";
 import Table from "../../components/Organisms/table/Table";
 import { Column } from "../../components/Organisms/table/type";
 import { useToastContext } from "../../utils/providers/ToastProvider";
+import { AddIcon } from "../../components/svg/AddIcon";
+import UpdatePasswordForm from "./UpdatePasswordForm";
 
 const Settings = () => {
   const { showToast } = useToastContext();
@@ -18,7 +20,7 @@ const Settings = () => {
   const [roomData, setRoomData] = useState<HouseType[]>();
   const [pagination, setPagination] = useState({
     current: 1,
-    limit: 10,
+    limit: 5,
     total: 0,
   });
 
@@ -26,7 +28,7 @@ const Settings = () => {
 
   const tableColumns: Column<HouseType>[] = [
     { key: "room_type", label: "House Type" },
-    { key: "price", label: "Price", justify: "right", type:"money"},
+    { key: "price", label: "Price", justify: "right", type: "money" },
     { key: "total_rooms", label: "Total Rooms", justify: "right" },
   ];
 
@@ -83,9 +85,12 @@ const Settings = () => {
     <Layout>
       {/* -------------- Header --------------*/}
       <div className="flex w-full justify-between items-center mb-3">
-        <TableHeader> Rooms </TableHeader>
+        <TableHeader> Rooms Management </TableHeader>
         <div className="lg:w-[150px]">
-          <PrimaryButton onClick={onHandleAddRooom}>Add Room</PrimaryButton>
+          <PrimaryButton onClick={onHandleAddRooom}>
+            <AddIcon color="white" />
+            Add Room
+          </PrimaryButton>
         </div>
       </div>
       {/* -------------- Header --------------*/}
@@ -99,6 +104,12 @@ const Settings = () => {
         pagination={pagination}
       />
 
+      {/* -------------- Header --------------*/}
+      <div className="flex w-full justify-between items-center mb-3 mt-20">
+        <TableHeader> Admin Change Password</TableHeader>
+      </div>
+      {/* -------------- Header --------------*/}
+      <UpdatePasswordForm />
       <Modal
         title="Add Room"
         content={modalContent}

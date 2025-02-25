@@ -1,7 +1,18 @@
-export const paginationPages = (limit: number, total: number): number[] => {
-  const totalPages = Math.floor(total / limit) + (total % limit > 0 ? 1 : 0);
-  return Array.from({ length: totalPages }, (_, i) => i + 1);
+export const paginationPages = (current: number, limit: number, total: number): number[] => {
+  const totalPages = Math.ceil(total / limit);
+  const maxPagesToShow = 5;
+
+  let startPage = Math.max(1, current - 2);
+  let endPage = startPage + maxPagesToShow - 1;
+
+  if (endPage > totalPages) {
+    endPage = totalPages;
+    startPage = Math.max(1, endPage - maxPagesToShow + 1);
+  }
+
+  return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 };
+
 
 export const moneyFormat = (number: number) => {
   return `₱${number.toLocaleString("en-PH", {

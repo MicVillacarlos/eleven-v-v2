@@ -5,6 +5,8 @@ import { NextIcon } from "../../svg/NextIcon";
 import { PreviousIcon } from "../../svg/PreviousIcon";
 import { TableProps } from "./type";
 import { moneyFormat, paginationPages } from "../../../helpers/helpers";
+import { DeleteIcon } from "../../svg/DeleteIcon";
+import { EyeOnIcon } from "../../svg/EyeOnIcon";
 
 const Table = <T,>({
   data,
@@ -15,7 +17,7 @@ const Table = <T,>({
   onSelectTablePage,
   pagination,
 }: TableProps<T>) => {
-  const pages = paginationPages(pagination.limit, pagination.total);
+  const pages = paginationPages(pagination.current,pagination.limit, pagination.total);
 
   const getCellContent = <T,>(
     item: T,
@@ -86,7 +88,15 @@ const Table = <T,>({
                 ))}
                 <td className="flex justify-center px-6 py-4">
                   <button className="hover:bg-gray-100 hover:text-gray-700">
+                    <EyeOnIcon size={25}/>
+                  </button>
+                  <div className="w-px self-stretch bg-gradient-to-tr from-transparent via-neutral-500 to-transparent opacity-25 mr-2 ml-2" />
+                  <button className="hover:bg-gray-100 hover:text-gray-700">
                     <EditIcon />
+                  </button>
+                  <div className="w-px self-stretch bg-gradient-to-tr from-transparent via-neutral-500 to-transparent opacity-25 mr-2 ml-2" />
+                  <button className="hover:bg-gray-100 hover:text-gray-700">
+                    <DeleteIcon size={22} />
                   </button>
                 </td>
               </tr>
