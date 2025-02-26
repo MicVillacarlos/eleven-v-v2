@@ -77,14 +77,12 @@ const UpdatePasswordForm: React.FC = () => {
     e.preventDefault();
 
     const { old_password, new_password, confirm_password } = formData;
-    let hasError = false;
 
     if (!old_password) {
       dispatch({
         type: "OLD_PASSWORD_ERROR",
         payload: "Old Password is required.",
       });
-      hasError = true;
     }
 
     if (!new_password) {
@@ -92,7 +90,6 @@ const UpdatePasswordForm: React.FC = () => {
         type: "NEW_PASSWORD_ERROR",
         payload: "New Password is required.",
       });
-      hasError = true;
     }
 
     if (!confirm_password) {
@@ -100,7 +97,6 @@ const UpdatePasswordForm: React.FC = () => {
         type: "CONFIRM_PASSWORD_ERROR",
         payload: "Confirm Password is required.",
       });
-      hasError = true;
     }
 
     if (new_password && confirm_password && new_password !== confirm_password) {
@@ -108,10 +104,14 @@ const UpdatePasswordForm: React.FC = () => {
         type: "CONFIRM_PASSWORD_ERROR",
         payload: "Passwords do not match.",
       });
-      hasError = true;
+
+      dispatch({
+        type: "NEW_PASSWORD_ERROR",
+        payload: "Passwords do not match.",
+      });
     }
 
-    if (!hasError) {
+    try {
       const response = await updatePassword(
         new_password,
         confirm_password,
@@ -129,10 +129,15 @@ const UpdatePasswordForm: React.FC = () => {
         dispatch({ type: "OLD_PASSWORD_ERROR", payload: "" });
         dispatch({ type: "NEW_PASSWORD_ERROR", payload: "" });
         dispatch({ type: "CONFIRM_PASSWORD_ERROR", payload: "" });
-      } else {
-        showToast(response.message, "danger",5);
-        dispatch({ type: "CONFIRM_PASSWORD_ERROR", payload: response.message });
-      }
+      } 
+      
+    } catch (error) {
+      console.log("HERE!----",error)
+      const errorMessage =
+      (error as { message?: string })?.message ||
+      "An unexpected error occurred.";
+      showToast(errorMessage , "danger",5);
+      // dispatch({ type: "CONFIRM_PASSWORD_ERROR", payload: errorMessage  });
     }
   };
 
@@ -146,6 +151,7 @@ const UpdatePasswordForm: React.FC = () => {
         onClickShowPassword={() => dispatch({ type: "TOGGLE_PASSWORD_OLD" })}
         errorMessage={state.oldPasswordError}
         value={formData.old_password}
+        required
       />
 
       <PasswordInput
@@ -156,6 +162,7 @@ const UpdatePasswordForm: React.FC = () => {
         onClickShowPassword={() => dispatch({ type: "TOGGLE_PASSWORD_NEW" })}
         errorMessage={state.newPasswordError}
         value={formData.new_password}
+        required
       />
 
       <PasswordInput
@@ -168,6 +175,7 @@ const UpdatePasswordForm: React.FC = () => {
         }
         errorMessage={state.confirmPasswordError}
         value={formData.confirm_password}
+        required
       />
       <div className="pt-5">
         <PrimaryButton type="submit">Update Password</PrimaryButton>

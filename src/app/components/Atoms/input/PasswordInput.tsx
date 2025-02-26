@@ -11,6 +11,7 @@ interface PasswordInputProps {
   onClickShowPassword: () => void;
   errorMessage?: string;
   value: string;
+  required?: boolean;
 }
 
 const PasswordInput = ({
@@ -21,14 +22,15 @@ const PasswordInput = ({
   onClickShowPassword,
   errorMessage,
   value,
+  required = false,
 }: PasswordInputProps) => {
   return (
     <div className="mb-8">
       <label
         htmlFor={id}
-        className="block mb-2 text-base font-medium text-gray-900 mt-8 font-medium"
+        className="block mb-2 text-base font-medium text-gray-900 mt-8"
       >
-        {label}
+        {label} {required && <span className="text-red-500">*</span>}
       </label>
       <div className="relative">
         <div className="absolute inset-y-0 flex items-center pl-2 pointer-events-none">
@@ -37,15 +39,13 @@ const PasswordInput = ({
         <input
           type={isShowPassword ? "text" : "password"}
           id={id}
-          className={
-            errorMessage
-              ? "border border-red-500 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-[#205072] block w-full pl-10 p-2.5"
-              : "border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-[#205072] block w-full pl-10 p-2.5"
-          }
+          className={`border ${
+            errorMessage ? "border-red-500" : "border-gray-300"
+          } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-[#205072] block w-full pl-10 p-2.5`}
           placeholder={label}
           onChange={handleChange}
           value={value}
-          required
+          required={required}
         />
         <div
           className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"

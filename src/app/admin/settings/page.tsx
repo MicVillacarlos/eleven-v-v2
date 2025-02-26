@@ -1,21 +1,33 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { getRooms } from "../../../lib/admin/api/room/room";
+import { addRoom, getRooms } from "../../../lib/admin/api/room/room";
 import { HouseType } from "../../../lib/admin/api/room/types";
 import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
 import TableHeader from "../../components/Atoms/text/TableHeader";
 import Layout from "../../components/Organisms/layout/Layout";
-import Modal from "../../components/Organisms/modal/Modal";
+import ModalForm from "../../components/Organisms/modal/ModalForm";
 import Table from "../../components/Organisms/table/Table";
 import { Column } from "../../components/Organisms/table/type";
-import { useToastContext } from "../../utils/providers/ToastProvider";
 import { AddIcon } from "../../components/svg/AddIcon";
+import { useToastContext } from "../../utils/providers/ToastProvider";
+import TextInput from "../../components/Atoms/input/TextInput";
+import NumberInput from "../../components/Atoms/input/NumberInput";
 import UpdatePasswordForm from "./UpdatePasswordForm";
+
+interface AddRoomData {
+  room_type: string;
+  price: number;
+  room_number: number;
+}
 
 const Settings = () => {
   const { showToast } = useToastContext();
   const [isViewAddRoom, setIsViewAddRoom] = useState<boolean>(false);
-
+  const [addRoomData, setAddRoomData] = useState<AddRoomData>({
+    room_type: "",
+    price: 0,
+    room_number: 0,
+  });
   //table
   const [roomData, setRoomData] = useState<HouseType[]>();
   const [pagination, setPagination] = useState({
@@ -23,8 +35,6 @@ const Settings = () => {
     limit: 5,
     total: 0,
   });
-
-  const modalContent = <div> hello </div>;
 
   const tableColumns: Column<HouseType>[] = [
     { key: "room_type", label: "House Type" },
@@ -79,7 +89,66 @@ const Settings = () => {
 
   const onCloseModalHandler = useCallback(() => {
     setIsViewAddRoom(false);
+    setAddRoomData({ room_type: "", price: 0, room_number: 0 });
   }, []);
+
+  // ------------------- FORM ---------------------//
+  const onSubmitForm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { room_type, price, room_number } = addRoomData;
+
+    const roomNumberString = room_number.toString();
+
+    try {
+      const result = await addRoom(room_type, price, `RM${roomNumberString}`);
+      if (result.room) {
+        showToast("Room added successfully!", "success");
+        setAddRoomData({ room_type: "", price: 0, room_number: 0 });
+        fetchData();
+        setIsViewAddRoom(false);
+      }
+    } catch (error) {
+      const errorMessage =
+        (error as { message?: string })?.message ||
+        "An unexpected error occurred.";
+      showToast(errorMessage, "danger");
+    }
+  };
+
+  const handleChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAddRoomData({ ...addRoomData, [e.target.id]: e.target.value });
+  };
+
+  const formContent = (
+    <>
+      <TextInput
+        label="Room Type"
+        placeholder={"Room Type"}
+        id={"room_type"}
+        handleChange={handleChangeForm}
+        value={addRoomData.room_type}
+        required
+      />
+      <NumberInput
+        label="Room Number"
+        placeholder={"Room Number"}
+        prefix="RM"
+        id={"room_number"}
+        value={addRoomData.room_number}
+        handleChange={handleChangeForm}
+        required
+      />
+      <NumberInput
+        label="Price"
+        placeholder={"Price"}
+        prefix="₱"
+        id={"price"}
+        value={addRoomData.price}
+        handleChange={handleChangeForm}
+        required
+      />
+    </>
+  );
 
   return (
     <Layout>
@@ -110,11 +179,13 @@ const Settings = () => {
       </div>
       {/* -------------- Header --------------*/}
       <UpdatePasswordForm />
-      <Modal
+      <ModalForm
+        widthSize={"xl"}
         title="Add Room"
-        content={modalContent}
+        content={formContent}
         isOpen={isViewAddRoom}
         onCloseModal={onCloseModalHandler}
+        onSubmitForm={onSubmitForm}
       />
     </Layout>
   );
