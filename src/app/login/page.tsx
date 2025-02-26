@@ -1,11 +1,10 @@
 import React from "react";
-import LoginPageFormComponent from "../components/Organisms/forms/LoginFormComponent";
-
+import LoginPageFormComponent from "./LoginFormComponent";
 
 const Login = () => {
   return (
     <div className="bg-white h-screen">
-      <LoginPageFormComponent/>
+      <LoginPageFormComponent />
     </div>
   );
 };
