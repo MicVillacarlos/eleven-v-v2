@@ -1,14 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { MailIcon } from "../../svg/MailIcon";
-import { loginUser } from "../../../../lib/admin/api/auth/auth";
+import { MailIcon } from "../components/svg/MailIcon";
+import { loginUser } from "../../lib/admin/api/auth/auth";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { LockIcon } from "../../svg/LockIcon";
-import { EyeOffIcon } from "../../svg/EyeOffIcon";
-import { EyeOnIcon } from "../../svg/EyeOnIcon";
-import PrimaryButton from "../../Atoms/buttons/PrimaryButton";
-import { useToastContext } from "../../../utils/providers/ToastProvider";
+import { LockIcon } from "../components/svg/LockIcon";
+import { EyeOffIcon } from "../components/svg/EyeOffIcon";
+import { EyeOnIcon } from "../components/svg/EyeOnIcon";
+import PrimaryButton from "../components/Atoms/buttons/PrimaryButton";
+import { useToastContext } from "../utils/providers/ToastProvider";
+import { LogoIcon } from "../components/svg/LogoIcon";
 
 const LoginPageFormComponent = () => {
   const [email, setEmail] = useState<string>("");
@@ -43,6 +44,9 @@ const LoginPageFormComponent = () => {
         <div className="w-[500px] mx-auto p-6 border border-gray-200 rounded-xl shadow-lg">
           <form onSubmit={handleSubmit}>
             {/* Email Field */}
+            <div className="flex w-full justify-center p-5 mb-5">
+              <LogoIcon size={50} />
+            </div>
             <label
               htmlFor="email"
               className="block mb-2 text-sm font-medium text-gray-900"

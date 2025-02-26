@@ -118,7 +118,7 @@ const UpdatePasswordForm: React.FC = () => {
         old_password
       );
       if (response.success) {
-        showToast("Password successfully updated.", "success");
+        showToast("Password successfully updated.", "success", 5);
         // Clear input fields
         setFormData({
           old_password: "",
@@ -130,7 +130,7 @@ const UpdatePasswordForm: React.FC = () => {
         dispatch({ type: "NEW_PASSWORD_ERROR", payload: "" });
         dispatch({ type: "CONFIRM_PASSWORD_ERROR", payload: "" });
       } else {
-        showToast(response.message, "danger");
+        showToast(response.message, "danger",5);
         dispatch({ type: "CONFIRM_PASSWORD_ERROR", payload: response.message });
       }
     }
