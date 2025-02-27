@@ -10,7 +10,7 @@ interface ModalPropsType {
   onSubmitForm: (e: React.FormEvent) => void;
 }
 
-const Modal = (props: ModalPropsType) => {
+const ModalForm = (props: ModalPropsType) => {
   const { title, content, isOpen, onCloseModal, onSubmitForm, widthSize } =
     props;
 
@@ -64,4 +64,4 @@ const Modal = (props: ModalPropsType) => {
   );
 };
 
-export default Modal;
+export default ModalForm;
