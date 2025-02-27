@@ -108,7 +108,11 @@ const Settings = () => {
     const roomNumberString = room_number.toString();
 
     try {
-      const result = await addRoom(room_type, price, `RM${roomNumberString}`);
+      const result = await addRoom(
+        room_type.trim(),
+        price,
+        `RM${roomNumberString}`
+      );
       if (result.room) {
         showToast("Room added successfully!", "success");
         setAddRoomData({ room_type: "", price: 0, room_number: 0 });
