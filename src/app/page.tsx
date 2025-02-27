@@ -1,10 +1,11 @@
-export default function Home() {
-  return (
-    <div>
-      <p className="text-red-900">Hello</p>
-      <div className="bg-white w-xl">
+"use client";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-      </div>
-    </div>
-  );
+export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/login");
+  }, [router]);
 }
