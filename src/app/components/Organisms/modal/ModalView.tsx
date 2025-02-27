@@ -2,14 +2,15 @@ import React, { JSX } from "react";
 import CloseIcon from "../../svg/CloseIcon";
 
 interface ModalPropsType {
+  widthSize?: string;
   title: string;
   content: JSX.Element;
   isOpen: boolean;
   onCloseModal: () => void;
 }
 
-const Modal = (props: ModalPropsType) => {
-  const { title, content, isOpen, onCloseModal } = props;
+const ModalView = (props: ModalPropsType) => {
+  const { title, content, isOpen, onCloseModal, widthSize } = props;
 
   return (
     <div
@@ -20,9 +21,15 @@ const Modal = (props: ModalPropsType) => {
         isOpen ? "" : "hidden"
       } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full bg-black bg-opacity-50`}
     >
-      <div className="relative p-4 w-full max-w-2xl max-h-full">
+      <div
+        className={
+          widthSize
+            ? `relative p-4 w-full max-w-${widthSize} max-h-full`
+            : `relative p-4 w-full max-w-2xl max-h-full`
+        }
+      >
         <div className="relative rounded-lg shadow-sm bg-white text-black">
-          <div className="flex items-center justify-between p-4 md:p-5 border-b border-gray-300">
+          <div className="flex items-center justify-between p-4 md:p-5">
             <h3 className="text-xl font-semibold">{title}</h3>
             {/* {--------------Close Button--------} */}
             <button
@@ -36,27 +43,10 @@ const Modal = (props: ModalPropsType) => {
             {/* {----------------Close Button--------} */}
           </div>
           <div className="p-4 md:p-5 space-y-4">{content}</div>
-          <div className="flex justify-end p-4 md:p-5 border-t border-gray-300">
-            <button
-              data-modal-hide="default-modal"
-              type="button"
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            >
-              Save
-            </button>
-            <button
-              data-modal-hide="default-modal"
-              type="button"
-              className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
-              onClick={onCloseModal}
-            >
-              Cancel
-            </button>
-          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Modal;
+export default ModalView;

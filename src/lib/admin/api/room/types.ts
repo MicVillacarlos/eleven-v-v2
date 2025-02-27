@@ -17,3 +17,12 @@ export interface GetRoomApiResponse {
   data: HouseType[];
   count: number;
 }
+
+export interface PostRoomApiResponse {
+  room: Room;
+}
+export interface AddRoomData {
+  room_type: string;
+  price: number;
+  room_number: number;
+}

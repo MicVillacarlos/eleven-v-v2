@@ -10,7 +10,7 @@ interface ToastProps {
 }
 
 interface ToastContextProps {
-  showToast: (message: string, type: "success" | "danger" | "warning") => void;
+  showToast: (message: string, type: "success" | "danger" | "warning", seconds?: number) => void;
 }
 
 const ToastContext = createContext<ToastContextProps | undefined>(undefined);
@@ -23,12 +23,12 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   const showToast = useCallback(
-    (message: string, type: "success" | "danger" | "warning") => {
+    (message: string, type: "success" | "danger" | "warning", seconds: number = 3) => {
       setToast({ message, type, isShow: true });
 
       setTimeout(() => {
         setToast((prev) => ({ ...prev, isShow: false }));
-      }, 3000);
+      }, seconds * 1000);
     },
     []
   );
