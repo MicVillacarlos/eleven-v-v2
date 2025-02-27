@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { useWindowSize } from "../../../utils/hooks/hooks";
 import { DashboardIcon } from "../../svg/DashboardIcon";
 import { HamburgerIcon } from "../../svg/HamburgerIcon";
+import { LodgersIcon } from "../../svg/LodgersIcon";
+import { SettingsIcon } from "../../svg/SettingsIcon";
+import ElevenVLogo from "next/image";
+import React from "react";
 
 export default function Layout({
   children,
@@ -36,7 +40,7 @@ export default function Layout({
       key: 2,
       label: "Lodgers",
       href: "lodgers",
-      icon: <DashboardIcon />,
+      icon: <LodgersIcon />,
     },
     {
       key: 3,
@@ -48,7 +52,7 @@ export default function Layout({
       key: 4,
       label: "Settings",
       href: "settings",
-      icon: <DashboardIcon />,
+      icon: <SettingsIcon />,
     },
     {
       key: 5,
@@ -81,14 +85,17 @@ export default function Layout({
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
           <a className="flex items-center ps-2.5 mb-5">
-            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+            {/* <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
               ELEVEN V
-            </span>
+            </span> */}
+            <img src="/elevenv-logo.svg" alt="Eleven V Logo" />
           </a>
-          <ul className="space-y-2 font-medium">
-            {SideBarOptions.map((item) => {
-              return (
-                <li key={item.key}>
+          <ul className="space-y-2 font-semibold">
+            {SideBarOptions.map((item, index) => (
+              <React.Fragment key={item.key}>
+                {" "}
+                {/* ✅ Add a unique key here */}
+                <li>
                   <a
                     href={item.href}
                     className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -97,8 +104,12 @@ export default function Layout({
                     <span className="ms-3">{item.label}</span>
                   </a>
                 </li>
-              );
-            })}
+                {/* ✅ Insert a line break (hr) after "Bills" */}
+                {item.label === "Bills" && (
+                  <hr className="my-2 border-gray-300 dark:border-gray-600" />
+                )}
+              </React.Fragment>
+            ))}
           </ul>
         </div>
       </aside>
