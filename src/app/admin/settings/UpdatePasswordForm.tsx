@@ -1,8 +1,8 @@
 "use client";
 import React, { useReducer, useState } from "react";
+import { updatePassword } from "../../../lib/admin/api/auth/auth";
 import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
 import PasswordInput from "../../components/Atoms/input/PasswordInput";
-import { updatePassword } from "../../../lib/admin/api/auth/auth";
 import { useToastContext } from "../../utils/providers/ToastProvider";
 
 interface State {
@@ -129,58 +129,55 @@ const UpdatePasswordForm: React.FC = () => {
         dispatch({ type: "OLD_PASSWORD_ERROR", payload: "" });
         dispatch({ type: "NEW_PASSWORD_ERROR", payload: "" });
         dispatch({ type: "CONFIRM_PASSWORD_ERROR", payload: "" });
-      } 
-      
+      }
     } catch (error) {
-      console.log("HERE!----",error)
       const errorMessage =
-      (error as { message?: string })?.message ||
-      "An unexpected error occurred.";
-      showToast(errorMessage , "danger",5);
-      // dispatch({ type: "CONFIRM_PASSWORD_ERROR", payload: errorMessage  });
+        (error as { message?: string })?.message ||
+        "An unexpected error occurred.";
+      showToast(errorMessage, "danger", 5);
     }
   };
 
   return (
-    <form className="w-full max-w-md" onSubmit={handleSubmit}>
-      <PasswordInput
-        id={"old_password"}
-        label={"Old Password"}
-        isShowPassword={state.showOldPassword}
-        handleChange={handleChange}
-        onClickShowPassword={() => dispatch({ type: "TOGGLE_PASSWORD_OLD" })}
-        errorMessage={state.oldPasswordError}
-        value={formData.old_password}
-        required
-      />
+      <form className="w-full max-w-md" onSubmit={handleSubmit}>
+        <PasswordInput
+          id={"old_password"}
+          label={"Old Password"}
+          isShowPassword={state.showOldPassword}
+          handleChange={handleChange}
+          onClickShowPassword={() => dispatch({ type: "TOGGLE_PASSWORD_OLD" })}
+          errorMessage={state.oldPasswordError}
+          value={formData.old_password}
+          required
+        />
 
-      <PasswordInput
-        id={"new_password"}
-        label={"New Password"}
-        isShowPassword={state.showNewPassword}
-        handleChange={handleChange}
-        onClickShowPassword={() => dispatch({ type: "TOGGLE_PASSWORD_NEW" })}
-        errorMessage={state.newPasswordError}
-        value={formData.new_password}
-        required
-      />
+        <PasswordInput
+          id={"new_password"}
+          label={"New Password"}
+          isShowPassword={state.showNewPassword}
+          handleChange={handleChange}
+          onClickShowPassword={() => dispatch({ type: "TOGGLE_PASSWORD_NEW" })}
+          errorMessage={state.newPasswordError}
+          value={formData.new_password}
+          required
+        />
 
-      <PasswordInput
-        id={"confirm_password"}
-        label={"Confirm Password"}
-        isShowPassword={state.showConfirmPassword}
-        handleChange={handleChange}
-        onClickShowPassword={() =>
-          dispatch({ type: "TOGGLE_PASSWORD_CONFIRM" })
-        }
-        errorMessage={state.confirmPasswordError}
-        value={formData.confirm_password}
-        required
-      />
-      <div className="pt-5">
-        <PrimaryButton type="submit">Update Password</PrimaryButton>
-      </div>
-    </form>
+        <PasswordInput
+          id={"confirm_password"}
+          label={"Confirm Password"}
+          isShowPassword={state.showConfirmPassword}
+          handleChange={handleChange}
+          onClickShowPassword={() =>
+            dispatch({ type: "TOGGLE_PASSWORD_CONFIRM" })
+          }
+          errorMessage={state.confirmPasswordError}
+          value={formData.confirm_password}
+          required
+        />
+        <div className="pt-5">
+          <PrimaryButton type="submit">Update Password</PrimaryButton>
+        </div>
+      </form>
   );
 };
 

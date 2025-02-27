@@ -17,4 +17,7 @@ export interface TableProps<T> {
     limit: number;
     total: number;
   };
+  onClickEdit?: (arg0: T | string) => void;
+  onClickDelete?: (arg0: T | string) => void;
+  onClickView?: (arg0: T | string) => void;
 }

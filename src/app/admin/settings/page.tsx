@@ -1,46 +1,54 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import React, { JSX, useCallback, useEffect, useState } from "react";
 import { addRoom, getRooms } from "../../../lib/admin/api/room/room";
-import { HouseType } from "../../../lib/admin/api/room/types";
+import { AddRoomData, HouseType } from "../../../lib/admin/api/room/types";
 import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
 import TableHeader from "../../components/Atoms/text/TableHeader";
 import Layout from "../../components/Organisms/layout/Layout";
 import ModalForm from "../../components/Organisms/modal/ModalForm";
-import Table from "../../components/Organisms/table/Table";
-import { Column } from "../../components/Organisms/table/type";
+import ModalView from "../../components/Organisms/modal/ModalView";
+import { Column, TableProps } from "../../components/Organisms/table/type";
 import { AddIcon } from "../../components/svg/AddIcon";
 import { useToastContext } from "../../utils/providers/ToastProvider";
-import TextInput from "../../components/Atoms/input/TextInput";
-import NumberInput from "../../components/Atoms/input/NumberInput";
+import AddRoomFormContent from "./AddRoomFormContent";
 import UpdatePasswordForm from "./UpdatePasswordForm";
+import { capitalizeFirstLetter } from "../../helpers/helpers";
 
-interface AddRoomData {
-  room_type: string;
-  price: number;
-  room_number: number;
-}
+//---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
+const RoomTable = dynamic(
+  () => import("../../components/Organisms/table/Table"),
+  {
+    ssr: false,
+  }
+) as <T>(props: TableProps<T>) => JSX.Element;
+//---End---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 
 const Settings = () => {
   const { showToast } = useToastContext();
-  const [isViewAddRoom, setIsViewAddRoom] = useState<boolean>(false);
+  const [isAddRoomModal, setIsAddRoomModal] = useState<boolean>(false);
+  const [isViewModal, setIsViewAddModal] = useState<boolean>(false);
   const [addRoomData, setAddRoomData] = useState<AddRoomData>({
     room_type: "",
     price: 0,
     room_number: 0,
   });
-  //table
-  const [roomData, setRoomData] = useState<HouseType[]>();
+  const [viewEditRoomData, setViewEditRoomData] = useState<HouseType>();
+  //----- Start: table states ------
+  const [roomDataTable, setRoomDataTable] = useState<HouseType[]>();
   const [pagination, setPagination] = useState({
     current: 1,
     limit: 5,
     total: 0,
   });
+  //----- End: table states -------
 
   const tableColumns: Column<HouseType>[] = [
     { key: "room_type", label: "House Type" },
     { key: "price", label: "Price", justify: "right", type: "money" },
     { key: "total_rooms", label: "Total Rooms", justify: "right" },
   ];
+  // ------------------- TABLE Functions---------------------//
 
   const fetchData = async () => {
     const { data, count } = await getRooms(
@@ -48,7 +56,7 @@ const Settings = () => {
       pagination.current,
       pagination.limit
     );
-    setRoomData(data);
+    setRoomDataTable(data);
     setPagination((prevState) => ({
       ...prevState,
       total: count,
@@ -83,16 +91,16 @@ const Settings = () => {
     }));
   }, []);
 
-  const onHandleAddRooom = useCallback(() => {
-    setIsViewAddRoom(true);
-  }, []);
-
-  const onCloseModalHandler = useCallback(() => {
-    setIsViewAddRoom(false);
+  const onCloseAddModalHandler = useCallback(() => {
+    setIsAddRoomModal(false);
     setAddRoomData({ room_type: "", price: 0, room_number: 0 });
   }, []);
 
-  // ------------------- FORM ---------------------//
+  // ------------------- ADD ROOM FORM Functions ---------------------//
+  const onHandleAddRooom = useCallback(() => {
+    setIsAddRoomModal(true);
+  }, []);
+
   const onSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     const { room_type, price, room_number } = addRoomData;
@@ -105,7 +113,7 @@ const Settings = () => {
         showToast("Room added successfully!", "success");
         setAddRoomData({ room_type: "", price: 0, room_number: 0 });
         fetchData();
-        setIsViewAddRoom(false);
+        setIsAddRoomModal(false);
       }
     } catch (error) {
       const errorMessage =
@@ -119,40 +127,26 @@ const Settings = () => {
     setAddRoomData({ ...addRoomData, [e.target.id]: e.target.value });
   };
 
-  const formContent = (
-    <>
-      <TextInput
-        label="Room Type"
-        placeholder={"Room Type"}
-        id={"room_type"}
-        handleChange={handleChangeForm}
-        value={addRoomData.room_type}
-        required
-      />
-      <NumberInput
-        label="Room Number"
-        placeholder={"Room Number"}
-        prefix="RM"
-        id={"room_number"}
-        value={addRoomData.room_number}
-        handleChange={handleChangeForm}
-        required
-      />
-      <NumberInput
-        label="Price"
-        placeholder={"Price"}
-        prefix="₱"
-        id={"price"}
-        value={addRoomData.price}
-        handleChange={handleChangeForm}
-        required
-      />
-    </>
-  );
+  //------------------------- ACTION BUTTONS Functions -------------------------
+  const onClickEditAction = (data: HouseType | string) => {
+    setViewEditRoomData(data as HouseType);
+  };
+
+  const onClickViewAction = (data: HouseType | string) => {
+    setIsViewAddModal(true);
+    setViewEditRoomData(data as HouseType);
+  };
+
+  const onCloseModalHandler = () => {
+    setIsViewAddModal(false);
+  };
+  //------------------------- MODAL VIEW Functions-------------------------
+
+  const viewModalContent = <></>;
 
   return (
     <Layout>
-      {/* -------------- Header --------------*/}
+      {/* -------------- Header Table--------------*/}
       <div className="flex w-full justify-between items-center mb-3">
         <TableHeader> Rooms Management </TableHeader>
         <div className="lg:w-[150px]">
@@ -162,30 +156,47 @@ const Settings = () => {
           </PrimaryButton>
         </div>
       </div>
-      {/* -------------- Header --------------*/}
-      <Table
+      {/* -------------- Header Table--------------*/}
+
+      <RoomTable<HouseType>
         isNoQuery
-        data={roomData ?? []}
+        data={roomDataTable ?? []}
         columns={tableColumns}
         handleNextNavigation={handleNextPagination}
         handlePrevNavigation={handlePrevPagination}
         onSelectTablePage={onSelectTablePage}
         pagination={pagination}
+        onClickEdit={onClickEditAction}
+        onClickView={onClickViewAction}
       />
 
-      {/* -------------- Header --------------*/}
+      {/* -------------- Update Password--------------*/}
       <div className="flex w-full justify-between items-center mb-3 mt-20">
         <TableHeader> Admin Change Password</TableHeader>
       </div>
-      {/* -------------- Header --------------*/}
       <UpdatePasswordForm />
+      {/* -------------- Update Password--------------*/}
       <ModalForm
         widthSize={"xl"}
         title="Add Room"
-        content={formContent}
-        isOpen={isViewAddRoom}
-        onCloseModal={onCloseModalHandler}
+        content={
+          <AddRoomFormContent
+            handleChangeForm={handleChangeForm}
+            roomType={addRoomData.room_type}
+            roomNumber={addRoomData.room_number}
+            price={addRoomData.price}
+          />
+        }
+        isOpen={isAddRoomModal}
+        onCloseModal={onCloseAddModalHandler}
         onSubmitForm={onSubmitForm}
+      />
+      <ModalView
+        content={viewModalContent}
+        isOpen={isViewModal}
+        onCloseModal={onCloseModalHandler}
+        title={capitalizeFirstLetter(viewEditRoomData?.room_type ?? "")}
+        widthSize="xl"
       />
     </Layout>
   );

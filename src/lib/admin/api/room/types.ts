@@ -21,4 +21,8 @@ export interface GetRoomApiResponse {
 export interface PostRoomApiResponse {
   room: Room;
 }
-
+export interface AddRoomData {
+  room_type: string;
+  price: number;
+  room_number: number;
+}
