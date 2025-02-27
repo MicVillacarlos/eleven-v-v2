@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 import { useWindowSize } from "../../../utils/hooks/hooks";
 import { DashboardIcon } from "../../svg/DashboardIcon";
 import { HamburgerIcon } from "../../svg/HamburgerIcon";
+import { LodgersIcon } from "../../svg/LodgersIcon";
+import { SettingsIcon } from "../../svg/SettingsIcon";
+import { BillsIcon } from "../../svg/BillsIcon";
+import { LogoutIcon } from "../../svg/LogoutIcon";
+import React from "react";
+import Image from "next/image";
 
 export default function Layout({
   children,
@@ -34,14 +40,32 @@ export default function Layout({
     },
     {
       key: 2,
+      label: "Lodgers",
+      href: "lodgers",
+      icon: <LodgersIcon />,
+    },
+    {
+      key: 3,
+      label: "Bills",
+      href: "bills",
+      icon: <BillsIcon />,
+    },
+    {
+      key: 4,
       label: "Settings",
       href: "settings",
-      icon: <DashboardIcon />,
+      icon: <SettingsIcon />,
+    },
+    {
+      key: 5,
+      label: "Logout",
+      href: "login",
+      icon: <LogoutIcon />,
     },
   ];
 
   return (
-    <div>
+    <div className="bg-[#E3EEF6] h-lvh">
       {/* ----------SIDE BAR CLOSE (to refactor)-------- */}
       <button
         data-drawer-target="logo-sidebar"
@@ -56,37 +80,46 @@ export default function Layout({
       {/* ----------SIDE BAR OPEN-------- */}
       <aside
         id="logo-sidebar"
-        className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${
+        className={`fixed top-0 left-0 z-40 w-64 h-lvh transition-transform bg-white ${
           isSideBarOpen ? "translate-x-0" : "-translate-x-full"
         } sm:translate-x-0`}
         aria-label="Sidebar"
       >
-        <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-          <a className="flex items-center ps-2.5 mb-5">
-            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-              ELEVEN V
-            </span>
+        <div className="h-full px-8 py-2 overflow-y-auto">
+          <a className="py-[48] flex items-center ps-2.5 mb-5">
+            <Image
+              src="/elevenv-logo.svg"
+              alt="Eleven V Logo"
+              width={0}
+              height={0}
+              style={{ width: '100%', height: 'auto' }}
+            />
           </a>
-          <ul className="space-y-2 font-medium">
-            {SideBarOptions.map((item) => {
-              return (
-                <li key={item.key}>
+          <ul className="space-y-3 font-semibold">
+            {SideBarOptions.map((item) => (
+              <React.Fragment key={item.key}>
+                <li>
                   <a
                     href={item.href}
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    className="flex items-center p-2 rounded-lg hover:bg-gray-100 group"
                   >
-                    {item.icon}
-                    <span className="ms-3">{item.label}</span>
+                    <span className="w-[50px] flex items-center justify-start">
+                      {item.icon}
+                    </span>
+
+                    <span className="text-[#7996AA]">{item.label}</span>
                   </a>
                 </li>
-              );
-            })}
+                {/* ✅ Insert a line break (hr) after "Bills" */}
+                {item.label === "Bills" && <hr className="border-[#7996AA]" />}
+              </React.Fragment>
+            ))}
           </ul>
         </div>
       </aside>
 
-      <div className="p-4 sm:ml-64">
-        <div className="p-4 mt-10">
+      <div className="p-4 pt-10 sm:ml-64 bg-[#E3EEF6]">
+        <div className="p-4">
           <div className="mb-4">{children}</div>
         </div>
       </div>

@@ -181,7 +181,6 @@ const Settings = () => {
       <UpdatePasswordForm />
       {/* -------------- Update Password--------------*/}
       <ModalForm
-        widthSize={"xl"}
         title="Add Room"
         content={
           <AddRoomFormContent
