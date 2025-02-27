@@ -6,7 +6,8 @@ import { DashboardIcon } from "../../svg/DashboardIcon";
 import { HamburgerIcon } from "../../svg/HamburgerIcon";
 import { LodgersIcon } from "../../svg/LodgersIcon";
 import { SettingsIcon } from "../../svg/SettingsIcon";
-import ElevenVLogo from "next/image";
+import { BillsIcon } from "../../svg/BillsIcon";
+import { LogoutIcon } from "../../svg/LogoutIcon";
 import React from "react";
 
 export default function Layout({
@@ -46,7 +47,7 @@ export default function Layout({
       key: 3,
       label: "Bills",
       href: "bills",
-      icon: <DashboardIcon />,
+      icon: <BillsIcon />,
     },
     {
       key: 4,
@@ -58,7 +59,7 @@ export default function Layout({
       key: 5,
       label: "Logout",
       href: "Logout",
-      icon: <DashboardIcon />,
+      icon: <LogoutIcon />,
     },
   ];
 
@@ -83,30 +84,33 @@ export default function Layout({
         } sm:translate-x-0`}
         aria-label="Sidebar"
       >
-        <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-          <a className="flex items-center ps-2.5 mb-5">
+        <div className="h-full px-8 py-2 overflow-y-auto">
+          <a className="py-[48] flex items-center ps-2.5 mb-5">
             {/* <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
               ELEVEN V
             </span> */}
             <img src="/elevenv-logo.svg" alt="Eleven V Logo" />
           </a>
-          <ul className="space-y-2 font-semibold">
-            {SideBarOptions.map((item, index) => (
+          <ul className="space-y-3 font-semibold">
+            {SideBarOptions.map((item) => (
               <React.Fragment key={item.key}>
                 {" "}
                 {/* ✅ Add a unique key here */}
                 <li>
                   <a
                     href={item.href}
-                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    className="flex items-center p-2 text-[#7996AA] rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                   >
-                    {item.icon}
-                    <span className="ms-3">{item.label}</span>
+                    <span className="w-[50px] flex items-center justify-start">
+                      {item.icon}
+                    </span>
+
+                    <span className="">{item.label}</span>
                   </a>
                 </li>
                 {/* ✅ Insert a line break (hr) after "Bills" */}
                 {item.label === "Bills" && (
-                  <hr className="my-2 border-gray-300 dark:border-gray-600" />
+                  <hr className="border-[#7996AA] dark:border-gray-600" />
                 )}
               </React.Fragment>
             ))}
@@ -114,7 +118,7 @@ export default function Layout({
         </div>
       </aside>
 
-      <div className="p-4 sm:ml-64">
+      <div className="p-4 sm:ml-64 bg-[#E3EEF6]">
         <div className="p-4 mt-10">
           <div className="mb-4">{children}</div>
         </div>

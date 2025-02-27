@@ -1,22 +1,30 @@
 import { FC } from "react";
 import { IconProps } from "./type";
 
-export const LodgersIcon: FC<IconProps> = ({
-  size = 20,
-  color = "currentColor",
-  className = "text-gray-500 dark:text-gray-400",
-}) => {
+export const LodgersIcon: FC<IconProps> = ({}) => {
   return (
     <svg
-      width={size}
-      height={size * 0.8}
-      className={`w-${size} h-${size * 0.8} ${className}`}
+      width="18"
+      height="22"
+      viewBox="0 0 18 22"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 20"
-      fill={color}
-      aria-label="Lodgers Icon"
     >
-      <path d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" />
+      <g clipPath="url(#clip0_114_764)">
+        <path
+          d="M9 9.5C11.4853 9.5 13.5 7.48527 13.5 5C13.5 2.51472 11.4853 0.5 9 0.5C6.51472 0.5 4.5 2.51472 4.5 5C4.5 7.48527 6.51472 9.5 9 9.5Z"
+          fill="#7996AA"
+        />
+        <path
+          d="M18 17C18 14.5146 15.9853 12.5 13.5 12.5H4.5C2.01472 12.5 0 14.5146 0 17V21.5H18V17Z"
+          fill="#7996AA"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_114_764">
+          <rect width="18" height="22" fill="white" />
+        </clipPath>
+      </defs>
     </svg>
   );
 };
