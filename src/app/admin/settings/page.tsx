@@ -1,17 +1,17 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import React, { JSX, useCallback, useEffect, useState } from "react";
 import { addRoom, getRooms } from "../../../lib/admin/api/room/room";
 import { HouseType } from "../../../lib/admin/api/room/types";
 import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
+import NumberInput from "../../components/Atoms/input/NumberInput";
+import TextInput from "../../components/Atoms/input/TextInput";
 import TableHeader from "../../components/Atoms/text/TableHeader";
 import Layout from "../../components/Organisms/layout/Layout";
 import ModalForm from "../../components/Organisms/modal/ModalForm";
-import Table from "../../components/Organisms/table/Table";
-import { Column } from "../../components/Organisms/table/type";
+import { Column, TableProps } from "../../components/Organisms/table/type";
 import { AddIcon } from "../../components/svg/AddIcon";
 import { useToastContext } from "../../utils/providers/ToastProvider";
-import TextInput from "../../components/Atoms/input/TextInput";
-import NumberInput from "../../components/Atoms/input/NumberInput";
 import UpdatePasswordForm from "./UpdatePasswordForm";
 
 interface AddRoomData {
@@ -19,6 +19,13 @@ interface AddRoomData {
   price: number;
   room_number: number;
 }
+
+const RoomTable = dynamic(
+  () => import("../../components/Organisms/table/Table"),
+  {
+    ssr: false,
+  }
+) as <T>(props: TableProps<T>) => JSX.Element;
 
 const Settings = () => {
   const { showToast } = useToastContext();
@@ -163,7 +170,8 @@ const Settings = () => {
         </div>
       </div>
       {/* -------------- Header --------------*/}
-      <Table
+
+      <RoomTable<HouseType>
         isNoQuery
         data={roomData ?? []}
         columns={tableColumns}
