@@ -6,7 +6,6 @@ export interface Column<T> {
 }
 
 export interface TableProps<T> {
-  isNoQuery?: boolean;
   data: T[];
   columns: Column<T>[];
   handleNextNavigation: () => void;
@@ -17,6 +16,7 @@ export interface TableProps<T> {
     limit: number;
     total: number;
   };
+  onChangeSearch?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClickEdit?: (arg0: T | string) => void;
   onClickDelete?: (arg0: T | string) => void;
   onClickView?: (arg0: T | string) => void;
