@@ -2,7 +2,7 @@ import React from "react";
 
 interface TextInputProps {
   id: string;
-  label: string;
+  label?: string;
   placeholder: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;

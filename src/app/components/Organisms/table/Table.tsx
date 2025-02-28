@@ -20,6 +20,7 @@ const Table = <T,>({
   onClickDelete,
   onClickView,
   pagination,
+  onChangeSearch
 }: TableProps<T>) => {
   const pages = paginationPages(
     pagination.current,
@@ -51,8 +52,9 @@ const Table = <T,>({
             <input
               type="text"
               id="table-search"
-              className="block pt-2 ps-10 text-base text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Search for items"
+              className="w-1/4 p-2.5 pl-10 pr-3 text-sm text-gray-900 border-none outline-none focus:ring-0 focus:border-none rounded-lg"
+              placeholder="Search"
+              onChange={onChangeSearch}
             />
           </div>
         )}
