@@ -162,7 +162,7 @@ const Table = <T,>({
                       className={`flex items-center justify-center px-3 h-8 leading-tight border cursor-pointer
                       ${
                         isActive
-                          ? "z-10 text-blue-600 border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700"
+                          ? "z-10 text-blue-600 border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-gray-700"
                           : "text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                       }`}
                     >

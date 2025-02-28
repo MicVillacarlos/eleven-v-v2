@@ -4,7 +4,7 @@ import React, { JSX, Suspense, useCallback, useEffect, useState } from "react";
 import { addRoom, getRooms } from "../../../lib/admin/api/room/room";
 import { AddRoomData, HouseType } from "../../../lib/admin/api/room/types";
 import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
-import TableHeader from "../../components/Atoms/text/TableHeader";
+import Text2xl from "../../components/Atoms/text/Text2xl";
 import Layout from "../../components/Organisms/layout/Layout";
 import ModalForm from "../../components/Organisms/modal/ModalForm";
 import ModalView from "../../components/Organisms/modal/ModalView";
@@ -15,7 +15,7 @@ import { useToastContext } from "../../utils/providers/ToastProvider";
 import RoomAddFormContent from "./RoomAddFormContent";
 import RoomUpdatePasswordForm from "./RoomUpdatePasswordForm";
 import { RoomViewModalContent } from "./RoomViewModalContent";
-import { RoomEditModalContent } from "./RoomEditFormContent copy";
+import { RoomDeleteModalContent } from "./RoomDeleteFormContent";
 import TableLoading from "../../components/Organisms/loaders/TableLoading";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
@@ -33,14 +33,14 @@ const Settings = () => {
   //-------- Start: Modal view ------------
   const [isAddRoomModal, setIsAddRoomModal] = useState<boolean>(false);
   const [isViewModal, setIsViewModal] = useState<boolean>(false);
-  const [isEditModal, setIsEditModal] = useState<boolean>(false);
+  const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false);
   //-------- End: Modal view ------------
   const [addRoomData, setAddRoomData] = useState<AddRoomData>({
     room_type: "",
     price: 0,
     room_number: 0,
   });
-  const [viewEditRoomData, setViewEditRoomData] = useState<HouseType>({
+  const [viewDeleteRoomData, setViewDeleteRoomData] = useState<HouseType>({
     key: "",
     total_rooms: 0,
     rooms: [],
@@ -143,21 +143,21 @@ const Settings = () => {
   };
 
   //------------------------- ACTION BUTTONS Functions -------------------------
-  const onClickEditAction = (data: HouseType | string) => {
-    setViewEditRoomData(data as HouseType);
-    setIsEditModal(true);
+  const onClickDeleteAction = (data: HouseType | string) => {
+    setViewDeleteRoomData(data as HouseType);
+    setIsDeleteModal(true);
   };
 
   const onClickViewAction = (data: HouseType | string) => {
     setIsViewModal(true);
-    setViewEditRoomData(data as HouseType);
+    setViewDeleteRoomData(data as HouseType);
   };
 
   //------------------------- MODAL VIEW Functions-------------------------
 
   const onCloseViewModalHandler = useCallback(() => {
     setIsViewModal(false);
-    setViewEditRoomData({
+    setViewDeleteRoomData({
       key: "",
       total_rooms: 0,
       rooms: [],
@@ -166,11 +166,11 @@ const Settings = () => {
     });
   }, []);
 
-  //------------------------- MODAL EDIT Functions-------------------------
+  //------------------------- MODAL DELETE Functions-------------------------
 
-  const onCloseEditModalHandler = useCallback(() => {
-    setIsEditModal(false);
-    setViewEditRoomData({
+  const onCloseDeleteModalHandler = useCallback(() => {
+    setIsDeleteModal(false);
+    setViewDeleteRoomData({
       key: "",
       total_rooms: 0,
       rooms: [],
@@ -180,26 +180,26 @@ const Settings = () => {
   }, []);
 
   const onDeleteRoomHandler = useCallback(() => {
-    setIsEditModal(false);
+    setIsDeleteModal(false);
     setPagination((prevState) => ({
       ...prevState,
       current: 1,
     }));
-    setViewEditRoomData({
+    setViewDeleteRoomData({
       key: "",
       total_rooms: 0,
       rooms: [],
       room_type: "",
       price: 0,
     });
-    fetchData()
+    fetchData();
   }, []);
 
   return (
     <Layout>
       {/* -------------- Header Table--------------*/}
       <div className="flex w-full justify-between items-center mb-3">
-        <TableHeader> Rooms Management </TableHeader>
+        <Text2xl> Rooms Management </Text2xl>
         <div className="lg:w-[150px]">
           <PrimaryButton onClick={onHandleAddRooom}>
             <AddIcon color="white" />
@@ -208,7 +208,7 @@ const Settings = () => {
         </div>
       </div>
       {/* -------------- Header Table--------------*/}
-      <Suspense fallback={<TableLoading/>}>
+      <Suspense fallback={<TableLoading />}>
         <RoomTable<HouseType>
           isNoQuery
           data={roomDataTable ?? []}
@@ -217,14 +217,14 @@ const Settings = () => {
           handlePrevNavigation={handlePrevPagination}
           onSelectTablePage={onSelectTablePage}
           pagination={pagination}
-          onClickEdit={onClickEditAction}
+          onClickDelete={onClickDeleteAction}
           onClickView={onClickViewAction}
         />
       </Suspense>
 
       {/* -------------- Update Password--------------*/}
       <div className="flex w-full justify-between items-center mb-3 mt-20">
-        <TableHeader> Admin Change Password</TableHeader>
+        <Text2xl> Admin Change Password</Text2xl>
       </div>
       <RoomUpdatePasswordForm />
       {/* -------------- Update Password--------------*/}
@@ -244,20 +244,20 @@ const Settings = () => {
       />
       <ModalView
         content={
-          <RoomEditModalContent
-            house={viewEditRoomData}
+          <RoomDeleteModalContent
+            house={viewDeleteRoomData}
             onCloseModal={onDeleteRoomHandler}
           />
         }
-        isOpen={isEditModal}
-        onCloseModal={onCloseEditModalHandler}
-        title={"Edit House"}
+        isOpen={isDeleteModal}
+        onCloseModal={onCloseDeleteModalHandler}
+        title={"Delete Room"}
       />
       <ModalView
-        content={<RoomViewModalContent house={viewEditRoomData} />}
+        content={<RoomViewModalContent house={viewDeleteRoomData} />}
         isOpen={isViewModal}
         onCloseModal={onCloseViewModalHandler}
-        title={capitalizeFirstLetter(viewEditRoomData?.room_type ?? "")}
+        title={capitalizeFirstLetter(viewDeleteRoomData?.room_type ?? "")}
       />
     </Layout>
   );
