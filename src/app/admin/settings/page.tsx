@@ -1,24 +1,28 @@
 "use client";
 import dynamic from "next/dynamic";
-import React, { JSX, useCallback, useEffect, useState } from "react";
+import React, { JSX, Suspense, useCallback, useEffect, useState } from "react";
 import { addRoom, getRooms } from "../../../lib/admin/api/room/room";
 import { AddRoomData, HouseType } from "../../../lib/admin/api/room/types";
 import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
-import TableHeader from "../../components/Atoms/text/TableHeader";
+import Text2xl from "../../components/Atoms/text/Text2xl";
 import Layout from "../../components/Organisms/layout/Layout";
 import ModalForm from "../../components/Organisms/modal/ModalForm";
 import ModalView from "../../components/Organisms/modal/ModalView";
 import { Column, TableProps } from "../../components/Organisms/table/type";
 import { AddIcon } from "../../components/svg/AddIcon";
-import { useToastContext } from "../../utils/providers/ToastProvider";
-import AddRoomFormContent from "./AddRoomFormContent";
-import UpdatePasswordForm from "./UpdatePasswordForm";
 import { capitalizeFirstLetter } from "../../helpers/helpers";
+import { useToastContext } from "../../utils/providers/ToastProvider";
+import RoomAddFormContent from "./RoomAddFormContent";
+import RoomUpdatePasswordForm from "./RoomUpdatePasswordForm";
+import { RoomViewModalContent } from "./RoomViewModalContent";
+import { RoomDeleteModalContent } from "./RoomDeleteFormContent";
+import TableLoading from "../../components/Organisms/loaders/TableLoading";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const RoomTable = dynamic(
   () => import("../../components/Organisms/table/Table"),
   {
+    loading: () => <TableLoading />,
     ssr: false,
   }
 ) as <T>(props: TableProps<T>) => JSX.Element;
@@ -26,14 +30,23 @@ const RoomTable = dynamic(
 
 const Settings = () => {
   const { showToast } = useToastContext();
+  //-------- Start: Modal view ------------
   const [isAddRoomModal, setIsAddRoomModal] = useState<boolean>(false);
-  const [isViewModal, setIsViewAddModal] = useState<boolean>(false);
+  const [isViewModal, setIsViewModal] = useState<boolean>(false);
+  const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false);
+  //-------- End: Modal view ------------
   const [addRoomData, setAddRoomData] = useState<AddRoomData>({
     room_type: "",
     price: 0,
     room_number: 0,
   });
-  const [viewEditRoomData, setViewEditRoomData] = useState<HouseType>();
+  const [viewDeleteRoomData, setViewDeleteRoomData] = useState<HouseType>({
+    key: "",
+    total_rooms: 0,
+    rooms: [],
+    room_type: "",
+    price: 0,
+  });
   //----- Start: table states ------
   const [roomDataTable, setRoomDataTable] = useState<HouseType[]>();
   const [pagination, setPagination] = useState({
@@ -48,6 +61,7 @@ const Settings = () => {
     { key: "price", label: "Price", justify: "right", type: "money" },
     { key: "total_rooms", label: "Total Rooms", justify: "right" },
   ];
+
   // ------------------- TABLE Functions---------------------//
 
   const fetchData = async () => {
@@ -105,10 +119,11 @@ const Settings = () => {
     e.preventDefault();
     const { room_type, price, room_number } = addRoomData;
 
-    const roomNumberString = room_number.toString();
+    const roomNumber = `RM${room_number.toString()}`;
+    const roomType = capitalizeFirstLetter(room_type.trim());
 
     try {
-      const result = await addRoom(room_type, price, `RM${roomNumberString}`);
+      const result = await addRoom(roomType, price, roomNumber);
       if (result.room) {
         showToast("Room added successfully!", "success");
         setAddRoomData({ room_type: "", price: 0, room_number: 0 });
@@ -128,27 +143,63 @@ const Settings = () => {
   };
 
   //------------------------- ACTION BUTTONS Functions -------------------------
-  const onClickEditAction = (data: HouseType | string) => {
-    setViewEditRoomData(data as HouseType);
+  const onClickDeleteAction = (data: HouseType | string) => {
+    setViewDeleteRoomData(data as HouseType);
+    setIsDeleteModal(true);
   };
 
   const onClickViewAction = (data: HouseType | string) => {
-    setIsViewAddModal(true);
-    setViewEditRoomData(data as HouseType);
+    setIsViewModal(true);
+    setViewDeleteRoomData(data as HouseType);
   };
 
-  const onCloseModalHandler = () => {
-    setIsViewAddModal(false);
-  };
   //------------------------- MODAL VIEW Functions-------------------------
 
-  const viewModalContent = <></>;
+  const onCloseViewModalHandler = useCallback(() => {
+    setIsViewModal(false);
+    setViewDeleteRoomData({
+      key: "",
+      total_rooms: 0,
+      rooms: [],
+      room_type: "",
+      price: 0,
+    });
+  }, []);
+
+  //------------------------- MODAL DELETE Functions-------------------------
+
+  const onCloseDeleteModalHandler = useCallback(() => {
+    setIsDeleteModal(false);
+    setViewDeleteRoomData({
+      key: "",
+      total_rooms: 0,
+      rooms: [],
+      room_type: "",
+      price: 0,
+    });
+  }, []);
+
+  const onDeleteRoomHandler = useCallback(() => {
+    setIsDeleteModal(false);
+    setPagination((prevState) => ({
+      ...prevState,
+      current: 1,
+    }));
+    setViewDeleteRoomData({
+      key: "",
+      total_rooms: 0,
+      rooms: [],
+      room_type: "",
+      price: 0,
+    });
+    fetchData();
+  }, []);
 
   return (
     <Layout>
       {/* -------------- Header Table--------------*/}
       <div className="flex w-full justify-between items-center mb-3">
-        <TableHeader> Rooms Management </TableHeader>
+        <Text2xl> Rooms Management </Text2xl>
         <div className="lg:w-[150px]">
           <PrimaryButton onClick={onHandleAddRooom}>
             <AddIcon color="white" />
@@ -157,29 +208,30 @@ const Settings = () => {
         </div>
       </div>
       {/* -------------- Header Table--------------*/}
-
-      <RoomTable<HouseType>
-        isNoQuery
-        data={roomDataTable ?? []}
-        columns={tableColumns}
-        handleNextNavigation={handleNextPagination}
-        handlePrevNavigation={handlePrevPagination}
-        onSelectTablePage={onSelectTablePage}
-        pagination={pagination}
-        onClickEdit={onClickEditAction}
-        onClickView={onClickViewAction}
-      />
+      <Suspense fallback={<TableLoading />}>
+        <RoomTable<HouseType>
+          isNoQuery
+          data={roomDataTable ?? []}
+          columns={tableColumns}
+          handleNextNavigation={handleNextPagination}
+          handlePrevNavigation={handlePrevPagination}
+          onSelectTablePage={onSelectTablePage}
+          pagination={pagination}
+          onClickDelete={onClickDeleteAction}
+          onClickView={onClickViewAction}
+        />
+      </Suspense>
 
       {/* -------------- Update Password--------------*/}
       <div className="flex w-full justify-between items-center mb-3 mt-20">
-        <TableHeader> Admin Change Password</TableHeader>
+        <Text2xl> Admin Change Password</Text2xl>
       </div>
-      <UpdatePasswordForm />
+      <RoomUpdatePasswordForm />
       {/* -------------- Update Password--------------*/}
       <ModalForm
         title="Add Room"
         content={
-          <AddRoomFormContent
+          <RoomAddFormContent
             handleChangeForm={handleChangeForm}
             roomType={addRoomData.room_type}
             roomNumber={addRoomData.room_number}
@@ -191,11 +243,21 @@ const Settings = () => {
         onSubmitForm={onSubmitForm}
       />
       <ModalView
-        content={viewModalContent}
+        content={
+          <RoomDeleteModalContent
+            house={viewDeleteRoomData}
+            onCloseModal={onDeleteRoomHandler}
+          />
+        }
+        isOpen={isDeleteModal}
+        onCloseModal={onCloseDeleteModalHandler}
+        title={"Delete Room"}
+      />
+      <ModalView
+        content={<RoomViewModalContent house={viewDeleteRoomData} />}
         isOpen={isViewModal}
-        onCloseModal={onCloseModalHandler}
-        title={capitalizeFirstLetter(viewEditRoomData?.room_type ?? "")}
-        widthSize="xl"
+        onCloseModal={onCloseViewModalHandler}
+        title={capitalizeFirstLetter(viewDeleteRoomData?.room_type ?? "")}
       />
     </Layout>
   );

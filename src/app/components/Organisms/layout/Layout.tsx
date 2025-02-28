@@ -107,7 +107,7 @@ export default function Layout({
                       {item.icon}
                     </span>
 
-                    <span className="text-[#7996AA]">{item.label}</span>
+                    <span className="text-[#7996AA] text-lg">{item.label}</span>
                   </a>
                 </li>
                 {/* ✅ Insert a line break (hr) after "Bills" */}
