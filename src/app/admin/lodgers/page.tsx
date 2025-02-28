@@ -7,6 +7,7 @@ import { AddIcon } from "../../components/svg/AddIcon";
 import dynamic from "next/dynamic";
 import TableLoading from "../../components/Organisms/loaders/TableLoading";
 import { TableProps } from "../../components/Organisms/table/type";
+import SearchInput from "../../components/Atoms/input/SearchInput";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const LodgersTable = dynamic(
@@ -51,6 +52,10 @@ const Lodgers = () => {
     }));
   }, []);
 
+  const onSearchTable = () => {
+    
+  }
+
   return (
     <Layout>
       {/* -------------- Header Table--------------*/}
@@ -64,6 +69,7 @@ const Lodgers = () => {
         </div>
       </div>
       {/* -------------- Header Table--------------*/}
+      <SearchInput onChangeSearch={onSearchTable} />
       <Suspense fallback={<TableLoading />}>
         <LodgersTable
           data={[]}

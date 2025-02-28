@@ -1,18 +1,16 @@
 import React from "react";
-import { SearchIcon } from "../../svg/SearchIcon";
+import { moneyFormat, paginationPages } from "../../../helpers/helpers";
+import { DeleteIcon } from "../../svg/DeleteIcon";
 import { EditIcon } from "../../svg/EditIcon";
+import { EmptyBoxIcon } from "../../svg/EmptyBoxIcon";
+import { EyeOnIcon } from "../../svg/EyeOnIcon";
 import { NextIcon } from "../../svg/NextIcon";
 import { PreviousIcon } from "../../svg/PreviousIcon";
 import { TableProps } from "./type";
-import { moneyFormat, paginationPages } from "../../../helpers/helpers";
-import { DeleteIcon } from "../../svg/DeleteIcon";
-import { EyeOnIcon } from "../../svg/EyeOnIcon";
-import { EmptyBoxIcon } from "../../svg/EmptyBoxIcon";
 
 const Table = <T,>({
   data,
   columns,
-  isNoQuery,
   handleNextNavigation,
   handlePrevNavigation,
   onSelectTablePage,
@@ -20,7 +18,6 @@ const Table = <T,>({
   onClickDelete,
   onClickView,
   pagination,
-  onChangeSearch
 }: TableProps<T>) => {
   const pages = paginationPages(
     pagination.current,
@@ -40,26 +37,6 @@ const Table = <T,>({
 
   return (
     <div className="relative overflow-x-auto">
-      <div className="pb-4">
-        <label htmlFor="table-search" className="sr-only">
-          Search
-        </label>
-        {!isNoQuery && (
-          <div className="relative mt-1">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-              <SearchIcon />
-            </div>
-            <input
-              type="text"
-              id="table-search"
-              className="w-1/4 p-2.5 pl-10 pr-3 text-sm text-gray-900 border-none outline-none focus:ring-0 focus:border-none rounded-lg"
-              placeholder="Search"
-              onChange={onChangeSearch}
-            />
-          </div>
-        )}
-      </div>
-
       {data.length ? (
         <div className="relative overflow-x-auto rounded-t-md">
           {

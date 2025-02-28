@@ -6,7 +6,6 @@ export interface Column<T> {
 }
 
 export interface TableProps<T> {
-  isNoQuery?: boolean;
   data: T[];
   columns: Column<T>[];
   handleNextNavigation: () => void;

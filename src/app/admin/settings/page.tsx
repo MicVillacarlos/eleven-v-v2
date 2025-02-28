@@ -210,7 +210,6 @@ const Settings = () => {
       {/* -------------- Header Table--------------*/}
       <Suspense fallback={<TableLoading />}>
         <RoomTable<HouseType>
-          isNoQuery
           data={roomDataTable ?? []}
           columns={tableColumns}
           handleNextNavigation={handleNextPagination}
