@@ -192,6 +192,7 @@ const Settings = () => {
       room_type: "",
       price: 0,
     });
+    fetchData()
   }, []);
 
   return (
