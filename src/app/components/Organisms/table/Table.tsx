@@ -36,9 +36,9 @@ const Table = <T,>({
   };
 
   return (
-    <div className="relative overflow-x-auto">
+    <div className="relative overflow-x-auto w-full">
       {data.length ? (
-        <div className="relative overflow-x-auto rounded-t-md">
+        <div className="overflow-x-auto rounded-t-md">
           {
             <table className="w-full text-base text-left rtl:text-right text-gray-500 shadow-sm">
               <thead className="text-sm uppercase bg-[#205072] text-white">
@@ -121,8 +121,8 @@ const Table = <T,>({
           }
 
           {/* {--------------- Start: Pagination Bar -----------------} */}
-          <nav aria-label="Page navigation">
-            <ul className="flex items-center justify-end w-full -space-x-px p-2 text-base rounded-b-md bg-[#205072]">
+          <nav aria-label="Page navigation" className="w-full">
+            <ul className="flex items-center justify-end p-2 text-base w-full rounded-b-md bg-[#205072]">
               <li>
                 <button
                   onClick={handlePrevNavigation}

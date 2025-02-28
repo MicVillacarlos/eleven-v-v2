@@ -1,15 +1,17 @@
-"use client"
-import React, { JSX, Suspense, useCallback, useState } from "react";
+"use client";
+import React, { JSX, Suspense, useCallback, useEffect, useState } from "react";
 import Layout from "../../components/Organisms/layout/Layout";
 import Text3xl from "../../components/Atoms/text/Text3xl";
 import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
 import { AddIcon } from "../../components/svg/AddIcon";
 import dynamic from "next/dynamic";
 import TableLoading from "../../components/Organisms/loaders/TableLoading";
-import { TableProps } from "../../components/Organisms/table/type";
+import { Column, TableProps } from "../../components/Organisms/table/type";
 import SearchInput from "../../components/Atoms/input/SearchInput";
+import { getLodgers } from "../../../lib/admin/api/lodgers/lodger";
+import { Lodger } from "../../../lib/admin/api/lodgers/types";
 
-//---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
+//---Start---Note: Use dynamic(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const LodgersTable = dynamic(
   () => import("../../components/Organisms/table/Table"),
   {
@@ -17,7 +19,7 @@ const LodgersTable = dynamic(
     ssr: false,
   }
 ) as <T>(props: TableProps<T>) => JSX.Element;
-//---End---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
+//---End---Note: Use dynamic(Next Js for Lazy Loading) for components fetching data. This is for optimization
 
 const Lodgers = () => {
   const [pagination, setPagination] = useState({
@@ -25,6 +27,32 @@ const Lodgers = () => {
     limit: 5,
     total: 0,
   });
+  const [lodgerDataTable, setLodgerDataTable] = useState<Lodger[]>();
+
+  const tableColumns: Column<Lodger>[] = [
+    { key: "room_number", label: "Room Number" },
+    { key: "full_name", label: "Full Name" },
+    { key: "age", label: "Age", justify: "right" },
+    { key: "email", label: "Email" },
+    { key: "phone_number", label: "Phone Number" },
+  ];
+
+  const fetchData = async () => {
+    const { data, count } = await getLodgers(
+      "",
+      pagination.current,
+      pagination.limit
+    );
+    setLodgerDataTable(data);
+    setPagination((prevState) => ({
+      ...prevState,
+      total: count,
+    }));
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [pagination.current]);
 
   // ------------------ TABLE FUNCTIONS --------------------
 
@@ -52,9 +80,13 @@ const Lodgers = () => {
     }));
   }, []);
 
-  const onSearchTable = () => {
-    
-  }
+  const onSearchTable = () => {};
+
+  const onClickDeleteLodgerTable = () => {};
+
+  const onClickEditLodgerTable = () => {};
+
+  const onClickViewLodgerTable = () => {};
 
   return (
     <Layout>
@@ -72,12 +104,15 @@ const Lodgers = () => {
       <SearchInput onChangeSearch={onSearchTable} />
       <Suspense fallback={<TableLoading />}>
         <LodgersTable
-          data={[]}
-          columns={[]}
+          data={lodgerDataTable ?? []}
+          columns={tableColumns}
           handleNextNavigation={handlePrevPagination}
           handlePrevNavigation={handleNextPagination}
           onSelectTablePage={onSelectTablePage}
           pagination={pagination}
+          onClickDelete={onClickDeleteLodgerTable}
+          onClickEdit={onClickEditLodgerTable}
+          onClickView={onClickViewLodgerTable}
         />
       </Suspense>
     </Layout>
