@@ -18,8 +18,8 @@ const RoomAddFormContent = ({
   return (
     <>
       <TextInput
-        label="Room Type"
-        placeholder={"Room Type"}
+        label="House Type"
+        placeholder={"House Type"}
         id={"room_type"}
         handleChange={handleChangeForm}
         value={roomType}

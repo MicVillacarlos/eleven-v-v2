@@ -12,7 +12,7 @@ interface RoomEditModalContentProps {
 
 export const RoomEditModalContent: React.FC<RoomEditModalContentProps> = ({
   house,
-  onCloseModal
+  onCloseModal,
 }) => {
   const { showToast } = useToastContext();
 
@@ -44,8 +44,8 @@ export const RoomEditModalContent: React.FC<RoomEditModalContentProps> = ({
             return (
               <div className="" key={item._id}>
                 <TextInput
-                  label="Room Type"
-                  placeholder={"Room Type"}
+                  label="House Type"
+                  placeholder={"House Type"}
                   id={"room_type"}
                   handleChange={handleChangeForm}
                   value={house.room_type}

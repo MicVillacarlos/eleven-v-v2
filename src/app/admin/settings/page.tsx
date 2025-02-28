@@ -119,14 +119,11 @@ const Settings = () => {
     e.preventDefault();
     const { room_type, price, room_number } = addRoomData;
 
-    const roomNumberString = room_number.toString();
+    const roomNumber = `RM${room_number.toString()}`;
+    const roomType = capitalizeFirstLetter(room_type.trim());
 
     try {
-      const result = await addRoom(
-        room_type.trim(),
-        price,
-        `RM${roomNumberString}`
-      );
+      const result = await addRoom(roomType, price, roomNumber);
       if (result.room) {
         showToast("Room added successfully!", "success");
         setAddRoomData({ room_type: "", price: 0, room_number: 0 });
