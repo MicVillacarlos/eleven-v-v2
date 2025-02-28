@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import React, { JSX, useCallback, useEffect, useState } from "react";
+import React, { JSX, Suspense, useCallback, useEffect, useState } from "react";
 import { addRoom, getRooms } from "../../../lib/admin/api/room/room";
 import { AddRoomData, HouseType } from "../../../lib/admin/api/room/types";
 import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
@@ -10,15 +10,19 @@ import ModalForm from "../../components/Organisms/modal/ModalForm";
 import ModalView from "../../components/Organisms/modal/ModalView";
 import { Column, TableProps } from "../../components/Organisms/table/type";
 import { AddIcon } from "../../components/svg/AddIcon";
-import { useToastContext } from "../../utils/providers/ToastProvider";
-import AddRoomFormContent from "./AddRoomFormContent";
-import UpdatePasswordForm from "./UpdatePasswordForm";
 import { capitalizeFirstLetter } from "../../helpers/helpers";
+import { useToastContext } from "../../utils/providers/ToastProvider";
+import RoomAddFormContent from "./RoomAddFormContent";
+import RoomUpdatePasswordForm from "./RoomUpdatePasswordForm";
+import { RoomViewModalContent } from "./RoomViewModalContent";
+import { RoomEditModalContent } from "./RoomEditFormContent copy";
+import TableLoading from "../../components/Organisms/loaders/TableLoading";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const RoomTable = dynamic(
   () => import("../../components/Organisms/table/Table"),
   {
+    loading: () => <TableLoading />,
     ssr: false,
   }
 ) as <T>(props: TableProps<T>) => JSX.Element;
@@ -26,14 +30,23 @@ const RoomTable = dynamic(
 
 const Settings = () => {
   const { showToast } = useToastContext();
+  //-------- Start: Modal view ------------
   const [isAddRoomModal, setIsAddRoomModal] = useState<boolean>(false);
-  const [isViewModal, setIsViewAddModal] = useState<boolean>(false);
+  const [isViewModal, setIsViewModal] = useState<boolean>(false);
+  const [isEditModal, setIsEditModal] = useState<boolean>(false);
+  //-------- End: Modal view ------------
   const [addRoomData, setAddRoomData] = useState<AddRoomData>({
     room_type: "",
     price: 0,
     room_number: 0,
   });
-  const [viewEditRoomData, setViewEditRoomData] = useState<HouseType>();
+  const [viewEditRoomData, setViewEditRoomData] = useState<HouseType>({
+    key: "",
+    total_rooms: 0,
+    rooms: [],
+    room_type: "",
+    price: 0,
+  });
   //----- Start: table states ------
   const [roomDataTable, setRoomDataTable] = useState<HouseType[]>();
   const [pagination, setPagination] = useState({
@@ -48,6 +61,7 @@ const Settings = () => {
     { key: "price", label: "Price", justify: "right", type: "money" },
     { key: "total_rooms", label: "Total Rooms", justify: "right" },
   ];
+
   // ------------------- TABLE Functions---------------------//
 
   const fetchData = async () => {
@@ -134,19 +148,54 @@ const Settings = () => {
   //------------------------- ACTION BUTTONS Functions -------------------------
   const onClickEditAction = (data: HouseType | string) => {
     setViewEditRoomData(data as HouseType);
+    setIsEditModal(true);
   };
 
   const onClickViewAction = (data: HouseType | string) => {
-    setIsViewAddModal(true);
+    setIsViewModal(true);
     setViewEditRoomData(data as HouseType);
   };
 
-  const onCloseModalHandler = () => {
-    setIsViewAddModal(false);
-  };
   //------------------------- MODAL VIEW Functions-------------------------
 
-  const viewModalContent = <></>;
+  const onCloseViewModalHandler = useCallback(() => {
+    setIsViewModal(false);
+    setViewEditRoomData({
+      key: "",
+      total_rooms: 0,
+      rooms: [],
+      room_type: "",
+      price: 0,
+    });
+  }, []);
+
+  //------------------------- MODAL EDIT Functions-------------------------
+
+  const onCloseEditModalHandler = useCallback(() => {
+    setIsEditModal(false);
+    setViewEditRoomData({
+      key: "",
+      total_rooms: 0,
+      rooms: [],
+      room_type: "",
+      price: 0,
+    });
+  }, []);
+
+  const onDeleteRoomHandler = useCallback(() => {
+    setIsEditModal(false);
+    setPagination((prevState) => ({
+      ...prevState,
+      current: 1,
+    }));
+    setViewEditRoomData({
+      key: "",
+      total_rooms: 0,
+      rooms: [],
+      room_type: "",
+      price: 0,
+    });
+  }, []);
 
   return (
     <Layout>
@@ -161,29 +210,30 @@ const Settings = () => {
         </div>
       </div>
       {/* -------------- Header Table--------------*/}
-
-      <RoomTable<HouseType>
-        isNoQuery
-        data={roomDataTable ?? []}
-        columns={tableColumns}
-        handleNextNavigation={handleNextPagination}
-        handlePrevNavigation={handlePrevPagination}
-        onSelectTablePage={onSelectTablePage}
-        pagination={pagination}
-        onClickEdit={onClickEditAction}
-        onClickView={onClickViewAction}
-      />
+      <Suspense fallback={<TableLoading/>}>
+        <RoomTable<HouseType>
+          isNoQuery
+          data={roomDataTable ?? []}
+          columns={tableColumns}
+          handleNextNavigation={handleNextPagination}
+          handlePrevNavigation={handlePrevPagination}
+          onSelectTablePage={onSelectTablePage}
+          pagination={pagination}
+          onClickEdit={onClickEditAction}
+          onClickView={onClickViewAction}
+        />
+      </Suspense>
 
       {/* -------------- Update Password--------------*/}
       <div className="flex w-full justify-between items-center mb-3 mt-20">
         <TableHeader> Admin Change Password</TableHeader>
       </div>
-      <UpdatePasswordForm />
+      <RoomUpdatePasswordForm />
       {/* -------------- Update Password--------------*/}
       <ModalForm
         title="Add Room"
         content={
-          <AddRoomFormContent
+          <RoomAddFormContent
             handleChangeForm={handleChangeForm}
             roomType={addRoomData.room_type}
             roomNumber={addRoomData.room_number}
@@ -195,11 +245,21 @@ const Settings = () => {
         onSubmitForm={onSubmitForm}
       />
       <ModalView
-        content={viewModalContent}
+        content={
+          <RoomEditModalContent
+            house={viewEditRoomData}
+            onCloseModal={onDeleteRoomHandler}
+          />
+        }
+        isOpen={isEditModal}
+        onCloseModal={onCloseEditModalHandler}
+        title={"Edit House"}
+      />
+      <ModalView
+        content={<RoomViewModalContent house={viewEditRoomData} />}
         isOpen={isViewModal}
-        onCloseModal={onCloseModalHandler}
+        onCloseModal={onCloseViewModalHandler}
         title={capitalizeFirstLetter(viewEditRoomData?.room_type ?? "")}
-        widthSize="xl"
       />
     </Layout>
   );

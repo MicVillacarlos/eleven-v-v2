@@ -2,19 +2,19 @@ import React from "react";
 import TextInput from "../../components/Atoms/input/TextInput";
 import NumberInput from "../../components/Atoms/input/NumberInput";
 
-interface AddRoomFormContentProps {
+interface RoomAddFormContentProps {
   handleChangeForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
   roomType: string;
   roomNumber: number;
   price: number;
 }
 
-const AddRoomFormContent = ({
+const RoomAddFormContent = ({
   handleChangeForm,
   roomType,
   roomNumber,
   price,
-}: AddRoomFormContentProps) => {
+}: RoomAddFormContentProps) => {
   return (
     <>
       <TextInput
@@ -47,4 +47,4 @@ const AddRoomFormContent = ({
   );
 };
 
-export default AddRoomFormContent;
+export default RoomAddFormContent;

@@ -31,3 +31,12 @@ export async function addRoom(
   return result;
 }
 
+export async function deleteRooom(
+  id: string,
+): Promise<GetRoomApiResponse> {
+  const result = request<GetRoomApiResponse>(`/admin/room/delete-room/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  return result;
+}
