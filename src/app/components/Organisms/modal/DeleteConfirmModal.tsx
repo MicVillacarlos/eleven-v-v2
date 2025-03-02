@@ -17,7 +17,7 @@ const DeleteModal = (props: ModalPropsType) => {
       aria-hidden="true"
       className={`${
         isOpen ? "" : "hidden"
-      } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-100 flex justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full bg-black bg-opacity-50`}
+      } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-[9999] flex justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full bg-black bg-opacity-50`}
     >
       <div className={`relative w-full max-h-full max-w-md`}>
         <div className="relative rounded-lg shadow-sm bg-white text-black p-7 flex flex-col items-center">
