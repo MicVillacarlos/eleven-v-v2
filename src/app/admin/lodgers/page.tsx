@@ -9,7 +9,12 @@ import TableLoading from "../../components/Organisms/loaders/TableLoading";
 import { Column, TableProps } from "../../components/Organisms/table/type";
 import SearchInput from "../../components/Atoms/input/SearchInput";
 import { getLodgers } from "../../../lib/admin/api/lodgers/lodger";
-import { Lodger } from "../../../lib/admin/api/lodgers/types";
+import {
+  AddEditLodger,
+  FetchLodgerType,
+} from "../../../lib/admin/api/lodgers/types";
+import ModalForm from "../../components/Organisms/modal/ModalForm";
+import LodgerAddEditFormContent from "./LodgerAddEditFormContent";
 
 //---Start---Note: Use dynamic(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const LodgersTable = dynamic(
@@ -27,9 +32,26 @@ const Lodgers = () => {
     limit: 5,
     total: 0,
   });
-  const [lodgerDataTable, setLodgerDataTable] = useState<Lodger[]>();
+  const [lodgerDataTable, setLodgerDataTable] = useState<FetchLodgerType[]>();
+  const [isViewAddEditFormModal, setIsViewAddEditFormModal] =
+    useState<boolean>(false);
+  const [addEditLodgerData, setAddEditLodgerData] = useState<AddEditLodger>({
+    first_name: "",
+    last_name: "",
+    birth_date: "",
+    sex: "",
+    home_address: "",
+    phone_number: 0,
+    email: "",
+    emergency_contact_person: "",
+    emergency_contact_number: 0,
+    occupation: "",
+    company_or_school: "",
+    number_of_room_occupants: 0,
+    room_id: "",
+  });
 
-  const tableColumns: Column<Lodger>[] = [
+  const tableColumns: Column<FetchLodgerType>[] = [
     { key: "room_number", label: "Room Number" },
     { key: "full_name", label: "Full Name" },
     { key: "age", label: "Age", justify: "right" },
@@ -55,6 +77,10 @@ const Lodgers = () => {
   }, [pagination.current]);
 
   // ------------------ TABLE FUNCTIONS --------------------
+
+  const onClickAddLodger = () => {
+    setIsViewAddEditFormModal(true)
+  }
 
   const handleNextPagination = useCallback(() => {
     setPagination((prevState) => {
@@ -82,11 +108,46 @@ const Lodgers = () => {
 
   const onSearchTable = () => {};
 
-  const onClickDeleteLodgerTable = () => {};
+  const onClickDeleteLodgerTable = () => {
+    
+  };
 
   const onClickEditLodgerTable = () => {};
 
   const onClickViewLodgerTable = () => {};
+
+  const onHandleChangeform = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setAddEditLodgerData({
+      ...addEditLodgerData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const onSubmitModalForm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("DATA:", addEditLodgerData)
+  }
+
+  const onCloseModalForm = useCallback(() => {
+    setIsViewAddEditFormModal(false);
+    setAddEditLodgerData({
+      first_name: "",
+      last_name: "",
+      birth_date: "",
+      sex: "",
+      home_address: "",
+      phone_number: 0,
+      email: "",
+      emergency_contact_person: "",
+      emergency_contact_number: 0,
+      occupation: "",
+      company_or_school: "",
+      number_of_room_occupants: 0,
+      room_id: "",
+    });
+  }, []);
 
   return (
     <Layout>
@@ -94,7 +155,7 @@ const Lodgers = () => {
       <div className="flex w-full justify-between items-center mb-3">
         <Text3xl> Lodgers Management </Text3xl>
         <div className="lg:w-[150px]">
-          <PrimaryButton>
+          <PrimaryButton onClick={onClickAddLodger}>
             <AddIcon color="white" />
             Add Lodger
           </PrimaryButton>
@@ -115,6 +176,19 @@ const Lodgers = () => {
           onClickView={onClickViewLodgerTable}
         />
       </Suspense>
+      <ModalForm
+        content={
+          <LodgerAddEditFormContent
+            handleChangeForm={onHandleChangeform}
+            formData={addEditLodgerData}
+          />
+        }
+        isOpen={isViewAddEditFormModal}
+        onSubmitForm={onSubmitModalForm}
+        onCloseModal={onCloseModalForm}
+        title="Add Ldoger"
+        key={'add_edit_lodger'}
+      />
     </Layout>
   );
 };

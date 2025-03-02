@@ -1,5 +1,5 @@
 
-export interface Lodger {
+export interface FetchLodgerType {
   _id: string;
   birth_date: string;
   sex: string;
@@ -18,5 +18,21 @@ export interface Lodger {
 
 export interface GetLodgerResponse {
   count: number;
-  data: Lodger[];
+  data: FetchLodgerType[];
+}
+
+export interface AddEditLodger {
+  first_name: string;
+  last_name: string;
+  birth_date: string; // Consider using Date type if parsing is needed
+  sex: string;
+  home_address: string;
+  phone_number: number;
+  email: string;
+  emergency_contact_person: string;
+  emergency_contact_number: number;
+  occupation: string;
+  company_or_school: string;
+  number_of_room_occupants: number;
+  room_id: string;
 }

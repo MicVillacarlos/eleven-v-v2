@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TextInput from "../../components/Atoms/input/TextInput";
 import NumberInput from "../../components/Atoms/input/NumberInput";
 
@@ -15,6 +15,11 @@ const RoomAddFormContent = ({
   roomNumber,
   price,
 }: RoomAddFormContentProps) => {
+
+  useEffect(() => {
+    
+  }, []);
+  
   return (
     <>
       <TextInput
