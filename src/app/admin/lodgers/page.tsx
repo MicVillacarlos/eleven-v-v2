@@ -8,13 +8,15 @@ import dynamic from "next/dynamic";
 import TableLoading from "../../components/Organisms/loaders/TableLoading";
 import { Column, TableProps } from "../../components/Organisms/table/type";
 import SearchInput from "../../components/Atoms/input/SearchInput";
-import { getLodgers } from "../../../lib/admin/api/lodgers/lodger";
+import { deleteLodger, getLodgers } from "../../../lib/admin/api/lodgers/lodger";
 import {
   AddEditLodger,
   FetchLodgerType,
 } from "../../../lib/admin/api/lodgers/types";
 import ModalForm from "../../components/Organisms/modal/ModalForm";
 import LodgerAddEditFormContent from "./LodgerAddEditFormContent";
+import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
+import { useToastContext } from "../../utils/providers/ToastProvider";
 
 //---Start---Note: Use dynamic(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const LodgersTable = dynamic(
@@ -58,6 +60,10 @@ const Lodgers = () => {
     { key: "email", label: "Email" },
     { key: "phone_number", label: "Phone Number" },
   ];
+
+  const { confirmDeleteModal } = useConfirmDeleteModal();
+  const { showToast } = useToastContext();
+
 
   const fetchData = async () => {
     const { data, count } = await getLodgers(
@@ -106,15 +112,35 @@ const Lodgers = () => {
     }));
   }, []);
 
-  const onSearchTable = () => {};
+  const onSearchTable = () => { 
 
-  const onClickDeleteLodgerTable = () => {
-    
+   };
+  
+  const onConfirmDeleteLodger = async(id:string) => {
+    try {
+      const result = await deleteLodger(id);
+      if (result.data) {
+        showToast("User successfully deleted.", "success");
+        await fetchData(); 
+      }
+    } catch (error) {
+      const errorMessage =
+        (error as { message?: string })?.message ||
+        "An unexpected error occurred.";
+      showToast(errorMessage, "danger");
+    }
+  }
+
+  const onClickDeleteLodgerTable = (data: string | FetchLodgerType) => {
+    const { _id } = data as FetchLodgerType;
+    confirmDeleteModal(()=>onConfirmDeleteLodger(_id))
   };
 
   const onClickEditLodgerTable = () => {};
 
-  const onClickViewLodgerTable = () => {};
+  const onClickViewLodgerTable = () => {
+
+  };
 
   const onHandleChangeform = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

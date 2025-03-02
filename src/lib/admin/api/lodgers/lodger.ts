@@ -15,3 +15,11 @@ export async function getLodgers(
   );
   return result;
 }
+
+export async function deleteLodger(id: string){
+  const result = request(`/admin/lodgers/delete-lodger/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  return result;
+}

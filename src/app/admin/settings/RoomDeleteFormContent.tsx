@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { deleteRooom } from "../../../lib/admin/api/room/room";
 import { useToastContext } from "../../utils/providers/ToastProvider";
-import DeleteConfirmModal from "../../components/Organisms/modal/DeleteConfirmModal";
 import { HouseType } from "../../../lib/admin/api/room/types";
+import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
 
 interface RoomDeleteModalContentProps {
   house: HouseType;
@@ -14,9 +14,9 @@ export const RoomDeleteModalContent: React.FC<RoomDeleteModalContentProps> = ({
   onCloseModal,
 }) => {
   const { showToast } = useToastContext();
-  const [isOpenConfirmDelete, setIsOpenConfirmDelete] =
-    useState<boolean>(false);
   const [deleteItemId, setDeleteItemId] = useState<string>("");
+
+  const { confirmDeleteModal } = useConfirmDeleteModal();
 
   const onDeleteRoom = async () => {
     try {
@@ -30,12 +30,11 @@ export const RoomDeleteModalContent: React.FC<RoomDeleteModalContentProps> = ({
         "An unexpected error occurred.";
       showToast(errorMessage, "danger");
     }
-    setIsOpenConfirmDelete(false);
     onCloseModal();
   };
 
   const onPressDelete = (id: string) => {
-    setIsOpenConfirmDelete(true);
+    confirmDeleteModal(onDeleteRoom);
     setDeleteItemId(id);
   };
 
@@ -70,11 +69,6 @@ export const RoomDeleteModalContent: React.FC<RoomDeleteModalContentProps> = ({
           }
         )}
       </div>
-      <DeleteConfirmModal
-        isOpen={isOpenConfirmDelete}
-        onCancelModalHandler={() => setIsOpenConfirmDelete(false)}
-        onDeleteModalHandler={() => onDeleteRoom()}
-      />
     </div>
   );
 };
