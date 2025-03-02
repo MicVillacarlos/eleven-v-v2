@@ -38,89 +38,96 @@ const Table = <T,>({
   return (
     <div className="relative overflow-x-auto w-full">
       {data.length ? (
-        <div className="overflow-x-auto rounded-t-md">
-          {
-            <table className="w-full text-base text-left rtl:text-right text-gray-500 shadow-sm">
-              <thead className="text-sm uppercase bg-[#205072] text-white">
-                <tr>
-                  {columns.map((col) => (
-                    <th
-                      key={String(col.key)}
-                      scope="col"
-                      className={`px-6 py-3 ${
-                        col.justify === "right" ? "text-right" : "text-left"
-                      }`}
-                    >
-                      {col.label}
-                    </th>
-                  ))}
-                  {(onClickView || onClickDelete || onClickEdit) && (
-                    <th className="px-6 py-3 text-center">Actions</th>
-                  )}
-                </tr>
-              </thead>
-
-              <tbody>
-                {data.map((item, index) => (
-                  <tr key={index} className="bg-white border-b border-gray-200">
+        <>
+          <div className="overflow-x-auto rounded-t-md">
+            {
+              <table className="w-full text-base text-left rtl:text-right text-gray-500 shadow-sm">
+                <thead className="text-sm uppercase bg-[#205072] text-white">
+                  <tr>
                     {columns.map((col) => (
-                      <td
+                      <th
                         key={String(col.key)}
-                        className={`px-6 py-4 ${
+                        scope="col"
+                        className={`px-6 py-3 ${
                           col.justify === "right" ? "text-right" : "text-left"
                         }`}
                       >
-                        {getCellContent(item, col)}
-                      </td>
+                        {col.label}
+                      </th>
                     ))}
-
                     {(onClickView || onClickDelete || onClickEdit) && (
-                      <td className="flex justify-center px-6 py-4 space-x-2">
-                        {onClickView && (
-                          <button
-                            onClick={() => onClickView(item)}
-                            className="hover:bg-gray-100 hover:text-gray-700"
-                          >
-                            <EyeOnIcon size={25} />
-                          </button>
-                        )}
-
-                        {onClickEdit && (
-                          <>
-                            {onClickView && (
-                              <div className="w-px self-stretch bg-gray-300 opacity-25" />
-                            )}
-                            <button
-                              onClick={() => onClickEdit(item)}
-                              className="hover:bg-gray-100 hover:text-gray-700"
-                            >
-                              <EditIcon />
-                            </button>
-                          </>
-                        )}
-
-                        {onClickDelete && (
-                          <>
-                            {(onClickView || onClickEdit) && (
-                              <div className="w-px self-stretch bg-gray-300 opacity-25" />
-                            )}
-                            <button
-                              onClick={() => onClickDelete(item)}
-                              className="hover:bg-gray-100 hover:text-gray-700"
-                            >
-                              <DeleteIcon />
-                            </button>
-                          </>
-                        )}
-                      </td>
+                      <th className="px-6 py-3 text-center">Actions</th>
                     )}
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          }
+                </thead>
 
-          {/* {--------------- Start: Pagination Bar -----------------} */}
+                <tbody>
+                  {data.map((item, index) => (
+                    <tr
+                      key={index}
+                      className="bg-white border-b border-gray-200"
+                    >
+                      {columns.map((col) => (
+                        <td
+                          key={String(col.key)}
+                          className={`px-6 py-4 ${
+                            col.justify === "right" ? "text-right" : "text-left"
+                          }`}
+                        >
+                          {getCellContent(item, col)}
+                        </td>
+                      ))}
+
+                      {(onClickView || onClickDelete || onClickEdit) && (
+                        <td className="flex justify-center px-6 py-4 space-x-2">
+                          {onClickView && (
+                            <button
+                              onClick={() => onClickView(item)}
+                              className="hover:bg-gray-100 hover:text-gray-700"
+                            >
+                              <EyeOnIcon size={25} />
+                            </button>
+                          )}
+
+                          {onClickEdit && (
+                            <>
+                              {onClickView && (
+                                <div className="w-px self-stretch bg-gray-300 opacity-25" />
+                              )}
+                              <button
+                                onClick={() => onClickEdit(item)}
+                                className="hover:bg-gray-100 hover:text-gray-700"
+                              >
+                                <EditIcon />
+                              </button>
+                            </>
+                          )}
+
+                          {onClickDelete && (
+                            <>
+                              {(onClickView || onClickEdit) && (
+                                <div className="w-px self-stretch bg-gray-300 opacity-25" />
+                              )}
+                              <button
+                                onClick={() => onClickDelete(item)}
+                                className="hover:bg-gray-100 hover:text-gray-700"
+                              >
+                                <DeleteIcon />
+                              </button>
+                            </>
+                          )}
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            }
+
+            {/* {--------------- Start: Pagination Bar -----------------} */}
+
+            {/* {--------------- End: Pagination Bar -----------------} */}
+          </div>
           <nav aria-label="Page navigation" className="w-full">
             <ul className="flex items-center justify-end p-2 text-base w-full rounded-b-md bg-[#205072]">
               <li>
@@ -139,11 +146,11 @@ const Table = <T,>({
                     <button
                       onClick={() => onSelectTablePage(item)}
                       className={`flex items-center justify-center px-3 h-8 leading-tight border cursor-pointer
-                      ${
-                        isActive
-                          ? "z-10 text-blue-600 border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-gray-700"
-                          : "text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                      }`}
+                   ${
+                     isActive
+                       ? "z-10 text-blue-600 border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-gray-700"
+                       : "text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                   }`}
                     >
                       {item}
                     </button>
@@ -161,8 +168,7 @@ const Table = <T,>({
               </li>
             </ul>
           </nav>
-          {/* {--------------- End: Pagination Bar -----------------} */}
-        </div>
+        </>
       ) : (
         <div className="w-full bg-white rounded-lg h-[300px] flex flex-col justify-center items-center">
           <EmptyBoxIcon size={70} color="#9ca3af" />

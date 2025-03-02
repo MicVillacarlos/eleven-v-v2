@@ -8,7 +8,11 @@ import dynamic from "next/dynamic";
 import TableLoading from "../../components/Organisms/loaders/TableLoading";
 import { Column, TableProps } from "../../components/Organisms/table/type";
 import SearchInput from "../../components/Atoms/input/SearchInput";
-import { deleteLodger, getLodgers } from "../../../lib/admin/api/lodgers/lodger";
+import {
+  addLodger,
+  deleteLodger,
+  getLodgers,
+} from "../../../lib/admin/api/lodgers/lodger";
 import {
   AddEditLodger,
   FetchLodgerType,
@@ -17,6 +21,7 @@ import ModalForm from "../../components/Organisms/modal/ModalForm";
 import LodgerAddEditFormContent from "./LodgerAddEditFormContent";
 import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
 import { useToastContext } from "../../utils/providers/ToastProvider";
+import { formatNumberToString, formatStringToNumber } from "../../helpers/helpers";
 
 //---Start---Note: Use dynamic(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const LodgersTable = dynamic(
@@ -49,7 +54,7 @@ const Lodgers = () => {
     emergency_contact_number: 0,
     occupation: "",
     company_or_school: "",
-    number_of_room_occupants: 0,
+    number_of_room_occupants: "",
     room_id: "",
   });
 
@@ -63,7 +68,6 @@ const Lodgers = () => {
 
   const { confirmDeleteModal } = useConfirmDeleteModal();
   const { showToast } = useToastContext();
-
 
   const fetchData = async () => {
     const { data, count } = await getLodgers(
@@ -85,8 +89,8 @@ const Lodgers = () => {
   // ------------------ TABLE FUNCTIONS --------------------
 
   const onClickAddLodger = () => {
-    setIsViewAddEditFormModal(true)
-  }
+    setIsViewAddEditFormModal(true);
+  };
 
   const handleNextPagination = useCallback(() => {
     setPagination((prevState) => {
@@ -112,52 +116,9 @@ const Lodgers = () => {
     }));
   }, []);
 
-  const onSearchTable = () => { 
+  const onSearchTable = () => { };
 
-   };
-  
-  const onConfirmDeleteLodger = async(id:string) => {
-    try {
-      const result = await deleteLodger(id);
-      if (result.data) {
-        showToast("User successfully deleted.", "success");
-        await fetchData(); 
-      }
-    } catch (error) {
-      const errorMessage =
-        (error as { message?: string })?.message ||
-        "An unexpected error occurred.";
-      showToast(errorMessage, "danger");
-    }
-  }
-
-  const onClickDeleteLodgerTable = (data: string | FetchLodgerType) => {
-    const { _id } = data as FetchLodgerType;
-    confirmDeleteModal(()=>onConfirmDeleteLodger(_id))
-  };
-
-  const onClickEditLodgerTable = () => {};
-
-  const onClickViewLodgerTable = () => {
-
-  };
-
-  const onHandleChangeform = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setAddEditLodgerData({
-      ...addEditLodgerData,
-      [e.target.id]: e.target.value,
-    });
-  };
-
-  const onSubmitModalForm = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("DATA:", addEditLodgerData)
-  }
-
-  const onCloseModalForm = useCallback(() => {
-    setIsViewAddEditFormModal(false);
+  const resetAddEditLodgerData = () => {
     setAddEditLodgerData({
       first_name: "",
       last_name: "",
@@ -170,9 +131,96 @@ const Lodgers = () => {
       emergency_contact_number: 0,
       occupation: "",
       company_or_school: "",
-      number_of_room_occupants: 0,
+      number_of_room_occupants: "",
       room_id: "",
     });
+    setIsViewAddEditFormModal(false)
+  }
+
+  const onConfirmDeleteLodger = async (id: string) => {
+    try {
+      const result = await deleteLodger(id);
+      if (result.data) {
+        showToast("User successfully deleted.", "success");
+        await fetchData();
+      }
+    } catch (error) {
+      const errorMessage =
+        (error as { message?: string })?.message ||
+        "An unexpected error occurred.";
+      showToast(errorMessage, "danger");
+    }
+  };
+
+  const onClickDeleteLodgerTable = (data: string | FetchLodgerType) => {
+    const { _id } = data as FetchLodgerType;
+    confirmDeleteModal(() => onConfirmDeleteLodger(_id));
+  };
+
+  const onClickEditLodgerTable = () => {};
+
+  const onClickViewLodgerTable = () => {};
+
+  const onHandleChangeform = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setAddEditLodgerData({
+      ...addEditLodgerData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const onSubmitModalForm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const {
+      first_name,
+      last_name,
+      birth_date,
+      sex,
+      home_address,
+      phone_number,
+      email,
+      emergency_contact_person,
+      emergency_contact_number,
+      occupation,
+      company_or_school,
+      number_of_room_occupants,
+      room_id,
+    } = addEditLodgerData;
+
+    try {
+      const result = await addLodger(
+        first_name,
+        last_name,
+        birth_date,
+        sex,
+        home_address,
+        formatNumberToString(phone_number, "+63"),
+        email,
+        emergency_contact_person,
+        formatNumberToString(emergency_contact_number, "+63"),
+        occupation,
+        company_or_school,
+        formatStringToNumber(number_of_room_occupants),
+        room_id
+      );
+
+      
+      if (result.user) {
+        showToast("Successfully added a new Lodger.", "success");
+        resetAddEditLodgerData();
+        fetchData();
+      }
+    } catch (error) {
+      const errorMessage =
+        (error as { message?: string })?.message ||
+        "An unexpected error occurred.";
+      showToast(errorMessage, "danger");
+    }
+  };
+
+  const onCloseModalForm = useCallback(() => {
+    resetAddEditLodgerData();
   }, []);
 
   return (
@@ -212,8 +260,8 @@ const Lodgers = () => {
         isOpen={isViewAddEditFormModal}
         onSubmitForm={onSubmitModalForm}
         onCloseModal={onCloseModalForm}
-        title="Add Ldoger"
-        key={'add_edit_lodger'}
+        title="Add Lodger"
+        key={"add_edit_lodger"}
       />
     </Layout>
   );

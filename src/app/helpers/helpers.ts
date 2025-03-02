@@ -25,3 +25,11 @@ export const capitalizeFirstLetter = (str: string): string => {
   if (!str) return ""; 
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export const formatNumberToString = (number: number, prefix?: string) => {
+  return prefix + number.toString();
+};
+
+export const formatStringToNumber = (string: string) => {
+  return Number(string);
+}

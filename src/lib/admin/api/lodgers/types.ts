@@ -24,7 +24,7 @@ export interface GetLodgerResponse {
 export interface AddEditLodger {
   first_name: string;
   last_name: string;
-  birth_date: string; // Consider using Date type if parsing is needed
+  birth_date: string;
   sex: string;
   home_address: string;
   phone_number: number;
@@ -33,6 +33,6 @@ export interface AddEditLodger {
   emergency_contact_number: number;
   occupation: string;
   company_or_school: string;
-  number_of_room_occupants: number;
+  number_of_room_occupants: string;
   room_id: string;
 }

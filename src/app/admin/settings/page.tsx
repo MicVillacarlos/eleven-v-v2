@@ -10,7 +10,7 @@ import ModalForm from "../../components/Organisms/modal/ModalForm";
 import ModalView from "../../components/Organisms/modal/ModalView";
 import { Column, TableProps } from "../../components/Organisms/table/type";
 import { AddIcon } from "../../components/svg/AddIcon";
-import { capitalizeFirstLetter } from "../../helpers/helpers";
+import { capitalizeFirstLetter, formatNumberToString } from "../../helpers/helpers";
 import { useToastContext } from "../../utils/providers/ToastProvider";
 import RoomAddFormContent from "./RoomAddFormContent";
 import RoomUpdatePasswordForm from "./RoomUpdatePasswordForm";
@@ -119,7 +119,7 @@ const Settings = () => {
     e.preventDefault();
     const { room_type, price, room_number } = addRoomData;
 
-    const roomNumber = `RM${room_number.toString()}`;
+    const roomNumber =  formatNumberToString(room_number, "RM");
     const roomType = capitalizeFirstLetter(room_type.trim());
 
     try {

@@ -1,18 +1,24 @@
 "use client";
 import React, { createContext, useCallback, useContext, useState } from "react";
-import DeleteModal from "../../components/Organisms/modal/DeleteConfirmModal";
+import DeleteConfirmModal from "../../components/Organisms/modal/DeleteConfirmModal";
 
 interface ConfirmDeleteModalContextProps {
   confirmDeleteModal: (onDelete: () => void) => void;
 }
 
-const ConfirmDeleteModalContext = createContext<ConfirmDeleteModalContextProps | undefined>(
-  undefined
-);
+const ConfirmDeleteModalContext = createContext<
+  ConfirmDeleteModalContextProps | undefined
+>(undefined);
 
-export const ConfirmDeleteModalProvider = ({ children }: { children: React.ReactNode }) => {
+export const ConfirmDeleteModalProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [isShow, setIsShow] = useState<boolean>(false);
-  const [onDeleteCallback, setOnDeleteCallback] = useState<() => void>(() => () => {});
+  const [onDeleteCallback, setOnDeleteCallback] = useState<() => void>(
+    () => () => {}
+  );
 
   const confirmDeleteModal = useCallback((onDelete: () => void) => {
     setIsShow(true);
@@ -22,7 +28,7 @@ export const ConfirmDeleteModalProvider = ({ children }: { children: React.React
   return (
     <ConfirmDeleteModalContext.Provider value={{ confirmDeleteModal }}>
       {children}
-      <DeleteModal
+      <DeleteConfirmModal
         isOpen={isShow}
         onCancelModalHandler={() => setIsShow(false)}
         onDeleteModalHandler={() => {
@@ -37,7 +43,9 @@ export const ConfirmDeleteModalProvider = ({ children }: { children: React.React
 export const useConfirmDeleteModal = () => {
   const context = useContext(ConfirmDeleteModalContext);
   if (!context) {
-    throw new Error("useConfirmDeleteModal must be used within a ConfirmDeleteModalProvider");
+    throw new Error(
+      "useConfirmDeleteModal must be used within a ConfirmDeleteModalProvider"
+    );
   }
   return context;
 };

@@ -7,7 +7,7 @@ interface ModalPropsType {
   onDeleteModalHandler: () => void;
 }
 
-const DeleteModal = (props: ModalPropsType) => {
+const DeleteConfirmModal = (props: ModalPropsType) => {
   const { isOpen, onCancelModalHandler, onDeleteModalHandler } = props;
 
   return (
@@ -22,7 +22,7 @@ const DeleteModal = (props: ModalPropsType) => {
       <div className={`relative w-full max-h-full max-w-md`}>
         <div className="relative rounded-lg shadow-sm bg-white text-black p-7 flex flex-col items-center">
           <WarningIcon size={80} color={"#D2122E"} />
-          <p className="text-lg font-bold">Are you sure?</p>
+          <p className="text-2xl font-bold mb-2">Are you sure?</p>
           <p className="text-base mb-8">
             Deleting this is irreversible, you can not retrieve it back.
           </p>
@@ -49,4 +49,4 @@ const DeleteModal = (props: ModalPropsType) => {
   );
 };
 
-export default DeleteModal;
+export default DeleteConfirmModal;
