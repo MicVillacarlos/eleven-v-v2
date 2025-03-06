@@ -1,5 +1,5 @@
 "use client";
-
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useWindowSize } from "../../../utils/hooks/hooks";
 import { DashboardIcon } from "../../svg/DashboardIcon";
@@ -30,29 +30,21 @@ export default function Layout({
     setIsSidebarOpen(!isSideBarOpen);
   };
 
+  const pathname = usePathname();
+
   const SideBarOptions = [
     {
       key: 1,
       label: "Dashboard",
-      href: "dashboard",
+      href: "/admin/dashboard",
       icon: <DashboardIcon />,
     },
-    {
-      key: 2,
-      label: "Lodgers",
-      href: "lodgers",
-      icon: <LodgersIcon />,
-    },
-    {
-      key: 3,
-      label: "Bills",
-      href: "bills",
-      icon: <BillsIcon />,
-    },
+    { key: 2, label: "Lodgers", href: "/admin/lodgers", icon: <LodgersIcon /> },
+    { key: 3, label: "Bills", href: "/admin/bills", icon: <BillsIcon /> },
     {
       key: 4,
       label: "Settings",
-      href: "settings",
+      href: "/admin/settings",
       icon: <SettingsIcon />,
     },
     {
@@ -86,34 +78,36 @@ export default function Layout({
       >
         <div className="h-full px-8 py-2 overflow-y-auto">
           <a className="py-[48] flex items-center ps-2.5 mb-5">
-            {/* <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-              ELEVEN V
-            </span> */}
             <img src="/elevenv-logo.svg" alt="Eleven V Logo" />
           </a>
           <ul className="space-y-3 font-semibold">
-            {SideBarOptions.map((item) => (
-              <React.Fragment key={item.key}>
-                {" "}
-                {/* ✅ Add a unique key here */}
-                <li>
-                  <a
-                    href={item.href}
-                    className="flex items-center p-2 text-[#7996AA] rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                  >
-                    <span className="w-[50px] flex items-center justify-start">
-                      {item.icon}
-                    </span>
+            {SideBarOptions.map((item) => {
+              const isActive =
+                pathname === item.href || pathname.startsWith(item.href);
 
-                    <span className="">{item.label}</span>
-                  </a>
-                </li>
-                {/* ✅ Insert a line break (hr) after "Bills" */}
-                {item.label === "Bills" && (
-                  <hr className="border-[#7996AA] dark:border-gray-600" />
-                )}
-              </React.Fragment>
-            ))}
+              return (
+                <React.Fragment key={item.key}>
+                  <li>
+                    <a
+                      href={item.href}
+                      className={`flex items-center p-2 rounded-lg group transition-all ${
+                        isActive
+                          ? "bg-gray-100 text-[#7996AA] shadow-xs"
+                          : "text-[#7996AA] hover:bg-gray-100"
+                      }`}
+                    >
+                      <span className="w-[50px] flex items-center justify-start">
+                        {item.icon}
+                      </span>
+                      <span>{item.label}</span>
+                    </a>
+                  </li>
+                  {item.label === "Bills" && (
+                    <hr className="border-[#7996AA] dark:border-gray-600" />
+                  )}
+                </React.Fragment>
+              );
+            })}
           </ul>
         </div>
       </aside>
