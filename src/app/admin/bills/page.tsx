@@ -11,6 +11,9 @@ import SearchInput from "../../components/Atoms/input/SearchInput";
 import ModalForm from "../../components/Organisms/modal/ModalForm";
 import BillAddEditFormContent from "./BillAddEditFormContent";
 import { AddEditBillFormData } from "../../../lib/admin/api/bills/types";
+import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
+import { useToastContext } from "../../utils/providers/ToastProvider";
+import { createBill } from "../../../lib/admin/api/bills/bills";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const BillsTable = dynamic(
@@ -43,6 +46,9 @@ const Bills = () => {
     limit: 5,
     total: 0,
   });
+
+  const { confirmDeleteModal } = useConfirmDeleteModal();
+  const { showToast } = useToastContext();
 
   const resetAddEditBillData = () => {
     setBillAddEditData({
@@ -98,8 +104,45 @@ const Bills = () => {
     resetAddEditBillData();
   };
 
-  const onSubmitAddEditBill = (e: React.FormEvent) => {
+  const onSubmitAddEditBill = async (e: React.FormEvent) => {
     e.preventDefault();
+    const {
+      add_on,
+      current_bill,
+      due_date,
+      lodger_id,
+      monthly_given_bill,
+      past_reading,
+      present_reading,
+      reading_end_date,
+      reading_start_date,
+      type_of_bill,
+    } = billAddEditData;
+    try {
+      const result = await createBill(
+        due_date,
+        past_reading,
+        present_reading,
+        current_bill,
+        monthly_given_bill,
+        type_of_bill,
+        add_on,
+        reading_end_date,
+        reading_start_date,
+        lodger_id
+      );
+
+      if (result.success) {
+        showToast("Bill added successfully!", "success");
+        resetAddEditBillData();
+        setIsViewAddEditBillModal(false);
+      }
+    } catch (error) {
+      const errorMessage =
+        (error as { message?: string })?.message ||
+        "An unexpected error occurred.";
+      showToast(errorMessage, "danger");
+    }
   };
 
   const onHandleChangeform = (
