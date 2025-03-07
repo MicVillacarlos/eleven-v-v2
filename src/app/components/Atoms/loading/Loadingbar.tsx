@@ -1,10 +1,13 @@
 import React from "react";
+import clsx from "clsx";
 
-const Loadingbar = () => {
+interface LoadingbarProps {
+  color?: string;
+}
+
+const Loadingbar: React.FC<LoadingbarProps> = ({ color }) => {
   return (
-    <div
-      className={`animate-pulse h-9 rounded bg-gray-300`}
-    ></div>
+    <div className={clsx("animate-pulse h-9 rounded", color || "bg-gray-300")} />
   );
 };
 

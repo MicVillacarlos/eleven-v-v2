@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import TextInput from "../../components/Atoms/input/TextInput";
 import SelectInput from "../../components/Atoms/input/SelectInput";
 import NumberInput from "../../components/Atoms/input/NumberInput";
 import DateInput from "../../components/Atoms/input/DateInput";
 import { AddEditLodger } from "../../../lib/admin/api/lodgers/types";
 import { GetRoomAvailablesObject } from "../../../lib/admin/api/room/types";
-import { getAvailableRooms } from "../../../lib/admin/api/room/room";
 
 interface LodgerAddEditFormContentProps {
-  handleChangeForm: (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) => void;
+  handleChangeForm: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
   formData: AddEditLodger;
+  availableRooms: GetRoomAvailablesObject[];
 }
 
 const LodgerAddEditFormContent = ({
   handleChangeForm,
   formData,
+  availableRooms,
 }: LodgerAddEditFormContentProps) => {
-  const [availableRooms, setAvailableRooms] =
-    useState<GetRoomAvailablesObject[]>([{ _id: "", value: "", name: "" }]);
   const {
     birth_date,
     company_or_school,
@@ -46,15 +47,7 @@ const LodgerAddEditFormContent = ({
     { _id: "1", value: "male", name: "Male" },
     { _id: "2", value: "female", name: "Female" },
   ];
-
-  useEffect(() => {
-    const fetchAvailableRooms = async () => {
-      const rooms = await getAvailableRooms();
-      setAvailableRooms(rooms.data);
-    };
-
-    fetchAvailableRooms();
-  }, []);
+  
 
   return (
     <div className="flex flex-col">

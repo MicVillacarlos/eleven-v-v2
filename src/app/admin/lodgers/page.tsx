@@ -22,6 +22,8 @@ import LodgerAddEditFormContent from "./LodgerAddEditFormContent";
 import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
 import { useToastContext } from "../../utils/providers/ToastProvider";
 import { formatNumberToString, formatStringToNumber } from "../../helpers/helpers";
+import { getAvailableRooms } from "../../../lib/admin/api/room/room";
+import { GetRoomAvailablesObject } from "../../../lib/admin/api/room/types";
 
 //---Start---Note: Use dynamic(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const LodgersTable = dynamic(
@@ -42,6 +44,9 @@ const Lodgers = () => {
   const [lodgerDataTable, setLodgerDataTable] = useState<FetchLodgerType[]>();
   const [isViewAddEditFormModal, setIsViewAddEditFormModal] =
     useState<boolean>(false);
+  const [availableRooms, setAvailableRooms] = useState<
+    GetRoomAvailablesObject[]
+  >([{ _id: "", value: "", name: "" }]);
   const [addEditLodgerData, setAddEditLodgerData] = useState<AddEditLodger>({
     first_name: "",
     last_name: "",
@@ -85,6 +90,17 @@ const Lodgers = () => {
   useEffect(() => {
     fetchData();
   }, [pagination.current]);
+
+  useEffect(() => {
+    const fetchAvailableRooms = async () => {
+      const rooms = await getAvailableRooms();
+      setAvailableRooms(rooms.data);
+    };
+
+    if (isViewAddEditFormModal) {
+      fetchAvailableRooms();
+    }
+  }, [isViewAddEditFormModal]);
 
   // ------------------ TABLE FUNCTIONS --------------------
 
@@ -255,6 +271,7 @@ const Lodgers = () => {
           <LodgerAddEditFormContent
             handleChangeForm={onHandleChangeform}
             formData={addEditLodgerData}
+            availableRooms={availableRooms}
           />
         }
         isOpen={isViewAddEditFormModal}
