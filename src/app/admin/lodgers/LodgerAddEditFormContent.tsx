@@ -47,6 +47,7 @@ const LodgerAddEditFormContent = ({
     { _id: "1", value: "male", name: "Male" },
     { _id: "2", value: "female", name: "Female" },
   ];
+  
 
   return (
     <div className="flex flex-col">

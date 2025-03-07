@@ -1,5 +1,5 @@
 import { request } from "../../base-api";
-import { AddEditLodger, GetLodgerResponse } from "./types";
+import { AddEditLodger, GetLodgerResponse, LodgerOption } from "./types";
 
 export async function getLodgers(
   search: string,
@@ -39,36 +39,34 @@ export async function addLodger(
   number_of_room_occupants: number,
   room_id: string
 ): Promise<{ user: AddEditLodger }> {
-  const result = request<{ user: AddEditLodger }>(`/admin/lodgers/create-lodger`, {
-    method: "POST",
-    body: JSON.stringify({
-      first_name,
-      last_name,
-      birth_date,
-      sex,
-      home_address,
-      phone_number,
-      email,
-      emergency_contact_person,
-      emergency_contact_number,
-      occupation,
-      company_or_school,
-      number_of_room_occupants,
-      room_id,
-    }),
+  const result = request<{ user: AddEditLodger }>(
+    `/admin/lodgers/create-lodger`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        first_name,
+        last_name,
+        birth_date,
+        sex,
+        home_address,
+        phone_number,
+        email,
+        emergency_contact_person,
+        emergency_contact_number,
+        occupation,
+        company_or_school,
+        number_of_room_occupants,
+        room_id,
+      }),
+    }
+  );
+  return result;
+}
+
+export async function getLodgersOption(): Promise<LodgerOption[]> {
+  const result = request<LodgerOption[]>(`/admin/lodgers/get-lodgers-option`, {
+    method: "GET",
+    credentials: "include",
   });
-  console.log(      first_name,
-    last_name,
-    birth_date,
-    sex,
-    home_address,
-    phone_number,
-    email,
-    emergency_contact_person,
-    emergency_contact_number,
-    occupation,
-    company_or_school,
-    number_of_room_occupants,
-    room_id,)
   return result;
 }

@@ -36,3 +36,10 @@ export interface AddEditLodger {
   number_of_room_occupants: string;
   room_id: string;
 }
+
+export interface LodgerOption {
+  name: string;
+  value: string;
+  _id: string;
+}
+
