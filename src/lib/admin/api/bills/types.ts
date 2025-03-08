@@ -10,8 +10,8 @@ export interface Bill {
   type_of_bill: string;
   lodger: Lodger;
   due_date: string;
-  reading_start_date: string;
-  reading_end_date: string;
+  past_reading_date: string;
+  present_reading_date: string;
   present_reading: number;
   past_reading: number;
   current_bill: number;
@@ -30,8 +30,8 @@ export interface Bill {
 export interface AddEditBillFormData {
   type_of_bill: "electricity" | "water" | "rent" | "";
   lodger_id: string;
-  reading_start_date: string;
-  reading_end_date: string;
+  past_reading_date: string;
+  present_reading_date: string;
   present_reading: number;
   past_reading: number;
   current_bill: number;

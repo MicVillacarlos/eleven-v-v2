@@ -9,8 +9,8 @@ export async function createBill(
   monthly_given_bill: number,
   type_of_bill: string,
   add_on: number,
-  reading_end_date: string,
-  reading_start_date: string,
+  present_reading_date: string,
+  past_reading_date: string,
   lodger_id: string
 ): Promise<{ success: boolean; bill: Bill }> {
   const result = await request<{ success: boolean; bill: Bill }>(
@@ -28,8 +28,8 @@ export async function createBill(
         monthly_given_bill,
         type_of_bill,
         add_on,
-        reading_end_date,
-        reading_start_date,
+        present_reading_date,
+        past_reading_date,
         lodger_id,
       }),
     }

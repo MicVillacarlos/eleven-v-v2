@@ -32,8 +32,8 @@ const Bills = () => {
   const [billAddEditData, setBillAddEditData] = useState<AddEditBillFormData>({
     type_of_bill: "",
     lodger_id: "",
-    reading_start_date: "",
-    reading_end_date: "",
+    past_reading_date: "",
+    present_reading_date: "",
     present_reading: 0,
     past_reading: 0,
     current_bill: 0,
@@ -54,8 +54,8 @@ const Bills = () => {
     setBillAddEditData({
       type_of_bill: "",
       lodger_id: "",
-      reading_start_date: "",
-      reading_end_date: "",
+      past_reading_date: "",
+      present_reading_date: "",
       present_reading: 0,
       past_reading: 0,
       current_bill: 0,
@@ -114,8 +114,8 @@ const Bills = () => {
       monthly_given_bill,
       past_reading,
       present_reading,
-      reading_end_date,
-      reading_start_date,
+      present_reading_date,
+      past_reading_date,
       type_of_bill,
     } = billAddEditData;
     try {
@@ -127,8 +127,8 @@ const Bills = () => {
         monthly_given_bill,
         type_of_bill,
         add_on,
-        reading_end_date,
-        reading_start_date,
+        present_reading_date,
+        past_reading_date,
         lodger_id
       );
 

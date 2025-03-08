@@ -3,13 +3,13 @@ import React, { useEffect, useMemo, useState } from "react";
 import { AddEditBillFormData } from "../../../lib/admin/api/bills/types";
 import SelectInput from "../../components/Atoms/input/SelectInput";
 import DividerHorizontal from "../../components/Atoms/others/DividerHorizontal";
-import {
-  LodgerOption,
-} from "../../../lib/admin/api/lodgers/types";
+import { LodgerOption } from "../../../lib/admin/api/lodgers/types";
 import { getLodgersOption } from "../../../lib/admin/api/lodgers/lodger";
 import DateInput from "../../components/Atoms/input/DateInput";
 import NumberInput from "../../components/Atoms/input/NumberInput";
 import { moneyFormat } from "../../helpers/helpers";
+import { config } from "../../../config/config";
+import moment from "moment";
 
 interface BillAddEditFormContentProps {
   handleChangeForm: (
@@ -29,14 +29,14 @@ const BillAddEditFormContent = ({
   const {
     type_of_bill,
     lodger_id,
-    reading_start_date,
-    reading_end_date,
+    past_reading_date,
+    present_reading_date,
     past_reading,
     present_reading,
     current_bill,
     monthly_given_bill,
     due_date,
-    add_on
+    add_on,
   } = formData;
 
   const billTypeOptions = [
@@ -64,25 +64,24 @@ const BillAddEditFormContent = ({
     ) {
       const differenceReading = present_reading - past_reading;
       const billQuotient = current_bill / monthly_given_bill;
-      const totalAddOn = billQuotient + add_on;
-
-      const billAmount = differenceReading * totalAddOn;
+      const totalAddOn = billQuotient + Number(add_on);
+      const billAmount = Math.round(differenceReading * totalAddOn * 100) / 100;
       return moneyFormat(billAmount);
     } else {
       return 0;
     }
   }, [add_on, current_bill, monthly_given_bill, past_reading, present_reading]);
-  
+
   const electricityWaterForm = (
     <div>
       <div className="flex w-full gap-5">
         <div className="w-1/2">
           <DateInput
             handleChange={handleChangeForm}
-            id="reading_start_date"
-            placeholder="Reading Start Date"
-            value={reading_start_date}
-            label="Reading Start Date"
+            id="past_reading_date"
+            placeholder="Past Reading Date"
+            value={past_reading_date}
+            label="Past Reading Date"
             required
           />
           <DateInput
@@ -91,16 +90,18 @@ const BillAddEditFormContent = ({
             placeholder="Due Date"
             value={due_date}
             label="Due Date"
+            minDate={moment().tz(config.timezone!).format("YYYY-MM-DD")}
+            maxDate={moment().tz(config.timezone!).add(3, 'month').format("YYYY-MM-DD")}
             required
           />
         </div>
         <div className="w-1/2">
           <DateInput
             handleChange={handleChangeForm}
-            id="reading_end_date"
-            placeholder="Reading End Date"
-            value={reading_end_date}
-            label="Reading End Date"
+            id="present_reading_date"
+            placeholder="Present Reading Date"
+            value={present_reading_date}
+            label="Present Reading Date"
             required
           />
         </div>
@@ -108,11 +109,19 @@ const BillAddEditFormContent = ({
       <div className="flex gap-5">
         <div className="w-1/2">
           <NumberInput
-            label={type_of_bill === "electricity" ? "Present Kilowatt Reading" : "Present Meter Reading"}
-            placeholder={type_of_bill === "electricity" ? "Present Kilowatt Reading" : "Present Meter Reading"}
-            id={"present_reading"}
+            label={
+              type_of_bill === "electricity"
+                ? "Past Kilowatt Reading"
+                : "Past Meter Reading"
+            }
+            placeholder={
+              type_of_bill === "electricity"
+                ? "Past Kilowatt Reading"
+                : "Past Meter Reading"
+            }
+            id={"past_reading"}
             handleChange={handleChangeForm}
-            value={present_reading}
+            value={past_reading}
             required
           />
           <NumberInput
@@ -136,13 +145,22 @@ const BillAddEditFormContent = ({
         </div>
         <div className="w-1/2">
           <NumberInput
-            label={type_of_bill === "electricity" ? "Past Kilowatt Reading" : "Past Meter Reading"}
-            placeholder={type_of_bill === "electricity" ? "Past Kilowatt Reading" : "Past Meter Reading"}
-            id={"past_reading"}
+            label={
+              type_of_bill === "electricity"
+                ? "Present Kilowatt Reading"
+                : "Present Meter Reading"
+            }
+            placeholder={
+              type_of_bill === "electricity"
+                ? "Present Kilowatt Reading"
+                : "Present Meter Reading"
+            }
+            id={"present_reading"}
             handleChange={handleChangeForm}
-            value={past_reading}
+            value={present_reading}
             required
           />
+
           <NumberInput
             label="Monthly Given Bill"
             placeholder={"Monthly Given Bill"}

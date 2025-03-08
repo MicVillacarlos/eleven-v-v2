@@ -8,8 +8,8 @@ import { LodgersIcon } from "../../svg/LodgersIcon";
 import { SettingsIcon } from "../../svg/SettingsIcon";
 import { BillsIcon } from "../../svg/BillsIcon";
 import { LogoutIcon } from "../../svg/LogoutIcon";
-import React from "react";
 import Image from "next/image";
+import React from "react";
 
 export default function Layout({
   children,
@@ -79,7 +79,13 @@ export default function Layout({
       >
         <div className="h-full px-8 py-2 overflow-y-auto">
           <a className="py-[48] flex items-center ps-2.5 mb-5">
-            <img src="/elevenv-logo.svg" alt="Eleven V Logo" />
+            <Image
+              src="/elevenv-logo.svg"
+              alt="Eleven V Logo"
+              width={0}
+              height={0}
+              style={{ width: "100%", height: "auto" }}
+            />
           </a>
           <ul className="space-y-3 font-semibold">
             {SideBarOptions.map((item) => {
@@ -93,7 +99,7 @@ export default function Layout({
                       href={item.href}
                       className={`flex items-center p-2 rounded-lg group transition-all ${
                         isActive
-                          ? "bg-gray-100 text-[#7996AA] shadow-xs"
+                          ? "bg-gray-100 text-[#205072] shadow-xs"
                           : "text-[#7996AA] hover:bg-gray-100"
                       }`}
                     >

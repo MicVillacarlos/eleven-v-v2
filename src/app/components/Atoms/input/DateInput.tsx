@@ -10,15 +10,19 @@ interface DateInputProps {
   value: string;
   placeholder: string;
   minDate?: string;
+  maxDate?: string;
 }
 
-const DateInput = ({ id, label, handleChange, required = false, value, minDate, placeholder}: DateInputProps) => {
+const DateInput = ({ id, label, handleChange, required = false, value, minDate, maxDate, placeholder}: DateInputProps) => {
   const [inputType, setInputType] = useState("text");
 
   return (
     <div className="mb-6">
       {label && (
-        <label htmlFor={id} className="block mb-2 text-sm font-medium text-gray-900">
+        <label
+          htmlFor={id}
+          className="block mb-2 text-sm font-medium text-gray-900"
+        >
           {label}
         </label>
       )}
@@ -33,7 +37,8 @@ const DateInput = ({ id, label, handleChange, required = false, value, minDate, 
           required={required}
           placeholder={placeholder}
           value={value}
-          max={minDate ?? moment().tz(config.timezone!).format("YYYY-MM-DD")}
+          min={minDate}
+          max={maxDate ?? moment().tz(config.timezone!).format("YYYY-MM-DD")}
         />
       </div>
     </div>
