@@ -74,6 +74,25 @@ const BillAddEditFormContent = ({
 
   const electricityWaterForm = (
     <div>
+      <DividerHorizontal />
+      <div className="flex w-full gap-5">
+        <div className="w-1/2">
+          <DateInput
+            handleChange={handleChangeForm}
+            id="due_date"
+            placeholder="Due Date"
+            value={due_date}
+            label="Due Date"
+            minDate={moment().tz(config.timezone!).format("YYYY-MM-DD")}
+            maxDate={moment()
+              .tz(config.timezone!)
+              .add(3, "month")
+              .format("YYYY-MM-DD")}
+            required
+          />
+        </div>
+        <div className="w-1/2"></div>
+      </div>
       <div className="flex w-full gap-5">
         <div className="w-1/2">
           <DateInput
@@ -84,30 +103,6 @@ const BillAddEditFormContent = ({
             label="Past Reading Date"
             required
           />
-          <DateInput
-            handleChange={handleChangeForm}
-            id="due_date"
-            placeholder="Due Date"
-            value={due_date}
-            label="Due Date"
-            minDate={moment().tz(config.timezone!).format("YYYY-MM-DD")}
-            maxDate={moment().tz(config.timezone!).add(3, 'month').format("YYYY-MM-DD")}
-            required
-          />
-        </div>
-        <div className="w-1/2">
-          <DateInput
-            handleChange={handleChangeForm}
-            id="present_reading_date"
-            placeholder="Present Reading Date"
-            value={present_reading_date}
-            label="Present Reading Date"
-            required
-          />
-        </div>
-      </div>
-      <div className="flex gap-5">
-        <div className="w-1/2">
           <NumberInput
             label={
               type_of_bill === "electricity"
@@ -144,6 +139,14 @@ const BillAddEditFormContent = ({
           />
         </div>
         <div className="w-1/2">
+          <DateInput
+            handleChange={handleChangeForm}
+            id="present_reading_date"
+            placeholder="Present Reading Date"
+            value={present_reading_date}
+            label="Present Reading Date"
+            required
+          />
           <NumberInput
             label={
               type_of_bill === "electricity"
@@ -160,7 +163,6 @@ const BillAddEditFormContent = ({
             value={present_reading}
             required
           />
-
           <NumberInput
             label="Monthly Given Bill"
             placeholder={"Monthly Given Bill"}
@@ -169,14 +171,15 @@ const BillAddEditFormContent = ({
             value={monthly_given_bill}
             required
           />
+          {calculateBill ? (
+            <div className="flex h-1/4 items-center">
+              <p className="font-semibold leading-none tracking-tight text-gray-900 text-base align-center">
+                Bill Amount: {calculateBill}
+              </p>
+            </div>
+          ) : null}
         </div>
       </div>
-      <DividerHorizontal />
-      {calculateBill ? (
-        <p className="font-semibold leading-none tracking-tight text-gray-900 text-base align-center">
-          Bill Amount: {calculateBill}
-        </p>
-      ) : null}
     </div>
   );
 
@@ -206,7 +209,6 @@ const BillAddEditFormContent = ({
           />
         </div>
       </div>
-      {type_of_bill && lodger_id && <DividerHorizontal />}
       {type_of_bill !== "rent" && lodger_id && electricityWaterForm}
     </div>
   );

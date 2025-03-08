@@ -45,7 +45,7 @@ const Bills = () => {
   });
   const [pagination, setPagination] = useState({
     current: 1,
-    limit: 5,
+    limit: 10,
     total: 0,
   });
 
@@ -56,9 +56,9 @@ const Bills = () => {
       key: "lodger_full_name",
       label: "Lodger Name",
     },
-    { key: "due_date", label: "Due Date", type: "date"},
+    { key: "due_date", label: "Due Date", type: "date" },
     { key: "type_of_bill", label: "Bill Type" },
-    { key: "status", label: "Status"},
+    { key: "status", label: "Status", type: "status_select" },
     { key: "bill_amount", label: "Amount", type: "money", justify: "right" },
   ];
 
@@ -83,7 +83,7 @@ const Bills = () => {
   // ------------------ TABLE FUNCTIONS --------------------
 
   const fetchData = async () => {
-    const data = await fetchBills(
+    const { data, count } = await fetchBills(
       query,
       pagination.current,
       pagination.limit,
@@ -91,7 +91,11 @@ const Bills = () => {
       "",
       ""
     );
-    setBillsTableData(data.data);
+    setBillsTableData(data);
+    setPagination((prevState) => ({
+      ...prevState,
+      total: count,
+    }));
   };
 
   useEffect(() => {
@@ -165,6 +169,7 @@ const Bills = () => {
         showToast("Bill added successfully!", "success");
         resetAddEditBillData();
         setIsViewAddEditBillModal(false);
+        fetchData();
       }
     } catch (error) {
       const errorMessage =
@@ -181,6 +186,15 @@ const Bills = () => {
       ...billAddEditData,
       [e.target.id]: e.target.value,
     });
+  };
+
+  const onChangeSelectStatus = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    // setBillAddEditData({
+    //   ...billAddEditData,
+    //   [e.target.id]: e.target.value,
+    // });
+    console.log("e.target.id:", e.target.id)
+    console.log("e.target.value:",e.target.value)
   };
 
   return (
@@ -205,8 +219,9 @@ const Bills = () => {
           handlePrevNavigation={handleNextPagination}
           onSelectTablePage={onSelectTablePage}
           pagination={pagination}
-          onClickView={() => { }}
-          onClickDelete={()=>{}}
+          onClickView={() => {}}
+          onClickDelete={() => {}}
+          onChangeSelectStatus={onChangeSelectStatus}
         />
       </Suspense>
       <ModalForm
