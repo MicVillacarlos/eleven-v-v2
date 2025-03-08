@@ -1,3 +1,6 @@
+import moment from "moment";
+import { config } from "../../config/config";
+
 export const paginationPages = (current: number, limit: number, total: number): number[] => {
   const totalPages = Math.ceil(total / limit);
   const maxPagesToShow = 5;
@@ -33,3 +36,7 @@ export const formatNumberToString = (number: number, prefix?: string) => {
 export const formatStringToNumber = (string: string) => {
   return Number(string);
 }
+
+export const formatDate = (date: Date | string) => {
+  return moment(date).tz(config.timezone!).format("MM-DD-YYYY");
+};

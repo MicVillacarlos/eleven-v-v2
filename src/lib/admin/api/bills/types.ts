@@ -1,30 +1,21 @@
-interface Lodger {
-  _id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-}
+
 
 export interface Bill {
+  _id: string;
+  lodger_id: string;
+  lodger_full_name: string;
+  room_number: string;
   bill_number: number;
-  type_of_bill: string;
-  lodger: Lodger;
   due_date: string;
   past_reading_date: string;
   present_reading_date: string;
-  present_reading: number;
   past_reading: number;
-  current_bill: number;
+  present_reading: number;
   monthly_given_bill: number;
-  add_on: number;
+  type_of_bill: string;
   bill_amount: number;
-  room_number: string;
-  status: string;
-  email_sent_status: string;
-  _id: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+  status: string; // Assuming only these two statuses exist
+  email_sent_status: string; // Assuming these values
 }
 
 export interface AddEditBillFormData {

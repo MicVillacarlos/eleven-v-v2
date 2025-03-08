@@ -38,10 +38,20 @@ export async function createBill(
   return result;
 }
 
-// export async function deleteRooom(id: string): Promise<GetRoomsApiResponse> {
-//   const result = request<GetRoomsApiResponse>(`/admin/room/delete-room/${id}`, {
-//     method: "DELETE",
-//     credentials: "include",
-//   });
-//   return result;
-// }
+export async function fetchBills(
+  search: string,
+  limit: number,
+  total: number,
+  status: string,
+  email_sent_status: string,
+  type_of_bill: string
+): Promise<{ count: number; data: Bill[] }> {
+  const result = request<{ count: number; data: Bill[] }>(
+    `/admin/bills/fetch-bills/${limit}/${total}?search=${search}&status=${status}&email_sent_status=${email_sent_status}&type_of_bill=${type_of_bill}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  return result;
+}
