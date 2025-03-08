@@ -13,7 +13,7 @@ import BillAddEditFormContent from "./BillAddEditFormContent";
 import { AddEditBillFormData, Bill } from "../../../lib/admin/api/bills/types";
 import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
 import { useToastContext } from "../../utils/providers/ToastProvider";
-import { createBill, fetchBills } from "../../../lib/admin/api/bills/bills";
+import { createBill, deleteBill, fetchBills } from "../../../lib/admin/api/bills/bills";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const BillsTable = dynamic(
@@ -137,6 +137,26 @@ const Bills = () => {
     resetAddEditBillData();
   };
 
+  const onConfirmDeleteBill = async (id: string) => {
+    try {
+      const result = await deleteBill(id);
+      if (result.data) {
+        showToast("Bill successfully deleted.", "success");
+        await fetchData();
+      }
+    } catch (error) {
+      const errorMessage =
+        (error as { message?: string })?.message ||
+        "An unexpected error occurred.";
+      showToast(errorMessage, "danger");
+    }
+  };
+
+  const onClickDeleteBillTable = (data: string | Bill) => {
+    const { _id } = data as Bill;
+    confirmDeleteModal(() => onConfirmDeleteBill(_id));
+  };
+
   const onSubmitAddEditBill = async (e: React.FormEvent) => {
     e.preventDefault();
     const {
@@ -189,10 +209,6 @@ const Bills = () => {
   };
 
   const onChangeSelectStatus = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // setBillAddEditData({
-    //   ...billAddEditData,
-    //   [e.target.id]: e.target.value,
-    // });
     console.log("e.target.id:", e.target.id)
     console.log("e.target.value:",e.target.value)
   };
@@ -205,7 +221,7 @@ const Bills = () => {
         <div className="lg:w-[150px]">
           <PrimaryButton onClick={onAddEditBill}>
             <AddIcon color="white" />
-            Add Bills
+            Add Bill
           </PrimaryButton>
         </div>
       </div>
@@ -220,7 +236,7 @@ const Bills = () => {
           onSelectTablePage={onSelectTablePage}
           pagination={pagination}
           onClickView={() => {}}
-          onClickDelete={() => {}}
+          onClickDelete={onClickDeleteBillTable}
           onChangeSelectStatus={onChangeSelectStatus}
         />
       </Suspense>

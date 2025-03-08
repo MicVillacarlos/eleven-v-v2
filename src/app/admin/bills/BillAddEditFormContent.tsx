@@ -183,6 +183,54 @@ const BillAddEditFormContent = ({
     </div>
   );
 
+  const rentForm = (
+    <div>
+      <DividerHorizontal />
+      <div className="flex w-full gap-5">
+        <div className="w-1/2">
+          <DateInput
+            handleChange={handleChangeForm}
+            id="due_date"
+            placeholder="Due Date"
+            value={due_date}
+            label="Due Date"
+            minDate={moment().tz(config.timezone!).format("YYYY-MM-DD")}
+            maxDate={moment()
+              .tz(config.timezone!)
+              .add(3, "month")
+              .format("YYYY-MM-DD")}
+            required
+          />
+        </div>
+        <div className="w-1/2"></div>
+      </div>
+      <div className="flex w-full gap-5">
+        <div className="w-1/2">
+          <DateInput
+            handleChange={handleChangeForm}
+            id="past_reading_date"
+            placeholder="Start Date"
+            value={past_reading_date}
+            label="Start Date"
+            required
+          />
+          
+        </div>
+        <div className="w-1/2">
+          <DateInput
+            handleChange={handleChangeForm}
+            id="present_reading_date"
+            placeholder="End Date"
+            value={present_reading_date}
+            label="End Date"
+            required
+          />
+        </div>
+
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex flex-col">
       <div className="flex w-full gap-5">
@@ -209,7 +257,8 @@ const BillAddEditFormContent = ({
           />
         </div>
       </div>
-      {type_of_bill !== "rent" && lodger_id && electricityWaterForm}
+      {type_of_bill !== "rent" && lodger_id ? electricityWaterForm : null}
+      {type_of_bill === "rent" && lodger_id ? rentForm : null}
     </div>
   );
 };

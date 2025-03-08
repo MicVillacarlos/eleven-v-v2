@@ -55,3 +55,11 @@ export async function fetchBills(
   );
   return result;
 }
+
+export async function deleteBill(id: string) {
+  const result = request(`/admin/bills/delete-bill/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  return result;
+}
