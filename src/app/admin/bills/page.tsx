@@ -101,7 +101,7 @@ const Bills = () => {
 
   useEffect(() => {
     fetchData();
-  }, [pagination.current]);
+  }, [pagination.current, query]);
 
   const handleNextPagination = useCallback(() => {
     setPagination((prevState) => {
@@ -127,7 +127,9 @@ const Bills = () => {
     }));
   }, []);
 
-  const onSearchTable = () => {};
+  const onSearchTable = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
 
   const onAddEditBill = () => {
     setIsViewAddEditBillModal(true);
@@ -229,7 +231,7 @@ const Bills = () => {
       {/* -------------- Header Table--------------*/}
       <div className="flex w-full justify-between mb-6 items-center gap-5 mb-5">
         <div className="md:w-1/4">
-          <SearchInput onChangeSearch={onSearchTable} />
+          <SearchInput placeHolder="Search Name" onChangeSearch={onSearchTable} />
         </div>
         <div className="lg:w-[150px]">
           <FilterTableButton />
