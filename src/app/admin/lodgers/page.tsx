@@ -24,6 +24,7 @@ import { useToastContext } from "../../utils/providers/ToastProvider";
 import { formatNumberToString, formatStringToNumber } from "../../helpers/helpers";
 import { getAvailableRooms } from "../../../lib/admin/api/room/room";
 import { GetRoomAvailablesObject } from "../../../lib/admin/api/room/types";
+import FilterTableButton from "../../components/Molecules/filters/FilterTableButton";
 
 //---Start---Note: Use dynamic(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const LodgersTable = dynamic(
@@ -252,7 +253,14 @@ const Lodgers = () => {
         </div>
       </div>
       {/* -------------- Header Table--------------*/}
-      <SearchInput onChangeSearch={onSearchTable} />
+      <div className="flex w-full justify-between mb-6 items-center gap-5 mb-5">
+        <div className="md:w-1/4">
+          <SearchInput onChangeSearch={onSearchTable} />
+        </div>
+        <div className="lg:w-[150px]">
+          <FilterTableButton />
+        </div>
+      </div>
       <Suspense fallback={<TableLoading />}>
         <LodgersTable
           data={lodgerDataTable ?? []}

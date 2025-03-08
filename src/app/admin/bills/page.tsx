@@ -14,6 +14,7 @@ import { AddEditBillFormData, Bill } from "../../../lib/admin/api/bills/types";
 import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
 import { useToastContext } from "../../utils/providers/ToastProvider";
 import { createBill, deleteBill, fetchBills } from "../../../lib/admin/api/bills/bills";
+import FilterTableButton from "../../components/Molecules/filters/FilterTableButton";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const BillsTable = dynamic(
@@ -226,7 +227,15 @@ const Bills = () => {
         </div>
       </div>
       {/* -------------- Header Table--------------*/}
-      <SearchInput onChangeSearch={onSearchTable} />
+      <div className="flex w-full justify-between mb-6 items-center gap-5 mb-5">
+        <div className="md:w-1/4">
+          <SearchInput onChangeSearch={onSearchTable} />
+        </div>
+        <div className="lg:w-[150px]">
+          <FilterTableButton />
+        </div>
+      </div>
+
       <Suspense fallback={<TableLoading />}>
         <BillsTable
           data={billsTableData ?? []}

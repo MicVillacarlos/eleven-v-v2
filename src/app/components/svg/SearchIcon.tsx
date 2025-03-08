@@ -17,7 +17,7 @@ export const SearchIcon: FC<IconProps> = ({
       viewBox="0 0 20 20"
     >
       <path
-        stroke={color}
+        stroke={color ?? "#7996AA"}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
