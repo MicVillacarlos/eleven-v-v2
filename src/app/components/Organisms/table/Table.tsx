@@ -1,5 +1,5 @@
 import React from "react";
-import { moneyFormat, paginationPages } from "../../../helpers/helpers";
+import { formatDate, moneyFormat, paginationPages } from "../../../helpers/helpers";
 import { DeleteIcon } from "../../svg/DeleteIcon";
 import { EditIcon } from "../../svg/EditIcon";
 import { EmptyBoxIcon } from "../../svg/EmptyBoxIcon";
@@ -30,6 +30,10 @@ const Table = <T,>({
 
     if (col.type === "money" && typeof value === "number") {
       return moneyFormat(value);
+    }
+
+    if (col.type === "date") {
+      return formatDate(value as string | Date);
     }
 
     return value as React.ReactNode;

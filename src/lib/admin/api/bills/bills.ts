@@ -1,37 +1,57 @@
 import { request } from "../../base-api";
-import { GetRoomAvailablesApiResponse } from "./types";
+import { Bill } from "./types";
 
-// export async function getRooms(
-//   search: string,
-//   limit: number,
-//   total: number
-// ): Promise<GetRoomsApiResponse> {
-//   const result = request<GetRoomsApiResponse>(
-//     `/admin/room/fetch-rooms/${limit}/${total}?search=${search}`,
-//     {
-//       method: "GET",
-//       credentials: "include",
-//     }
-//   );
-//   return result;
-// }
+export async function createBill(
+  due_date: string,
+  past_reading: number,
+  present_reading: number,
+  current_bill: number,
+  monthly_given_bill: number,
+  type_of_bill: string,
+  add_on: number,
+  present_reading_date: string,
+  past_reading_date: string,
+  lodger_id: string
+): Promise<{ success: boolean; bill: Bill }> {
+  const result = await request<{ success: boolean; bill: Bill }>(
+    `/admin/bills/create-bill`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        due_date,
+        past_reading,
+        present_reading,
+        current_bill,
+        monthly_given_bill,
+        type_of_bill,
+        add_on,
+        present_reading_date,
+        past_reading_date,
+        lodger_id,
+      }),
+    }
+  );
 
-// export async function addRoom(
-//   room_type: string,
-//   price: number,
-//   room_number: string
-// ): Promise<PostRoomApiResponse> {
-//   const result = request<PostRoomApiResponse>(`/admin/room/create-room`, {
-//     method: "POST",
-//     body: JSON.stringify({ room_type, price, room_number }),
-//   });
-//   return result;
-// }
+  return result;
+}
 
-// export async function deleteRooom(id: string): Promise<GetRoomsApiResponse> {
-//   const result = request<GetRoomsApiResponse>(`/admin/room/delete-room/${id}`, {
-//     method: "DELETE",
-//     credentials: "include",
-//   });
-//   return result;
-// }
+export async function fetchBills(
+  search: string,
+  limit: number,
+  total: number,
+  status: string,
+  email_sent_status: string,
+  type_of_bill: string
+): Promise<{ count: number; data: Bill[] }> {
+  const result = request<{ count: number; data: Bill[] }>(
+    `/admin/bills/fetch-bills/${limit}/${total}?search=${search}&status=${status}&email_sent_status=${email_sent_status}&type_of_bill=${type_of_bill}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  return result;
+}

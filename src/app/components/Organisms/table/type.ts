@@ -1,10 +1,10 @@
 export interface Column<T> {
   key: keyof T;
   label: string;
-  type?: "money";
+  type?: "money" | 'date';
   justify?: "center" | "left" | "right";
+  render?: (row: T) => React.ReactNode;
 }
-
 export interface TableProps<T> {
   data: T[];
   columns: Column<T>[];

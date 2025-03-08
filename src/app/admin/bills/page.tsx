@@ -6,11 +6,14 @@ import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
 import { AddIcon } from "../../components/svg/AddIcon";
 import TableLoading from "../../components/Organisms/loaders/TableLoading";
 import dynamic from "next/dynamic";
-import { TableProps } from "../../components/Organisms/table/type";
+import { Column, TableProps } from "../../components/Organisms/table/type";
 import SearchInput from "../../components/Atoms/input/SearchInput";
 import ModalForm from "../../components/Organisms/modal/ModalForm";
 import BillAddEditFormContent from "./BillAddEditFormContent";
-import { AddEditBillFormData } from "../../../lib/admin/api/bills/types";
+import { AddEditBillFormData, Bill } from "../../../lib/admin/api/bills/types";
+import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
+import { useToastContext } from "../../utils/providers/ToastProvider";
+import { createBill, fetchBills } from "../../../lib/admin/api/bills/bills";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const BillsTable = dynamic(
@@ -25,12 +28,14 @@ const BillsTable = dynamic(
 const Bills = () => {
   const [isViewAddEditBillModal, setIsViewAddEditBillModal] =
     useState<boolean>(false);
+  const [query, setQuery] = useState<string>("");
+  const [billsTableData, setBillsTableData] = useState<Bill[]>();
 
   const [billAddEditData, setBillAddEditData] = useState<AddEditBillFormData>({
     type_of_bill: "",
     lodger_id: "",
-    reading_start_date: "",
-    reading_end_date: "",
+    past_reading_date: "",
+    present_reading_date: "",
     present_reading: 0,
     past_reading: 0,
     current_bill: 0,
@@ -44,12 +49,28 @@ const Bills = () => {
     total: 0,
   });
 
+  const tableColumns: Column<Bill>[] = [
+    { key: "bill_number", label: "Bill No." },
+    { key: "room_number", label: "Room" },
+    {
+      key: "lodger_full_name",
+      label: "Lodger Name",
+    },
+    { key: "due_date", label: "Due Date", type: "date"},
+    { key: "type_of_bill", label: "Bill Type" },
+    { key: "status", label: "Status"},
+    { key: "bill_amount", label: "Amount", type: "money", justify: "right" },
+  ];
+
+  const { confirmDeleteModal } = useConfirmDeleteModal();
+  const { showToast } = useToastContext();
+
   const resetAddEditBillData = () => {
     setBillAddEditData({
       type_of_bill: "",
       lodger_id: "",
-      reading_start_date: "",
-      reading_end_date: "",
+      past_reading_date: "",
+      present_reading_date: "",
       present_reading: 0,
       past_reading: 0,
       current_bill: 0,
@@ -61,7 +82,21 @@ const Bills = () => {
 
   // ------------------ TABLE FUNCTIONS --------------------
 
-  useEffect(() => {}, [isViewAddEditBillModal]);
+  const fetchData = async () => {
+    const data = await fetchBills(
+      query,
+      pagination.current,
+      pagination.limit,
+      "",
+      "",
+      ""
+    );
+    setBillsTableData(data.data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [pagination.current]);
 
   const handleNextPagination = useCallback(() => {
     setPagination((prevState) => {
@@ -98,8 +133,45 @@ const Bills = () => {
     resetAddEditBillData();
   };
 
-  const onSubmitAddEditBill = (e: React.FormEvent) => {
+  const onSubmitAddEditBill = async (e: React.FormEvent) => {
     e.preventDefault();
+    const {
+      add_on,
+      current_bill,
+      due_date,
+      lodger_id,
+      monthly_given_bill,
+      past_reading,
+      present_reading,
+      present_reading_date,
+      past_reading_date,
+      type_of_bill,
+    } = billAddEditData;
+    try {
+      const result = await createBill(
+        due_date,
+        past_reading,
+        present_reading,
+        current_bill,
+        monthly_given_bill,
+        type_of_bill,
+        add_on,
+        present_reading_date,
+        past_reading_date,
+        lodger_id
+      );
+
+      if (result.success) {
+        showToast("Bill added successfully!", "success");
+        resetAddEditBillData();
+        setIsViewAddEditBillModal(false);
+      }
+    } catch (error) {
+      const errorMessage =
+        (error as { message?: string })?.message ||
+        "An unexpected error occurred.";
+      showToast(errorMessage, "danger");
+    }
   };
 
   const onHandleChangeform = (
@@ -127,12 +199,14 @@ const Bills = () => {
       <SearchInput onChangeSearch={onSearchTable} />
       <Suspense fallback={<TableLoading />}>
         <BillsTable
-          data={[]}
-          columns={[]}
+          data={billsTableData ?? []}
+          columns={tableColumns ?? []}
           handleNextNavigation={handlePrevPagination}
           handlePrevNavigation={handleNextPagination}
           onSelectTablePage={onSelectTablePage}
           pagination={pagination}
+          onClickView={() => { }}
+          onClickDelete={()=>{}}
         />
       </Suspense>
       <ModalForm

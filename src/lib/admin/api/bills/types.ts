@@ -1,34 +1,28 @@
-interface Lodger {
-  _id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-}
+
 
 export interface Bill {
-  type_of_bill: "electricity" | "water" | "rent" | "";
-  lodger: Lodger;
-  due_date: string; // ISO date string
-  reading_start_date: string; // ISO date string
-  reading_end_date: string; // ISO date string
-  present_reading: number;
-  past_reading: number;
-  current_bill: number;
-  monthly_given_bill: number;
-  add_on: number;
-  bill_amount: number;
-  status: "unpaid" | "paid" | "pending"; // Extend as needed
-  email_sent_status: "undelivered" | "sent" | "pending"; // Extend as needed
   _id: string;
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
-  __v: number;
+  lodger_id: string;
+  lodger_full_name: string;
+  room_number: string;
+  bill_number: number;
+  due_date: string;
+  past_reading_date: string;
+  present_reading_date: string;
+  past_reading: number;
+  present_reading: number;
+  monthly_given_bill: number;
+  type_of_bill: string;
+  bill_amount: number;
+  status: string; // Assuming only these two statuses exist
+  email_sent_status: string; // Assuming these values
 }
+
 export interface AddEditBillFormData {
   type_of_bill: "electricity" | "water" | "rent" | "";
   lodger_id: string;
-  reading_start_date: string;
-  reading_end_date: string;
+  past_reading_date: string;
+  present_reading_date: string;
   present_reading: number;
   past_reading: number;
   current_bill: number;
@@ -36,19 +30,6 @@ export interface AddEditBillFormData {
   add_on: number;
   due_date: string;
 }
-
-// export interface HouseType {
-//   key: Key | null | undefined;
-//   total_rooms: number;
-//   rooms: Room[];
-//   room_type: string;
-//   price: number;
-// }
-
-// export interface GetRoomsApiResponse {
-//   data: HouseType[];
-//   count: number;
-// }
 
 export interface GetRoomAvailablesObject {
   _id: string;
