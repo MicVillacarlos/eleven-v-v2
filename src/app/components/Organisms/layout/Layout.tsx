@@ -1,5 +1,5 @@
 "use client";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useWindowSize } from "../../../utils/hooks/hooks";
 import { DashboardIcon } from "../../svg/DashboardIcon";
@@ -17,6 +17,8 @@ export default function Layout({
 }>) {
   const windowWidth: number = useWindowSize();
   const [isSideBarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const pathname = usePathname();
+  const router = useRouter(); // ✅ To handle client-side navigation
 
   useEffect(() => {
     if (windowWidth > 639) {
@@ -30,7 +32,11 @@ export default function Layout({
     setIsSidebarOpen(!isSideBarOpen);
   };
 
-  const pathname = usePathname();
+  const handleLogout = () => {
+    document.cookie =
+      "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    router.push("/login");
+  };
 
   const SideBarOptions = [
     {
@@ -46,12 +52,6 @@ export default function Layout({
       label: "Settings",
       href: "/admin/settings",
       icon: <SettingsIcon />,
-    },
-    {
-      key: 5,
-      label: "Logout",
-      href: "Logout",
-      icon: <LogoutIcon />,
     },
   ];
 
@@ -77,9 +77,9 @@ export default function Layout({
         aria-label="Sidebar"
       >
         <div className="h-full px-8 py-2 overflow-y-auto">
-          <a className="py-[48] flex items-center ps-2.5 mb-5">
+          <div className="py-[48] flex items-center ps-2.5 mb-5">
             <img src="/elevenv-logo.svg" alt="Eleven V Logo" />
-          </a>
+          </div>
           <ul className="space-y-3 font-semibold">
             {SideBarOptions.map((item) => {
               const isActive =
@@ -108,6 +108,18 @@ export default function Layout({
                 </React.Fragment>
               );
             })}
+            {/* ✅ Logout Button */}
+            <li>
+              <button
+                onClick={handleLogout}
+                className="flex items-center p-2 w-full rounded-lg group transition-all text-[#7996AA] hover:bg-gray-100"
+              >
+                <span className="w-[50px] flex items-center justify-start">
+                  <LogoutIcon />
+                </span>
+                <span>Logout</span>
+              </button>
+            </li>
           </ul>
         </div>
       </aside>
