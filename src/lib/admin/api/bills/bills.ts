@@ -43,11 +43,10 @@ export async function fetchBills(
   limit: number,
   total: number,
   status: string,
-  email_sent_status: string,
   type_of_bill: string
 ): Promise<{ count: number; data: Bill[] }> {
   const result = request<{ count: number; data: Bill[] }>(
-    `/admin/bills/fetch-bills/${limit}/${total}?search=${search}&status=${status}&email_sent_status=${email_sent_status}&type_of_bill=${type_of_bill}`,
+    `/admin/bills/fetch-bills/${limit}/${total}?search=${search}&status=${status}&type_of_bill=${type_of_bill}`,
     {
       method: "GET",
       credentials: "include",

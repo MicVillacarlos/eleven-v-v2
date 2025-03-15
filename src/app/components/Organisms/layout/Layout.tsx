@@ -1,6 +1,6 @@
 "use client";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { useWindowSize } from "../../../utils/hooks/hooks";
 import { DashboardIcon } from "../../svg/DashboardIcon";
 import { HamburgerIcon } from "../../svg/HamburgerIcon";
@@ -18,6 +18,8 @@ export default function Layout({
 }>) {
   const windowWidth: number = useWindowSize();
   const [isSideBarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const pathname = usePathname();
+  const router = useRouter(); // ✅ To handle client-side navigation
 
   useEffect(() => {
     if (windowWidth > 639) {
@@ -31,28 +33,40 @@ export default function Layout({
     setIsSidebarOpen(!isSideBarOpen);
   };
 
-  const pathname = usePathname();
+  const handleLogout = () => {
+    document.cookie =
+      "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    router.push("/login");
+  };
+
+  const iconColor = useCallback((path: string) => {
+    return pathname.startsWith(path) ?  "#205072" : "#7996AA";
+  }, [pathname]);
 
   const SideBarOptions = [
     {
       key: 1,
       label: "Dashboard",
       href: "/admin/dashboard",
-      icon: <DashboardIcon />,
+      icon: <DashboardIcon color={iconColor("/admin/dashboard")} />,
     },
-    { key: 2, label: "Lodgers", href: "/admin/lodgers", icon: <LodgersIcon /> },
-    { key: 3, label: "Bills", href: "/admin/bills", icon: <BillsIcon /> },
+    {
+      key: 2,
+      label: "Lodgers",
+      href: "/admin/lodgers",
+      icon: <LodgersIcon color={iconColor("/admin/lodgers")} />,
+    },
+    {
+      key: 3,
+      label: "Bills",
+      href: "/admin/bills",
+      icon: <BillsIcon color={iconColor("/admin/bills")} />,
+    },
     {
       key: 4,
       label: "Settings",
       href: "/admin/settings",
-      icon: <SettingsIcon />,
-    },
-    {
-      key: 5,
-      label: "Logout",
-      href: "login",
-      icon: <LogoutIcon />,
+      icon: <SettingsIcon color={iconColor("/admin/settings")} />,
     },
   ];
 
@@ -115,6 +129,18 @@ export default function Layout({
                 </React.Fragment>
               );
             })}
+            {/* ✅ Logout Button */}
+            <li>
+              <button
+                onClick={handleLogout}
+                className="flex items-center p-2 w-full rounded-lg group transition-all text-[#7996AA] hover:bg-gray-100"
+              >
+                <span className="w-[50px] flex items-center justify-start">
+                  <LogoutIcon />
+                </span>
+                <span>Logout</span>
+              </button>
+            </li>
           </ul>
         </div>
       </aside>

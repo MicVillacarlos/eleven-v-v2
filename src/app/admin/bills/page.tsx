@@ -16,6 +16,7 @@ import { useToastContext } from "../../utils/providers/ToastProvider";
 import { createBill, deleteBill, fetchBills, updateStatusBill } from "../../../lib/admin/api/bills/bills";
 import FilterTableButton from "../../components/Molecules/filters/FilterTableButton";
 import { useConfirmationModal } from "../../utils/providers/ConfirmationModalProvider";
+import { filterOptions } from "../../utils/options/options";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const BillsTable = dynamic(
@@ -51,12 +52,11 @@ const Bills = () => {
     total: 0,
   });
 
-  const filterOptions = [
-    {
-      header: 'Status',
-      options: [{value:'paid', label:"Paid"}]
-    }
-  ]
+
+  const [filter, setFilter] = useState<{ [key: string]: string }>({
+    status: "",
+    type_of_bill: "",
+  });
 
   const tableColumns: Column<Bill>[] = [
     { key: "bill_number", label: "Bill No." },
@@ -97,9 +97,8 @@ const Bills = () => {
       query,
       pagination.current,
       pagination.limit,
-      "",
-      "",
-      ""
+      filter.status,
+      filter.type_of_bill,
     );
     setBillsTableData(data);
     setPagination((prevState) => ({
@@ -110,7 +109,7 @@ const Bills = () => {
 
   useEffect(() => {
     fetchData();
-  }, [pagination.current, query]);
+  }, [pagination.current, query, filter]);
 
   const handleNextPagination = useCallback(() => {
     setPagination((prevState) => {
@@ -135,6 +134,23 @@ const Bills = () => {
       current: page,
     }));
   }, []);
+
+  const onSelectTableFilter = (filter: Record<string, string>) => {
+    const { status, type_of_bill } = filter;
+    if (status) {
+      setFilter((prevState) => ({
+        ...prevState,
+        status,
+      }));
+    }
+
+    if (type_of_bill) {
+      setFilter((prevState) => ({
+        ...prevState,
+        type_of_bill,
+      }));
+    }
+  };
 
   const onSearchTable = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -262,10 +278,23 @@ const Bills = () => {
       {/* -------------- Header Table--------------*/}
       <div className="flex w-full justify-between mb-6 items-center gap-5 mb-5">
         <div className="md:w-1/4">
-          <SearchInput placeHolder="Search Name" onChangeSearch={onSearchTable} />
+          <SearchInput
+            placeHolder="Search Name"
+            onChangeSearch={onSearchTable}
+          />
         </div>
         <div className="lg:w-[150px]">
-          <FilterTableButton onSelectFilter={()=>{}}/>
+          <FilterTableButton
+            onSelectFilter={onSelectTableFilter}
+            options={filterOptions}
+            filterValue={filter}
+            onClickReset={() =>
+              setFilter({
+                status: "",
+                type_of_bill: "",
+              })
+            }
+          />
         </div>
       </div>
 

@@ -29,6 +29,11 @@ export const capitalizeFirstLetter = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+export const lowercaseFirstLetter = (str: string): string => {
+  if (!str) return "";
+  return str.charAt(0).toLowerCase() + str.slice(1);
+};
+
 export const formatNumberToString = (number: number, prefix?: string) => {
   return prefix + number.toString();
 };
