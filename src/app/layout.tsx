@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ToastProvider } from "./utils/providers/ToastProvider";
 import { ConfirmDeleteModalProvider } from "./utils/providers/ConfirmDeleteModalProvider";
+import { ConfirmationModalProvider } from "./utils/providers/ConfirmationModalProvider";
 
 export const metadata: Metadata = {
   title: "Eleven V",
@@ -13,7 +14,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en">
       <body>
         <ToastProvider>
-          <ConfirmDeleteModalProvider>{children}</ConfirmDeleteModalProvider>
+          <ConfirmDeleteModalProvider>
+            <ConfirmationModalProvider>{children}</ConfirmationModalProvider>
+          </ConfirmDeleteModalProvider>
         </ToastProvider>
       </body>
     </html>

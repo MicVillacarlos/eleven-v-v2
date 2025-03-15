@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 
-const FilterTableButton = () => {
+interface FilterTableButtonProps {
+  onSelectFilter: () => void
+}
+
+const FilterTableButton = (props: FilterTableButtonProps) => {
+  const { onSelectFilter } = props;
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -38,7 +43,7 @@ const FilterTableButton = () => {
             Category
           </h6>
           <ul className="space-y-2 text-base" aria-labelledby="dropdownDefault">
-            <li className="flex items-center">
+            <li className="flex items-center" onClick={onSelectFilter}>
               <input
                 id="apple"
                 type="checkbox"

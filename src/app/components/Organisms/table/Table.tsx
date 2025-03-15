@@ -9,7 +9,7 @@ import { PreviousIcon } from "../../svg/PreviousIcon";
 import { TableProps } from "./type";
 import StatusSelectInput from "../../Atoms/input/StatusSelectInput";
 
-const Table = <T,>({
+const Table = <T extends { _id: string; },>({
   data,
   columns,
   handleNextNavigation,
@@ -27,9 +27,8 @@ const Table = <T,>({
     pagination.total
   );
 
-  const getCellContent = (item: T, col: { key: keyof T; type?: string }) => {
+  const getCellContent = <T extends { _id: string }>(item: T, col: { key: keyof T; type?: string }) => {
     const value = item[col.key];
-
     if (col.type === "money" && typeof value === "number") {
       return moneyFormat(value);
     }
@@ -43,7 +42,7 @@ const Table = <T,>({
         <StatusSelectInput
           id={"status"}
           value={value as string}
-          onChange={onChangeSelectStatus}
+          onChange={(e) => onChangeSelectStatus!(e, item._id ?? "")}
         />
       );
     }

@@ -63,3 +63,11 @@ export async function deleteBill(id: string) {
   });
   return result;
 }
+
+export async function updateStatusBill(bill_id: string, status: string) {
+  const result = request(`/admin/bills/update-bill-status/${bill_id}`, {
+    method: "PUT",
+    body: JSON.stringify({ status }),
+  });
+  return result;
+}

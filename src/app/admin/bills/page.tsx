@@ -13,8 +13,9 @@ import BillAddEditFormContent from "./BillAddEditFormContent";
 import { AddEditBillFormData, Bill } from "../../../lib/admin/api/bills/types";
 import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
 import { useToastContext } from "../../utils/providers/ToastProvider";
-import { createBill, deleteBill, fetchBills } from "../../../lib/admin/api/bills/bills";
+import { createBill, deleteBill, fetchBills, updateStatusBill } from "../../../lib/admin/api/bills/bills";
 import FilterTableButton from "../../components/Molecules/filters/FilterTableButton";
+import { useConfirmationModal } from "../../utils/providers/ConfirmationModalProvider";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const BillsTable = dynamic(
@@ -23,7 +24,7 @@ const BillsTable = dynamic(
     loading: () => <TableLoading />,
     ssr: false,
   }
-) as <T>(props: TableProps<T>) => JSX.Element;
+) as <T extends { _id: string; }>(props: TableProps<T>) => JSX.Element;
 //---End---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 
 const Bills = () => {
@@ -50,6 +51,13 @@ const Bills = () => {
     total: 0,
   });
 
+  const filterOptions = [
+    {
+      header: 'Status',
+      options: [{value:'paid', label:"Paid"}]
+    }
+  ]
+
   const tableColumns: Column<Bill>[] = [
     { key: "bill_number", label: "Bill No." },
     { key: "room_number", label: "Room" },
@@ -65,6 +73,7 @@ const Bills = () => {
 
   const { confirmDeleteModal } = useConfirmDeleteModal();
   const { showToast } = useToastContext();
+  const { confirmationModal } = useConfirmationModal();
 
   const resetAddEditBillData = () => {
     setBillAddEditData({
@@ -211,10 +220,32 @@ const Bills = () => {
     });
   };
 
-  const onChangeSelectStatus = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("e.target.id:", e.target.id)
-    console.log("e.target.value:",e.target.value)
+  const onChangeSelectStatus = async (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    bill_id?: string
+  ) => {
+    if (!bill_id) {
+      showToast("Invalid bill ID.", "danger");
+      return;
+    }
+    
+    const status = e.target.value;
+  
+    confirmationModal("Confirm Status Change", "Are you sure you want to update the bill status?", async () => {
+      try {
+        const result = await updateStatusBill(bill_id, status);
+        if (result.bill) {
+          fetchData();
+          showToast("Bill status successfully updated!", "success");
+        }
+      } catch (error) {
+        const errorMessage =
+          (error as { message?: string })?.message || "An unexpected error occurred.";
+        showToast(errorMessage, "danger");
+      }
+    });
   };
+  
 
   return (
     <Layout>
@@ -234,7 +265,7 @@ const Bills = () => {
           <SearchInput placeHolder="Search Name" onChangeSearch={onSearchTable} />
         </div>
         <div className="lg:w-[150px]">
-          <FilterTableButton />
+          <FilterTableButton onSelectFilter={()=>{}}/>
         </div>
       </div>
 
