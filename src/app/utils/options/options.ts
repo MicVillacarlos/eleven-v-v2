@@ -6,12 +6,14 @@ export interface FilterOption {
 
 export interface FilterCategory {
   header: string;
+  header_value: string;
   options: FilterOption[];
 }
 
 export const filterOptions = [
   {
     header: "Status",
+    header_value: "status",
     options: [
       { id: 1, value: "paid", label: "Paid" },
       { id: 2, value: "unpaid", label: "Unpaid" },
@@ -19,10 +21,12 @@ export const filterOptions = [
     ],
   },
   {
-    header: "Sort",
+    header: "Type of Bill",
+    header_value: "type_of_bill",
     options: [
-      { id: 4, value: "-1", label: "Latest first" },
-      { id: 5, value: "1", label: "Oldest first" },
+      { id: 1, value: "rent", label: "Rent" },
+      { id: 2, value: "electricity", label: "Electricity" },
+      { id: 3, value: "water", label: "Water" },
     ],
   },
 ];
