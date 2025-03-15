@@ -3,7 +3,7 @@ import CloseIcon from "../../svg/CloseIcon";
 
 interface ModalPropsType {
   widthSize?: string;
-  title: string;
+  title?: string;
   content: React.ReactNode;
   isOpen: boolean;
   onCloseModal: () => void;

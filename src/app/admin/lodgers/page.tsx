@@ -21,9 +21,14 @@ import ModalForm from "../../components/Organisms/modal/ModalForm";
 import LodgerAddEditFormContent from "./LodgerAddEditFormContent";
 import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
 import { useToastContext } from "../../utils/providers/ToastProvider";
-import { formatNumberToString, formatStringToNumber } from "../../helpers/helpers";
+import {
+  formatNumberToString,
+  formatStringToNumber,
+} from "../../helpers/helpers";
 import { getAvailableRooms } from "../../../lib/admin/api/room/room";
 import { GetRoomAvailablesObject } from "../../../lib/admin/api/room/types";
+import ModalView from "../../components/Organisms/modal/ModalView";
+import { LodgerViewModalContent } from "./LodgerViewModalContent";
 
 //---Start---Note: Use dynamic(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const LodgersTable = dynamic(
@@ -32,7 +37,7 @@ const LodgersTable = dynamic(
     loading: () => <TableLoading />,
     ssr: false,
   }
-) as <T extends { _id: string; }>(props: TableProps<T>) => JSX.Element;
+) as <T extends { _id: string }>(props: TableProps<T>) => JSX.Element;
 //---End---Note: Use dynamic(Next Js for Lazy Loading) for components fetching data. This is for optimization
 
 const Lodgers = () => {
@@ -62,6 +67,17 @@ const Lodgers = () => {
     number_of_room_occupants: "",
     room_id: "",
   });
+
+  /**
+   **View Modal states --- START ---
+   */
+  const [viewLodgerData, setViewLodgerData] = useState<FetchLodgerType | null>(
+    null
+  );
+  const [isViewLodgerModal, setIsViewLodgerModal] = useState<boolean>(false);
+  /**
+   **View Modal states --- END ---
+   */
 
   const tableColumns: Column<FetchLodgerType>[] = [
     { key: "room_number", label: "Room Number" },
@@ -132,7 +148,7 @@ const Lodgers = () => {
     }));
   }, []);
 
-  const onSearchTable = () => { };
+  const onSearchTable = () => {};
 
   const resetAddEditLodgerData = () => {
     setAddEditLodgerData({
@@ -150,8 +166,8 @@ const Lodgers = () => {
       number_of_room_occupants: "",
       room_id: "",
     });
-    setIsViewAddEditFormModal(false)
-  }
+    setIsViewAddEditFormModal(false);
+  };
 
   const onConfirmDeleteLodger = async (id: string) => {
     try {
@@ -174,8 +190,6 @@ const Lodgers = () => {
   };
 
   const onClickEditLodgerTable = () => {};
-
-  const onClickViewLodgerTable = () => {};
 
   const onHandleChangeform = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -221,7 +235,6 @@ const Lodgers = () => {
         room_id
       );
 
-      
       if (result.user) {
         showToast("Successfully added a new Lodger.", "success");
         resetAddEditLodgerData();
@@ -239,9 +252,24 @@ const Lodgers = () => {
     resetAddEditLodgerData();
   }, []);
 
+  /**
+   ** View Modal Functions --- Start ---
+   */
+  const onClickViewLodgerTable = (data: FetchLodgerType | string) => {
+    setViewLodgerData(data as FetchLodgerType);
+    setIsViewLodgerModal(true);
+  };
+
+  const onCloseViewModal = () => {
+    setIsViewLodgerModal(false);
+    setViewLodgerData(null);
+  };
+  /**
+   ** View Modal Functions --- End ---
+   */
   return (
     <Layout>
-      {/* -------------- Header Table--------------*/}
+      {/* -------------- Header Table --------------*/}
       <div className="flex w-full justify-between items-center mb-3">
         <Text3xl> Lodgers Management </Text3xl>
         <div className="lg:w-[150px]">
@@ -251,14 +279,12 @@ const Lodgers = () => {
           </PrimaryButton>
         </div>
       </div>
-      {/* -------------- Header Table--------------*/}
+      {/* -------------- Header Table --------------*/}
       <div className="flex w-full justify-between mb-6 items-center gap-5 mb-5">
         <div className="md:w-1/4">
           <SearchInput onChangeSearch={onSearchTable} />
         </div>
-        <div className="lg:w-[150px]">
-          {/* <FilterTableButton /> */}
-        </div>
+        <div className="lg:w-[150px]">{/* <FilterTableButton /> */}</div>
       </div>
       <Suspense fallback={<TableLoading />}>
         <LodgersTable
@@ -286,6 +312,16 @@ const Lodgers = () => {
         onCloseModal={onCloseModalForm}
         title="Add Lodger"
         key={"add_edit_lodger"}
+      />
+      
+      {/**
+       **View Modal for Lodger
+       */}
+      <ModalView
+        title={viewLodgerData?.full_name}
+        content={<LodgerViewModalContent lodger={viewLodgerData} />}
+        isOpen={isViewLodgerModal}
+        onCloseModal={onCloseViewModal}
       />
     </Layout>
   );

@@ -10,7 +10,10 @@ import ModalForm from "../../components/Organisms/modal/ModalForm";
 import ModalView from "../../components/Organisms/modal/ModalView";
 import { Column, TableProps } from "../../components/Organisms/table/type";
 import { AddIcon } from "../../components/svg/AddIcon";
-import { capitalizeFirstLetter, formatNumberToString } from "../../helpers/helpers";
+import {
+  capitalizeFirstLetter,
+  formatNumberToString,
+} from "../../helpers/helpers";
 import { useToastContext } from "../../utils/providers/ToastProvider";
 import RoomAddFormContent from "./RoomAddFormContent";
 import RoomUpdatePasswordForm from "./RoomUpdatePasswordForm";
@@ -25,7 +28,7 @@ const RoomTable = dynamic(
     loading: () => <TableLoading />,
     ssr: false,
   }
-) as <T extends { _id: string; }>(props: TableProps<T>) => JSX.Element;
+) as <T extends { _id: string }>(props: TableProps<T>) => JSX.Element;
 //---End---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 
 const Settings = () => {
@@ -41,6 +44,7 @@ const Settings = () => {
     room_number: 0,
   });
   const [viewDeleteRoomData, setViewDeleteRoomData] = useState<HouseType>({
+    _id:"",
     key: "",
     total_rooms: 0,
     rooms: [],
@@ -119,7 +123,7 @@ const Settings = () => {
     e.preventDefault();
     const { room_type, price, room_number } = addRoomData;
 
-    const roomNumber =  formatNumberToString(room_number, "RM");
+    const roomNumber = formatNumberToString(room_number, "RM");
     const roomType = capitalizeFirstLetter(room_type.trim());
 
     try {
@@ -153,30 +157,29 @@ const Settings = () => {
     setViewDeleteRoomData(data as HouseType);
   };
 
-  //------------------------- MODAL VIEW Functions-------------------------
-
-  const onCloseViewModalHandler = useCallback(() => {
-    setIsViewModal(false);
+  const resetViewDeleteRoomData = () => {
     setViewDeleteRoomData({
+      _id:"",
       key: "",
       total_rooms: 0,
       rooms: [],
       room_type: "",
       price: 0,
     });
+  }
+
+  //------------------------- MODAL VIEW Functions-------------------------
+
+  const onCloseViewModalHandler = useCallback(() => {
+    setIsViewModal(false);
+    resetViewDeleteRoomData();
   }, []);
 
   //------------------------- MODAL DELETE Functions-------------------------
 
   const onCloseDeleteModalHandler = useCallback(() => {
     setIsDeleteModal(false);
-    setViewDeleteRoomData({
-      key: "",
-      total_rooms: 0,
-      rooms: [],
-      room_type: "",
-      price: 0,
-    });
+    resetViewDeleteRoomData();
   }, []);
 
   const onDeleteRoomHandler = useCallback(() => {
@@ -185,13 +188,7 @@ const Settings = () => {
       ...prevState,
       current: 1,
     }));
-    setViewDeleteRoomData({
-      key: "",
-      total_rooms: 0,
-      rooms: [],
-      room_type: "",
-      price: 0,
-    });
+    resetViewDeleteRoomData();
     fetchData();
   }, []);
 
