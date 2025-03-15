@@ -16,6 +16,7 @@ import { useToastContext } from "../../utils/providers/ToastProvider";
 import { createBill, deleteBill, fetchBills, updateStatusBill } from "../../../lib/admin/api/bills/bills";
 import FilterTableButton from "../../components/Molecules/filters/FilterTableButton";
 import { useConfirmationModal } from "../../utils/providers/ConfirmationModalProvider";
+import { filterOptions } from "../../utils/options/options";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const BillsTable = dynamic(
@@ -50,13 +51,6 @@ const Bills = () => {
     limit: 10,
     total: 0,
   });
-
-  const filterOptions = [
-    {
-      header: 'Status',
-      options: [{value:'paid', label:"Paid"}]
-    }
-  ]
 
   const tableColumns: Column<Bill>[] = [
     { key: "bill_number", label: "Bill No." },
@@ -265,7 +259,7 @@ const Bills = () => {
           <SearchInput placeHolder="Search Name" onChangeSearch={onSearchTable} />
         </div>
         <div className="lg:w-[150px]">
-          <FilterTableButton onSelectFilter={()=>{}}/>
+          <FilterTableButton onSelectFilter={()=>{}} options={filterOptions}/>
         </div>
       </div>
 
