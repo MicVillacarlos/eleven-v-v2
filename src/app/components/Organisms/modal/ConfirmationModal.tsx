@@ -3,12 +3,14 @@ import { WarningIcon } from "../../svg/WarningIcon";
 
 interface ModalPropsType {
   isOpen: boolean;
+  title: string;
+  message: string;
   onCancelModalHandler: () => void;
-  onDeleteModalHandler: () => void;
+  onConfirmHandler: () => void;
 }
 
-const DeleteConfirmModal = (props: ModalPropsType) => {
-  const { isOpen, onCancelModalHandler, onDeleteModalHandler } = props;
+const ConfirmationModal = (props: ModalPropsType) => {
+  const { isOpen, onCancelModalHandler, onConfirmHandler, title, message} = props;
 
   return (
     <div
@@ -21,18 +23,16 @@ const DeleteConfirmModal = (props: ModalPropsType) => {
     >
       <div className={`relative w-full max-h-full max-w-md`}>
         <div className="relative rounded-lg shadow-sm bg-white text-black p-7 flex flex-col items-center">
-          <WarningIcon size={80} color={"#D2122E"} />
-          <p className="text-2xl font-bold mb-2">Are you sure?</p>
-          <p className="text-base mb-8">
-            Deleting this is irreversible, you can not retrieve it back.
-          </p>
+          <WarningIcon size={80} color={"#205072"} />
+          <p className="text-2xl font-bold mb-2">{title}</p>
+          <p className="text-base mb-8">{message}</p>
           <div className="flex flex-col w-full gap-2">
             <button
               data-modal-hide="default-modal"
-              className="text-white bg-[#D2122E] hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center"
-              onClick={onDeleteModalHandler}
+              className="text-white bg-[#205072] hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center"
+              onClick={onConfirmHandler}
             >
-              DELETE PERMANENTLY
+              PROCEED
             </button>
             <button
               data-modal-hide="default-modal"
@@ -49,4 +49,4 @@ const DeleteConfirmModal = (props: ModalPropsType) => {
   );
 };
 
-export default DeleteConfirmModal;
+export default ConfirmationModal;

@@ -25,7 +25,7 @@ const RoomTable = dynamic(
     loading: () => <TableLoading />,
     ssr: false,
   }
-) as <T>(props: TableProps<T>) => JSX.Element;
+) as <T extends { _id: string; }>(props: TableProps<T>) => JSX.Element;
 //---End---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 
 const Settings = () => {

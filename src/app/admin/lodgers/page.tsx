@@ -32,7 +32,7 @@ const LodgersTable = dynamic(
     loading: () => <TableLoading />,
     ssr: false,
   }
-) as <T>(props: TableProps<T>) => JSX.Element;
+) as <T extends { _id: string; }>(props: TableProps<T>) => JSX.Element;
 //---End---Note: Use dynamic(Next Js for Lazy Loading) for components fetching data. This is for optimization
 
 const Lodgers = () => {
@@ -252,7 +252,14 @@ const Lodgers = () => {
         </div>
       </div>
       {/* -------------- Header Table--------------*/}
-      <SearchInput onChangeSearch={onSearchTable} />
+      <div className="flex w-full justify-between mb-6 items-center gap-5 mb-5">
+        <div className="md:w-1/4">
+          <SearchInput onChangeSearch={onSearchTable} />
+        </div>
+        <div className="lg:w-[150px]">
+          {/* <FilterTableButton /> */}
+        </div>
+      </div>
       <Suspense fallback={<TableLoading />}>
         <LodgersTable
           data={lodgerDataTable ?? []}

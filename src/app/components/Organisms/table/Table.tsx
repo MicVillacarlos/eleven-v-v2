@@ -7,8 +7,9 @@ import { EyeOnIcon } from "../../svg/EyeOnIcon";
 import { NextIcon } from "../../svg/NextIcon";
 import { PreviousIcon } from "../../svg/PreviousIcon";
 import { TableProps } from "./type";
+import StatusSelectInput from "../../Atoms/input/StatusSelectInput";
 
-const Table = <T,>({
+const Table = <T extends { _id: string; },>({
   data,
   columns,
   handleNextNavigation,
@@ -17,6 +18,7 @@ const Table = <T,>({
   onClickEdit,
   onClickDelete,
   onClickView,
+  onChangeSelectStatus,
   pagination,
 }: TableProps<T>) => {
   const pages = paginationPages(
@@ -25,15 +27,24 @@ const Table = <T,>({
     pagination.total
   );
 
-  const getCellContent = (item: T, col: { key: keyof T; type?: string }) => {
+  const getCellContent = <T extends { _id: string }>(item: T, col: { key: keyof T; type?: string }) => {
     const value = item[col.key];
-
     if (col.type === "money" && typeof value === "number") {
       return moneyFormat(value);
     }
 
     if (col.type === "date") {
       return formatDate(value as string | Date);
+    }
+
+    if (col.type === "status_select") {
+      return (
+        <StatusSelectInput
+          id={"status"}
+          value={value as string}
+          onChange={(e) => onChangeSelectStatus!(e, item._id ?? "")}
+        />
+      );
     }
 
     return value as React.ReactNode;

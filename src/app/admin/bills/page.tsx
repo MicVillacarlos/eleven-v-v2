@@ -13,7 +13,9 @@ import BillAddEditFormContent from "./BillAddEditFormContent";
 import { AddEditBillFormData, Bill } from "../../../lib/admin/api/bills/types";
 import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
 import { useToastContext } from "../../utils/providers/ToastProvider";
-import { createBill, fetchBills } from "../../../lib/admin/api/bills/bills";
+import { createBill, deleteBill, fetchBills, updateStatusBill } from "../../../lib/admin/api/bills/bills";
+import FilterTableButton from "../../components/Molecules/filters/FilterTableButton";
+import { useConfirmationModal } from "../../utils/providers/ConfirmationModalProvider";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const BillsTable = dynamic(
@@ -22,7 +24,7 @@ const BillsTable = dynamic(
     loading: () => <TableLoading />,
     ssr: false,
   }
-) as <T>(props: TableProps<T>) => JSX.Element;
+) as <T extends { _id: string; }>(props: TableProps<T>) => JSX.Element;
 //---End---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 
 const Bills = () => {
@@ -45,9 +47,16 @@ const Bills = () => {
   });
   const [pagination, setPagination] = useState({
     current: 1,
-    limit: 5,
+    limit: 10,
     total: 0,
   });
+
+  const filterOptions = [
+    {
+      header: 'Status',
+      options: [{value:'paid', label:"Paid"}]
+    }
+  ]
 
   const tableColumns: Column<Bill>[] = [
     { key: "bill_number", label: "Bill No." },
@@ -56,14 +65,15 @@ const Bills = () => {
       key: "lodger_full_name",
       label: "Lodger Name",
     },
-    { key: "due_date", label: "Due Date", type: "date"},
+    { key: "due_date", label: "Due Date", type: "date" },
     { key: "type_of_bill", label: "Bill Type" },
-    { key: "status", label: "Status"},
+    { key: "status", label: "Status", type: "status_select" },
     { key: "bill_amount", label: "Amount", type: "money", justify: "right" },
   ];
 
   const { confirmDeleteModal } = useConfirmDeleteModal();
   const { showToast } = useToastContext();
+  const { confirmationModal } = useConfirmationModal();
 
   const resetAddEditBillData = () => {
     setBillAddEditData({
@@ -83,7 +93,7 @@ const Bills = () => {
   // ------------------ TABLE FUNCTIONS --------------------
 
   const fetchData = async () => {
-    const data = await fetchBills(
+    const { data, count } = await fetchBills(
       query,
       pagination.current,
       pagination.limit,
@@ -91,12 +101,16 @@ const Bills = () => {
       "",
       ""
     );
-    setBillsTableData(data.data);
+    setBillsTableData(data);
+    setPagination((prevState) => ({
+      ...prevState,
+      total: count,
+    }));
   };
 
   useEffect(() => {
     fetchData();
-  }, [pagination.current]);
+  }, [pagination.current, query]);
 
   const handleNextPagination = useCallback(() => {
     setPagination((prevState) => {
@@ -122,7 +136,9 @@ const Bills = () => {
     }));
   }, []);
 
-  const onSearchTable = () => {};
+  const onSearchTable = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
 
   const onAddEditBill = () => {
     setIsViewAddEditBillModal(true);
@@ -131,6 +147,26 @@ const Bills = () => {
   const onCloseAddEditBillModal = () => {
     setIsViewAddEditBillModal(false);
     resetAddEditBillData();
+  };
+
+  const onConfirmDeleteBill = async (id: string) => {
+    try {
+      const result = await deleteBill(id);
+      if (result.data) {
+        showToast("Bill successfully deleted.", "success");
+        await fetchData();
+      }
+    } catch (error) {
+      const errorMessage =
+        (error as { message?: string })?.message ||
+        "An unexpected error occurred.";
+      showToast(errorMessage, "danger");
+    }
+  };
+
+  const onClickDeleteBillTable = (data: string | Bill) => {
+    const { _id } = data as Bill;
+    confirmDeleteModal(() => onConfirmDeleteBill(_id));
   };
 
   const onSubmitAddEditBill = async (e: React.FormEvent) => {
@@ -165,6 +201,7 @@ const Bills = () => {
         showToast("Bill added successfully!", "success");
         resetAddEditBillData();
         setIsViewAddEditBillModal(false);
+        fetchData();
       }
     } catch (error) {
       const errorMessage =
@@ -183,6 +220,33 @@ const Bills = () => {
     });
   };
 
+  const onChangeSelectStatus = async (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    bill_id?: string
+  ) => {
+    if (!bill_id) {
+      showToast("Invalid bill ID.", "danger");
+      return;
+    }
+    
+    const status = e.target.value;
+  
+    confirmationModal("Confirm Status Change", "Are you sure you want to update the bill status?", async () => {
+      try {
+        const result = await updateStatusBill(bill_id, status);
+        if (result.bill) {
+          fetchData();
+          showToast("Bill status successfully updated!", "success");
+        }
+      } catch (error) {
+        const errorMessage =
+          (error as { message?: string })?.message || "An unexpected error occurred.";
+        showToast(errorMessage, "danger");
+      }
+    });
+  };
+  
+
   return (
     <Layout>
       {/* -------------- Header Table--------------*/}
@@ -191,12 +255,20 @@ const Bills = () => {
         <div className="lg:w-[150px]">
           <PrimaryButton onClick={onAddEditBill}>
             <AddIcon color="white" />
-            Add Bills
+            Add Bill
           </PrimaryButton>
         </div>
       </div>
       {/* -------------- Header Table--------------*/}
-      <SearchInput onChangeSearch={onSearchTable} />
+      <div className="flex w-full justify-between mb-6 items-center gap-5 mb-5">
+        <div className="md:w-1/4">
+          <SearchInput placeHolder="Search Name" onChangeSearch={onSearchTable} />
+        </div>
+        <div className="lg:w-[150px]">
+          <FilterTableButton onSelectFilter={()=>{}}/>
+        </div>
+      </div>
+
       <Suspense fallback={<TableLoading />}>
         <BillsTable
           data={billsTableData ?? []}
@@ -205,8 +277,9 @@ const Bills = () => {
           handlePrevNavigation={handleNextPagination}
           onSelectTablePage={onSelectTablePage}
           pagination={pagination}
-          onClickView={() => { }}
-          onClickDelete={()=>{}}
+          onClickView={() => {}}
+          onClickDelete={onClickDeleteBillTable}
+          onChangeSelectStatus={onChangeSelectStatus}
         />
       </Suspense>
       <ModalForm

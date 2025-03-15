@@ -55,3 +55,19 @@ export async function fetchBills(
   );
   return result;
 }
+
+export async function deleteBill(id: string) {
+  const result = request(`/admin/bills/delete-bill/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  return result;
+}
+
+export async function updateStatusBill(bill_id: string, status: string) {
+  const result = request(`/admin/bills/update-bill-status/${bill_id}`, {
+    method: "PUT",
+    body: JSON.stringify({ status }),
+  });
+  return result;
+}
