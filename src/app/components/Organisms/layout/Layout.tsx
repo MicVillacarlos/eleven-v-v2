@@ -1,6 +1,6 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useWindowSize } from "../../../utils/hooks/hooks";
 import { DashboardIcon } from "../../svg/DashboardIcon";
 import { HamburgerIcon } from "../../svg/HamburgerIcon";
@@ -39,20 +39,34 @@ export default function Layout({
     router.push("/login");
   };
 
+  const iconColor = useCallback((path: string) => {
+    return pathname.startsWith(path) ?  "#205072" : "#7996AA";
+  }, [pathname]);
+
   const SideBarOptions = [
     {
       key: 1,
       label: "Dashboard",
       href: "/admin/dashboard",
-      icon: <DashboardIcon />,
+      icon: <DashboardIcon color={iconColor("/admin/dashboard")} />,
     },
-    { key: 2, label: "Lodgers", href: "/admin/lodgers", icon: <LodgersIcon /> },
-    { key: 3, label: "Bills", href: "/admin/bills", icon: <BillsIcon /> },
+    {
+      key: 2,
+      label: "Lodgers",
+      href: "/admin/lodgers",
+      icon: <LodgersIcon color={iconColor("/admin/lodgers")} />,
+    },
+    {
+      key: 3,
+      label: "Bills",
+      href: "/admin/bills",
+      icon: <BillsIcon color={iconColor("/admin/bills")} />,
+    },
     {
       key: 4,
       label: "Settings",
       href: "/admin/settings",
-      icon: <SettingsIcon />,
+      icon: <SettingsIcon color={iconColor("/admin/settings")} />,
     },
   ];
 
