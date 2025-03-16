@@ -1,4 +1,4 @@
-import { request } from "../../base-api";
+import { request } from "../../base-api-client";
 import { LoginType, UpdatePasswordType } from "./types";
 
 export async function loginUser(

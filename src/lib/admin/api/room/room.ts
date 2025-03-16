@@ -1,5 +1,9 @@
-import { request } from "../../base-api";
-import { GetRoomAvailablesApiResponse, GetRoomsApiResponse, PostRoomApiResponse } from "./types";
+import { request } from "../../base-api-client";
+import {
+  GetRoomAvailablesApiResponse,
+  GetRoomsApiResponse,
+  PostRoomApiResponse,
+} from "./types";
 
 export async function getRooms(
   search: string,
@@ -37,9 +41,12 @@ export async function deleteRooom(id: string): Promise<GetRoomsApiResponse> {
 }
 
 export async function getAvailableRooms(): Promise<GetRoomAvailablesApiResponse> {
-  const result = request<GetRoomAvailablesApiResponse>(`/admin/room/available-rooms`, {
-    method: "GET",
-    credentials: "include",
-  });
+  const result = request<GetRoomAvailablesApiResponse>(
+    `/admin/room/available-rooms`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
   return result;
 }
