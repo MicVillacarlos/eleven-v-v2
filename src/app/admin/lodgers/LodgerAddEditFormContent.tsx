@@ -134,6 +134,7 @@ const LodgerAddEditFormContent = ({
             placeHolder="Number of Room Occupants"
             value={number_of_room_occupants}
             onChange={handleChangeForm}
+            required
           />
         </div>
         {/* ---------- column 2--------- */}
@@ -170,6 +171,7 @@ const LodgerAddEditFormContent = ({
             placeHolder="Room Number"
             value={room_id}
             onChange={handleChangeForm}
+            required
           />
         </div>
       </div>

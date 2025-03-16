@@ -40,7 +40,7 @@ const ModalView = (props: ModalPropsType) => {
             </button>
             {/* {----------------Close Button--------} */}
           </div>
-          <div className="px-4 pb-4 md:px-5 space-y-4">{content}</div>
+          <div className="pr-4 pl-6  pb-8 md:px-5 space-y-4">{content}</div>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import { AddEditBillFormData } from "../../../lib/admin/api/bills/types";
 import SelectInput from "../../components/Atoms/input/SelectInput";
 import DividerHorizontal from "../../components/Atoms/others/DividerHorizontal";
 import { LodgerOption } from "../../../lib/admin/api/lodgers/types";
-import { getLodgersOption } from "../../../lib/admin/api/lodgers/lodger";
+import { getLodgersOption } from "../../../lib/admin/api/lodgers/lodger-client";
 import DateInput from "../../components/Atoms/input/DateInput";
 import NumberInput from "../../components/Atoms/input/NumberInput";
 import { moneyFormat } from "../../helpers/helpers";
@@ -214,7 +214,6 @@ const BillAddEditFormContent = ({
             label="Start Date"
             required
           />
-          
         </div>
         <div className="w-1/2">
           <DateInput
@@ -226,7 +225,6 @@ const BillAddEditFormContent = ({
             required
           />
         </div>
-
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import { deleteRooom } from "../../../lib/admin/api/room/room";
+import { deleteRooom } from "../../../lib/admin/api/room/room-client";
 import { useToastContext } from "../../utils/providers/ToastProvider";
 import { HouseType } from "../../../lib/admin/api/room/types";
 import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
@@ -17,7 +17,7 @@ export const RoomDeleteModalContent: React.FC<RoomDeleteModalContentProps> = ({
 
   const { confirmDeleteModal } = useConfirmDeleteModal();
 
-  const onDeleteRoom = async (id:string) => {
+  const onDeleteRoom = async (id: string) => {
     try {
       const result = await deleteRooom(id);
       if (result.data) {
@@ -32,7 +32,8 @@ export const RoomDeleteModalContent: React.FC<RoomDeleteModalContentProps> = ({
     onCloseModal();
   };
 
-  const handleDelete = (id:string) => confirmDeleteModal(() => onDeleteRoom(id));
+  const handleDelete = (id: string) =>
+    confirmDeleteModal(() => onDeleteRoom(id));
 
   return (
     <div>
