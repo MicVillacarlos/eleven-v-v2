@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { deleteRooom } from "../../../lib/admin/api/room/room";
+import React from "react";
+import { deleteRooom } from "../../../lib/admin/api/room/room-client";
 import { useToastContext } from "../../utils/providers/ToastProvider";
 import { HouseType } from "../../../lib/admin/api/room/types";
 import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
@@ -14,13 +14,12 @@ export const RoomDeleteModalContent: React.FC<RoomDeleteModalContentProps> = ({
   onCloseModal,
 }) => {
   const { showToast } = useToastContext();
-  const [deleteItemId, setDeleteItemId] = useState<string>("");
 
   const { confirmDeleteModal } = useConfirmDeleteModal();
 
-  const onDeleteRoom = async () => {
+  const onDeleteRoom = async (id: string) => {
     try {
-      const result = await deleteRooom(deleteItemId);
+      const result = await deleteRooom(id);
       if (result.data) {
         showToast("Room successfully deleted!", "success");
       }
@@ -33,10 +32,8 @@ export const RoomDeleteModalContent: React.FC<RoomDeleteModalContentProps> = ({
     onCloseModal();
   };
 
-  const onPressDelete = (id: string) => {
-    confirmDeleteModal(onDeleteRoom);
-    setDeleteItemId(id);
-  };
+  const handleDelete = (id: string) =>
+    confirmDeleteModal(() => onDeleteRoom(id));
 
   return (
     <div>
@@ -56,7 +53,7 @@ export const RoomDeleteModalContent: React.FC<RoomDeleteModalContentProps> = ({
                     data-modal-hide="default-modal"
                     type="button"
                     className="py-2.5 px-5 ms-3 text-sm font-medium text-white focus:outline-none bg-[#D2122E] rounded-lg border border-gray-200 hover:bg-red-700 hover:text-gray-700 focus:ring-4 focus:ring-gray-100"
-                    onClick={() => onPressDelete(item._id)}
+                    onClick={() => handleDelete(item._id)}
                   >
                     Delete
                   </button>

@@ -6,6 +6,7 @@ export interface Room {
 }
 
 export interface HouseType {
+  _id: string;
   key: Key | null | undefined;
   total_rooms: number;
   rooms: Room[];

@@ -1,4 +1,4 @@
-import { request } from "../../base-api";
+import { request } from "../../base-api-client";
 import { AddEditLodger, GetLodgerResponse, LodgerOption } from "./types";
 
 export async function getLodgers(

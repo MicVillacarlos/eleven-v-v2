@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { WarningIcon } from "../../svg/WarningIcon";
 
@@ -24,7 +25,7 @@ const ConfirmationModal = (props: ModalPropsType) => {
       <div className={`relative w-full max-h-full max-w-md`}>
         <div className="relative rounded-lg shadow-sm bg-white text-black p-7 flex flex-col items-center">
           <WarningIcon size={80} color={"#205072"} />
-          <p className="text-2xl font-bold mb-2">{title}</p>
+          <p className="text-2xl font-bold my-2">{title}</p>
           <p className="text-base mb-8">{message}</p>
           <div className="flex flex-col w-full gap-2">
             <button
