@@ -17,6 +17,7 @@ import { createBill, deleteBill, fetchBills, updateStatusBill } from "../../../l
 import FilterTableButton from "../../components/Molecules/filters/FilterTableButton";
 import { useConfirmationModal } from "../../utils/providers/ConfirmationModalProvider";
 import { filterOptions } from "../../utils/options/options";
+import { useRouter } from "next/navigation";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const BillsTable = dynamic(
@@ -90,9 +91,10 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
     });
   };
 
+  const router = useRouter();
   // ------------------ TABLE FUNCTIONS --------------------
 
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
     const { data, count } = await fetchBills(
       query,
       pagination.current,
@@ -104,7 +106,8 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
     setPagination((prevState) => ({
       ...prevState,
       total: count,
-    }));  }, []);
+    }));
+  };
 
   useEffect(() => {
     fetchData();
@@ -182,6 +185,26 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
   const onClickDeleteBillTable = (data: string | Bill) => {
     const { _id } = data as Bill;
     confirmDeleteModal(() => onConfirmDeleteBill(_id));
+  };
+
+  const onClickMessageBillTable = (data: string | Bill) => {
+    if (typeof data === "string") {
+      console.error(
+        "Invalid data: Expected a Bill object but received a string"
+      );
+      return;
+    }
+
+    const { lodger_id, email_sent_status, bill_number } = data;
+
+    if (!email_sent_status) {
+      router.push(`/admin/bills/${bill_number}/${lodger_id}`);
+    } else {
+      showToast(
+        "A Notification message has already been sent. You can't send another message",
+        "warning", 5
+      );
+    }
   };
 
   const onSubmitAddEditBill = async (e: React.FormEvent) => {
@@ -305,7 +328,8 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
           handlePrevNavigation={handleNextPagination}
           onSelectTablePage={onSelectTablePage}
           pagination={pagination}
-          onClickView={() => {}}
+          onClickView={() => { }}
+          onClickMessage={onClickMessageBillTable}
           onClickDelete={onClickDeleteBillTable}
           onChangeSelectStatus={onChangeSelectStatus}
         />

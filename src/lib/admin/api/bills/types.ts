@@ -15,7 +15,7 @@ export interface Bill {
   type_of_bill: string;
   bill_amount: number;
   status: string; // Assuming only these two statuses exist
-  email_sent_status: string; // Assuming these values
+  email_sent_status: boolean; // Assuming these values
 }
 
 export interface AddEditBillFormData {

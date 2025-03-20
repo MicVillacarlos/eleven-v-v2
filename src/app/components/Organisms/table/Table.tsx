@@ -8,6 +8,7 @@ import { NextIcon } from "../../svg/NextIcon";
 import { PreviousIcon } from "../../svg/PreviousIcon";
 import { TableProps } from "./type";
 import StatusSelectInput from "../../Atoms/input/StatusSelectInput";
+import { MailIcon } from "../../svg/MailIcon";
 
 const Table = <T extends { _id: string; },>({
   data,
@@ -16,9 +17,11 @@ const Table = <T extends { _id: string; },>({
   handlePrevNavigation,
   onSelectTablePage,
   onClickEdit,
+  onClickMessage,
   onClickDelete,
   onClickView,
   onChangeSelectStatus,
+  onClickCheckbox,
   pagination,
 }: TableProps<T>) => {
   const pages = paginationPages(
@@ -82,6 +85,25 @@ const Table = <T extends { _id: string; },>({
                       key={index}
                       className="bg-white border-b border-gray-200"
                     >
+                      {onClickCheckbox && (
+                        <td className="w-4 p-4">
+                          <div className="flex items-center">
+                            <input
+                              id="checkbox"
+                              type="checkbox"
+                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
+                              onChange={()=>onClickCheckbox(item)}
+                            />
+                            <label
+                              htmlFor="checkbox"
+                              className="sr-only"
+                            >
+                              checkbox
+                            </label>
+                          </div>
+                        </td>
+                      )}
+
                       {columns.map((col) => (
                         <td
                           key={String(col.key)}
@@ -93,7 +115,10 @@ const Table = <T extends { _id: string; },>({
                         </td>
                       ))}
 
-                      {(onClickView || onClickDelete || onClickEdit) && (
+                      {(onClickView ||
+                        onClickDelete ||
+                        onClickEdit ||
+                        onClickMessage) && (
                         <td className="flex justify-center px-6 py-4 space-x-2">
                           {onClickView && (
                             <button
@@ -102,6 +127,17 @@ const Table = <T extends { _id: string; },>({
                             >
                               <EyeOnIcon size={25} />
                             </button>
+                          )}
+
+                          {onClickMessage && (
+                            <>
+                              {onClickView && (
+                                <div className="w-px self-stretch bg-gray-300 opacity-25" />
+                              )}
+                              <button onClick={() => onClickMessage(item)}>
+                                <MailIcon size={18} />
+                              </button>
+                            </>
                           )}
 
                           {onClickEdit && (

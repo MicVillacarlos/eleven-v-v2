@@ -21,7 +21,9 @@ export interface TableProps<T extends { _id: string }> {
     e: React.ChangeEvent<HTMLSelectElement>,
     id: string
   ) => void;
+  onClickMessage?: (arg0: T | string) => void;
   onClickEdit?: (arg0: T | string) => void;
   onClickDelete?: (arg0: T | string) => void;
   onClickView?: (arg0: T | string) => void;
+  onClickCheckbox?: (arg0: T | string) => void;
 }
