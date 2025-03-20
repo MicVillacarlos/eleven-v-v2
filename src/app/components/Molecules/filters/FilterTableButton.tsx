@@ -7,10 +7,11 @@ interface FilterTableButtonProps {
   options: FilterCategory[];
   filterValue: { [key: string]: string };
   onClickReset: () => void;
+  buttonName?: string
 }
 
 const FilterTableButton = (props: FilterTableButtonProps) => {
-  const { onSelectFilter, filterValue, onClickReset } = props;
+  const { onSelectFilter, filterValue, onClickReset, buttonName } = props;
   const [isOpen, setIsOpen] = useState(false);
 
   const handleFilterSelect = (header: string, value: string) => {
@@ -25,7 +26,7 @@ const FilterTableButton = (props: FilterTableButtonProps) => {
         className="flex items-center justify-center text-white bg-[#205072] hover:bg-blue-800 focus:ring-4 font-semibold focus:ring-blue-300 font-medium rounded-lg text-base px-5 py-2.5 w-full"
         type="button"
       >
-        Filter by
+        {buttonName ?? "Filter"}
         <svg
           className="w-4 h-4 ml-2"
           aria-hidden="true"
