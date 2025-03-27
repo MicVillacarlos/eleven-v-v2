@@ -16,7 +16,7 @@ export async function fetchBillsInitial(
 
 
 export async function fetchBillsMessagingInitial(
-  bill_number: number,
+  bill_number: number[],
   id: string,
   page: number,
   limit: number,
