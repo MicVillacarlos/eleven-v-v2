@@ -13,8 +13,11 @@ export default async function LodgerId({params}:LodgerMessagingProps) {
     .split(",")
     .map((num) => Number(num.slice(2)));
 
-  const { data: initialBills, count: initialTotal } =
-    await fetchBillsMessagingInitial(billNumbersFiltered, lodger_id, 1, 5);
+  const {
+    data: initialBills,
+    count: initialTotal,
+    bill_selected: billSelected,
+  } = await fetchBillsMessagingInitial(billNumbersFiltered, lodger_id, 1, 5);
 
-  return <Lodger initialBills={initialBills} initialTotal={initialTotal} />;
+  return <Lodger initialBills={initialBills} initialTotal={initialTotal} billSelected={billSelected} />;
 }
