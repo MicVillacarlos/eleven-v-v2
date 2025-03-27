@@ -9,10 +9,12 @@ interface LodgerMessagingProps {
 
 export default async function LodgerId({params}:LodgerMessagingProps) {
   const { bill_number, lodger_id } = params;
-  const billNumberFiltered = Number(bill_number.slice(2));
+  const billNumbersFiltered = bill_number
+    .split(",")
+    .map((num) => Number(num.slice(2)));
 
   const { data: initialBills, count: initialTotal } =
-    await fetchBillsMessagingInitial(billNumberFiltered, lodger_id, 1, 5);
+    await fetchBillsMessagingInitial(billNumbersFiltered, lodger_id, 1, 5);
 
   return <Lodger initialBills={initialBills} initialTotal={initialTotal} />;
 }
