@@ -13,3 +13,16 @@ export async function fetchBillsInitial(
     "GET"
   );
 }
+
+
+export async function fetchBillsMessagingInitial(
+  bill_number: number,
+  id: string,
+  page: number,
+  limit: number,
+): Promise<{ count: number; data: Bill[] }> {
+  return await requestServer(
+    `/admin/bills/fetch-bills-messaging/${bill_number}/${id}/${page}/${limit}`,
+    "GET"
+  );
+}
