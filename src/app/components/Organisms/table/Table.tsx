@@ -1,5 +1,9 @@
 import React from "react";
-import { formatDate, moneyFormat, paginationPages } from "../../../helpers/helpers";
+import {
+  formatDate,
+  moneyFormat,
+  paginationPages,
+} from "../../../helpers/helpers";
 import { DeleteIcon } from "../../svg/DeleteIcon";
 import { EditIcon } from "../../svg/EditIcon";
 import { EmptyBoxIcon } from "../../svg/EmptyBoxIcon";
@@ -10,9 +14,12 @@ import { TableProps } from "./type";
 import StatusSelectInput from "../../Atoms/input/StatusSelectInput";
 import { MailIcon } from "../../svg/MailIcon";
 
-const Table = <T extends {
-  bill_number: string; _id: string; 
-},>({
+const Table = <
+  T extends {
+    bill_number: string;
+    _id: string;
+  }
+>({
   data,
   columns,
   handleNextNavigation,
@@ -26,7 +33,7 @@ const Table = <T extends {
   onClickCheckbox,
   pagination,
   isNoPagination,
-  selectedBillNumbers
+  selectedBillNumbers,
 }: TableProps<T>) => {
   const pages = paginationPages(
     pagination.current,
@@ -34,7 +41,10 @@ const Table = <T extends {
     pagination.total
   );
 
-  const getCellContent = <T extends { _id: string }>(item: T, col: { key: keyof T; type?: string }) => {
+  const getCellContent = <T extends { _id: string }>(
+    item: T,
+    col: { key: keyof T; type?: string }
+  ) => {
     const value = item[col.key];
     if (col.type === "money" && typeof value === "number") {
       return moneyFormat(value);
@@ -96,7 +106,12 @@ const Table = <T extends {
                             <input
                               id="checkbox"
                               type="checkbox"
-                              checked={selectedBillNumbers && selectedBillNumbers.includes(Number(item.bill_number.slice(2)))}
+                              checked={
+                                selectedBillNumbers &&
+                                selectedBillNumbers.includes(
+                                  Number(item.bill_number.slice(2))
+                                )
+                              }
                               className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
                               onChange={() => onClickCheckbox(item)}
                             />
