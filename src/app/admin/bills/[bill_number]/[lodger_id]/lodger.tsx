@@ -1,8 +1,8 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { JSX, useCallback, useEffect, useRef, useState } from "react";
-import { fetchBillsMessaging } from "../../../../../lib/admin/api/bills/bills-client";
+import { fetchBillsMessaging, sendBillNotification } from "../../../../../lib/admin/api/bills/bills-client";
 import { Bill } from "../../../../../lib/admin/api/bills/types";
 import PrimaryButton from "../../../../components/Atoms/buttons/PrimaryButton";
 import DividerHorizontal from "../../../../components/Atoms/others/DividerHorizontal";
@@ -16,6 +16,8 @@ import {
 } from "../../../../components/Organisms/table/type";
 import SendIcon from "../../../../components/svg/SendIcon";
 import { billNumbersFiltered } from "../../../../helpers/helpers";
+import SecondaryButton from "../../../../components/Atoms/buttons/SecondaryButton";
+import { useToastContext } from "../../../../utils/providers/ToastProvider";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const BillTable = dynamic(
@@ -46,6 +48,9 @@ const Lodger = ({
     limit: 10,
     total: initialTotal,
   });
+  
+  const router = useRouter()
+  const { showToast } = useToastContext();
 
   const billTableColumns: Column<Bill>[] = [
     { key: "bill_number", label: "Bill No." },
@@ -128,6 +133,30 @@ const Lodger = ({
     });
 
   };
+
+  const onClickResetButton = () => {
+    setBillNumberSelected(billNumbersFiltered(params.bill_number as string));
+  };
+
+  const onSendBillHandler = async () => {
+    try {
+      const result = await sendBillNotification(
+        params.lodger_id as string,
+        billNumberSelected
+      );
+
+      if (result.success) {
+        showToast("Bill Notification successfully sent.", "success");
+        router.push("/admin/bills");
+      }
+    } catch (error) {
+      const errorMessage =
+      (error as { message?: string })?.message ||
+      "An unexpected error occurred.";
+    showToast(errorMessage, "danger");
+    }
+  };
+
   return (
     <Layout>
       {/* -------------- Header Table--------------*/}
@@ -173,9 +202,16 @@ const Lodger = ({
           Eleven-V, All rights reserved.
         </p>
       </div>
-      <div className="flex justify-end mb-24">
+      <div className="flex justify-end mb-24 gap-3">
+        {billSelectedData.length > 1 && (
+          <div className="w-250 mt-5">
+            <SecondaryButton onClick={onClickResetButton}>
+              Reset
+            </SecondaryButton>
+          </div>
+        )}
         <div className="w-250 mt-5">
-          <PrimaryButton>
+          <PrimaryButton onClick={onSendBillHandler}>
             Send Bill <SendIcon size={18} />
           </PrimaryButton>
         </div>

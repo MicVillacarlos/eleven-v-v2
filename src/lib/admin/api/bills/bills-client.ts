@@ -90,3 +90,16 @@ export async function updateStatusBill(bill_id: string, status: string) {
   });
   return result;
 }
+
+export async function sendBillNotification(lodger_id: string, bill_numbers: number[]) {
+  const result = request(`/admin/bills/send-notification-email/${lodger_id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      bill_numbers,
+    }),
+  });
+  return result;
+}
