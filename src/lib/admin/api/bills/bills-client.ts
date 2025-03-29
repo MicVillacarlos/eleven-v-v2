@@ -55,6 +55,26 @@ export async function fetchBills(
   return result;
 }
 
+export async function fetchBillsMessaging(
+  bill_number: number[],
+  id: string,
+  page: number,
+  limit: number
+): Promise<{ count: number; data: Bill[]; bill_selected: Bill[] }> {
+  const result = request<{
+    count: number;
+    data: Bill[];
+    bill_selected: Bill[];
+  }>(
+    `/admin/bills/fetch-bills-messaging/${bill_number}/${id}/${page}/${limit}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  return result;
+}
+
 export async function deleteBill(id: string) {
   const result = request(`/admin/bills/delete-bill/${id}`, {
     method: "DELETE",

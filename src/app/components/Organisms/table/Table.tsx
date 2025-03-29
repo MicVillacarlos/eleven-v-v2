@@ -10,7 +10,9 @@ import { TableProps } from "./type";
 import StatusSelectInput from "../../Atoms/input/StatusSelectInput";
 import { MailIcon } from "../../svg/MailIcon";
 
-const Table = <T extends { _id: string; },>({
+const Table = <T extends {
+  bill_number: string; _id: string; 
+},>({
   data,
   columns,
   handleNextNavigation,
@@ -23,7 +25,8 @@ const Table = <T extends { _id: string; },>({
   onChangeSelectStatus,
   onClickCheckbox,
   pagination,
-  isNoPagination
+  isNoPagination,
+  selectedBillNumbers
 }: TableProps<T>) => {
   const pages = paginationPages(
     pagination.current,
@@ -64,9 +67,9 @@ const Table = <T extends { _id: string; },>({
                 <thead className="text-sm uppercase bg-[#205072] text-white">
                   <tr>
                     {onClickCheckbox && <th></th>}
-                    {columns.map((col) => (
+                    {columns.map((col, index) => (
                       <th
-                        key={String(col.key)}
+                        key={index}
                         scope="col"
                         className={`px-6 py-3 ${
                           col.justify === "right" ? "text-right" : "text-left"
@@ -93,6 +96,7 @@ const Table = <T extends { _id: string; },>({
                             <input
                               id="checkbox"
                               type="checkbox"
+                              checked={selectedBillNumbers && selectedBillNumbers.includes(Number(item.bill_number.slice(2)))}
                               className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
                               onChange={() => onClickCheckbox(item)}
                             />
@@ -103,9 +107,9 @@ const Table = <T extends { _id: string; },>({
                         </td>
                       )}
 
-                      {columns.map((col) => (
+                      {columns.map((col, index) => (
                         <td
-                          key={String(col.key)}
+                          key={index}
                           className={`px-6 py-4 ${
                             col.justify === "right" ? "text-right" : "text-left"
                           }`}

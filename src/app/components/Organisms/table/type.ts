@@ -27,4 +27,5 @@ export interface TableProps<T extends { _id: string }> {
   onClickDelete?: (arg0: T | string) => void;
   onClickView?: (arg0: T | string) => void;
   onClickCheckbox?: (arg0: T | string) => void;
+  selectedBillNumbers?: number[];
 }

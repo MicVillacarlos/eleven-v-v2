@@ -1,5 +1,5 @@
 "use client"
-import React, { JSX, Suspense, useCallback, useEffect, useState } from "react";
+import React, { JSX, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Layout from "../../components/Organisms/layout/Layout";
 import Text3xl from "../../components/Atoms/text/Text3xl";
 import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
@@ -52,7 +52,6 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
     limit: 10,
     total: initialTotal,
   });
-
 
   const [filter, setFilter] = useState<{ [key: string]: string }>({
     status: "",
@@ -108,10 +107,18 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
       total: count,
     }));
   };
-
+  
+  //--Prevents fetch in first render
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     fetchData();
   }, [pagination.current, query, filter]);
+  //--Prevents fetch in first render
 
   const handleNextPagination = useCallback(() => {
     setPagination((prevState) => {
@@ -202,7 +209,8 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
     } else {
       showToast(
         "A Notification message has already been sent. You can't send another message",
-        "warning", 5
+        "warning",
+        5
       );
     }
   };
@@ -266,24 +274,28 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
       showToast("Invalid bill ID.", "danger");
       return;
     }
-    
+
     const status = e.target.value;
-  
-    confirmationModal("Confirm Status Change", "Are you sure you want to update the bill status?", async () => {
-      try {
-        const result = await updateStatusBill(bill_id, status);
-        if (result.bill) {
-          fetchData();
-          showToast("Bill status successfully updated!", "success");
+
+    confirmationModal(
+      "Confirm Status Change",
+      "Are you sure you want to update the bill status?",
+      async () => {
+        try {
+          const result = await updateStatusBill(bill_id, status);
+          if (result.bill) {
+            fetchData();
+            showToast("Bill status successfully updated!", "success");
+          }
+        } catch (error) {
+          const errorMessage =
+            (error as { message?: string })?.message ||
+            "An unexpected error occurred.";
+          showToast(errorMessage, "danger");
         }
-      } catch (error) {
-        const errorMessage =
-          (error as { message?: string })?.message || "An unexpected error occurred.";
-        showToast(errorMessage, "danger");
       }
-    });
+    );
   };
-  
 
   return (
     <Layout>
@@ -328,7 +340,7 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
           handlePrevNavigation={handleNextPagination}
           onSelectTablePage={onSelectTablePage}
           pagination={pagination}
-          onClickView={() => { }}
+          onClickView={() => {}}
           onClickMessage={onClickMessageBillTable}
           onClickDelete={onClickDeleteBillTable}
           onChangeSelectStatus={onChangeSelectStatus}
