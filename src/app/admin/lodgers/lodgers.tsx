@@ -54,6 +54,8 @@ const Lodgers = ({
   });
   const [lodgerDataTable, setLodgerDataTable] =
     useState<FetchLodgerType[]>(initialLodgers);
+  
+  const [query, setQuery] = useState<string>("");
 
   const [isViewAddEditFormModal, setIsViewAddEditFormModal] =
     useState<boolean>(false);
@@ -102,7 +104,7 @@ const Lodgers = ({
 
   const fetchData = async () => {
     const { data, count } = await getLodgers(
-      "",
+      query,
       pagination.current,
       pagination.limit
     );
@@ -122,7 +124,7 @@ const Lodgers = ({
     }
 
     fetchData();
-  }, [pagination.current]);
+  }, [pagination.current, query]);
   //------------ Prevents fetch in first render ------------
 
   useEffect(() => {
@@ -166,7 +168,9 @@ const Lodgers = ({
     }));
   }, []);
 
-  const onSearchTable = () => {};
+  const onSearchTable = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
 
   const resetAddEditLodgerData = () => {
     setAddEditLodgerData({
@@ -300,7 +304,7 @@ const Lodgers = ({
       {/* -------------- Header Table --------------*/}
       <div className="flex w-full justify-between mb-6 items-center gap-5 mb-5">
         <div className="md:w-1/4">
-          <SearchInput onChangeSearch={onSearchTable} />
+          <SearchInput placeHolder="Search Name" onChangeSearch={onSearchTable} />
         </div>
         <div className="lg:w-[150px]">{/* <FilterTableButton /> */}</div>
       </div>
