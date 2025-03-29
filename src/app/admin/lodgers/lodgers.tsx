@@ -1,5 +1,5 @@
 "use client";
-import React, { JSX, Suspense, useCallback, useEffect, useState } from "react";
+import React, { JSX, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Layout from "../../components/Organisms/layout/Layout";
 import Text3xl from "../../components/Atoms/text/Text3xl";
 import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
@@ -113,9 +113,17 @@ const Lodgers = ({
     }));
   };
 
+  //------------ Prevents fetch in first render ------------
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     fetchData();
   }, [pagination.current]);
+  //------------ Prevents fetch in first render ------------
 
   useEffect(() => {
     const fetchAvailableRooms = async () => {

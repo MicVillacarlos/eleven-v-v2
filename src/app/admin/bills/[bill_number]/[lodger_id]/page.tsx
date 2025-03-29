@@ -1,4 +1,5 @@
 import { fetchBillsMessagingInitial } from "../../../../../lib/admin/api/bills/bills-server";
+import { billNumbersFiltered } from "../../../../helpers/helpers";
 import Lodger from "./lodger";
 interface LodgerMessagingProps {
   params: {
@@ -9,12 +10,12 @@ interface LodgerMessagingProps {
 
 export default async function LodgerId({params}:LodgerMessagingProps) {
   const { bill_number, lodger_id } = params;
-  const billNumbersFiltered = bill_number
-    .split(",")
-    .map((num) => Number(num.slice(2)));
 
-  const { data: initialBills, count: initialTotal } =
-    await fetchBillsMessagingInitial(billNumbersFiltered, lodger_id, 1, 5);
+  const {
+    data: initialBills,
+    count: initialTotal,
+    bill_selected: billSelected,
+  } = await fetchBillsMessagingInitial(billNumbersFiltered(bill_number), lodger_id, 1, 5);
 
-  return <Lodger initialBills={initialBills} initialTotal={initialTotal} />;
+  return <Lodger initialBills={initialBills} initialTotal={initialTotal} billSelected={billSelected} />;
 }

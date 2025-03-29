@@ -1,5 +1,5 @@
-import moment from "moment";
 import { config } from "../../config/config";
+import moment from "moment-timezone"
 
 export const paginationPages = (current: number, limit: number, total: number): number[] => {
   const totalPages = Math.ceil(total / limit);
@@ -43,5 +43,8 @@ export const formatStringToNumber = (string: string) => {
 }
 
 export const formatDate = (date: Date | string) => {
-  return moment(date).tz(config.timezone!).format("MM-DD-YYYY");
+  return moment(date).tz(config.timezone ?? "UTC").format("MM-DD-YYYY");
 };
+
+export const billNumbersFiltered = (bill_number: string) =>
+  bill_number?.split(",").map((num: string) => Number(num.slice(2)));

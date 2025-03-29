@@ -1,5 +1,10 @@
 import React from "react";
-import { formatDate, moneyFormat, paginationPages } from "../../../helpers/helpers";
+import {
+  capitalizeFirstLetter,
+  formatDate,
+  moneyFormat,
+  paginationPages,
+} from "../../../helpers/helpers";
 import { DeleteIcon } from "../../svg/DeleteIcon";
 import { EditIcon } from "../../svg/EditIcon";
 import { EmptyBoxIcon } from "../../svg/EmptyBoxIcon";
@@ -10,7 +15,12 @@ import { TableProps } from "./type";
 import StatusSelectInput from "../../Atoms/input/StatusSelectInput";
 import { MailIcon } from "../../svg/MailIcon";
 
-const Table = <T extends { _id: string; },>({
+const Table = <
+  T extends {
+    bill_number: string;
+    _id: string;
+  }
+>({
   data,
   columns,
   handleNextNavigation,
@@ -23,6 +33,8 @@ const Table = <T extends { _id: string; },>({
   onChangeSelectStatus,
   onClickCheckbox,
   pagination,
+  isNoPagination,
+  selectedBillNumbers,
 }: TableProps<T>) => {
   const pages = paginationPages(
     pagination.current,
@@ -30,7 +42,10 @@ const Table = <T extends { _id: string; },>({
     pagination.total
   );
 
-  const getCellContent = <T extends { _id: string }>(item: T, col: { key: keyof T; type?: string }) => {
+  const getCellContent = <T extends { _id: string }>(
+    item: T,
+    col: { key: keyof T; type?: string }
+  ) => {
     const value = item[col.key];
     if (col.type === "money" && typeof value === "number") {
       return moneyFormat(value);
@@ -50,6 +65,10 @@ const Table = <T extends { _id: string; },>({
       );
     }
 
+    if (typeof value === "string") {
+      return capitalizeFirstLetter(value);
+    }
+
     return value as React.ReactNode;
   };
 
@@ -62,9 +81,10 @@ const Table = <T extends { _id: string; },>({
               <table className="w-full text-base text-left rtl:text-right text-gray-500 shadow-sm">
                 <thead className="text-sm uppercase bg-[#205072] text-white">
                   <tr>
-                    {columns.map((col) => (
+                    {onClickCheckbox && <th></th>}
+                    {columns.map((col, index) => (
                       <th
-                        key={String(col.key)}
+                        key={index}
                         scope="col"
                         className={`px-6 py-3 ${
                           col.justify === "right" ? "text-right" : "text-left"
@@ -91,22 +111,25 @@ const Table = <T extends { _id: string; },>({
                             <input
                               id="checkbox"
                               type="checkbox"
+                              checked={
+                                selectedBillNumbers &&
+                                selectedBillNumbers.includes(
+                                  Number(item.bill_number.slice(2))
+                                )
+                              }
                               className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
-                              onChange={()=>onClickCheckbox(item)}
+                              onChange={() => onClickCheckbox(item)}
                             />
-                            <label
-                              htmlFor="checkbox"
-                              className="sr-only"
-                            >
+                            <label htmlFor="checkbox" className="sr-only">
                               checkbox
                             </label>
                           </div>
                         </td>
                       )}
 
-                      {columns.map((col) => (
+                      {columns.map((col, index) => (
                         <td
-                          key={String(col.key)}
+                          key={index}
                           className={`px-6 py-4 ${
                             col.justify === "right" ? "text-right" : "text-left"
                           }`}
@@ -179,46 +202,48 @@ const Table = <T extends { _id: string; },>({
 
             {/* {--------------- End: Pagination Bar -----------------} */}
           </div>
-          <nav aria-label="Page navigation" className="w-full">
-            <ul className="flex items-center justify-end p-2 text-base w-full rounded-b-md bg-[#205072]">
-              <li>
-                <button
-                  onClick={handlePrevNavigation}
-                  className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 cursor-pointer"
-                >
-                  <PreviousIcon />
-                </button>
-              </li>
+          {!isNoPagination ? (
+            <nav aria-label="Page navigation" className="w-full">
+              <ul className="flex items-center justify-end p-2 text-base w-full rounded-b-md bg-[#205072]">
+                <li>
+                  <button
+                    onClick={handlePrevNavigation}
+                    className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 cursor-pointer"
+                  >
+                    <PreviousIcon />
+                  </button>
+                </li>
 
-              {pages.map((item, index) => {
-                const isActive = item === pagination.current;
-                return (
-                  <li key={index}>
-                    <button
-                      onClick={() => onSelectTablePage(item)}
-                      className={`flex items-center justify-center px-3 h-8 leading-tight border cursor-pointer
+                {pages.map((item, index) => {
+                  const isActive = item === pagination.current;
+                  return (
+                    <li key={index}>
+                      <button
+                        onClick={() => onSelectTablePage(item)}
+                        className={`flex items-center justify-center px-3 h-8 leading-tight border cursor-pointer
                    ${
                      isActive
                        ? "z-10 text-blue-600 border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-gray-700"
                        : "text-gray-500 bg-white border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                    }`}
-                    >
-                      {item}
-                    </button>
-                  </li>
-                );
-              })}
+                      >
+                        {item}
+                      </button>
+                    </li>
+                  );
+                })}
 
-              <li>
-                <button
-                  onClick={handleNextNavigation}
-                  className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 cursor-pointer"
-                >
-                  <NextIcon />
-                </button>
-              </li>
-            </ul>
-          </nav>
+                <li>
+                  <button
+                    onClick={handleNextNavigation}
+                    className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 cursor-pointer"
+                  >
+                    <NextIcon />
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          ) : null}
         </>
       ) : (
         <div className="w-full bg-white rounded-lg h-[300px] flex flex-col justify-center items-center">

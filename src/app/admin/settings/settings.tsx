@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import React, { JSX, Suspense, useCallback, useEffect, useState } from "react";
+import React, { JSX, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { addRoom, getRooms } from "../../../lib/admin/api/room/room-client";
 import { AddRoomData, HouseType } from "../../../lib/admin/api/room/types";
 import PrimaryButton from "../../components/Atoms/buttons/PrimaryButton";
@@ -81,9 +81,17 @@ const Settings = ({ initialRooms, initialTotal }: { initialRooms: HouseType[]; i
     }));
   };
 
+  //------------ Prevents fetch in first render ------------
+  const isFirstRender = useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     fetchData();
   }, [pagination.current]);
+  //------------ Prevents fetch in first render ------------
 
   const handleNextPagination = useCallback(() => {
     setPagination((prevState) => {

@@ -8,6 +8,7 @@ export interface Column<T> {
 export interface TableProps<T extends { _id: string }> {
   data: T[];
   columns: Column<T>[];
+  isNoPagination?: boolean;
   handleNextNavigation: () => void;
   handlePrevNavigation: () => void;
   onSelectTablePage: (page: number) => void;
@@ -26,4 +27,5 @@ export interface TableProps<T extends { _id: string }> {
   onClickDelete?: (arg0: T | string) => void;
   onClickView?: (arg0: T | string) => void;
   onClickCheckbox?: (arg0: T | string) => void;
+  selectedBillNumbers?: number[];
 }

@@ -5,7 +5,7 @@ export interface Bill {
   lodger_id: string;
   lodger_full_name: string;
   room_number: string;
-  bill_number: number;
+  bill_number: string;
   due_date: string;
   past_reading_date: string;
   present_reading_date: string;
