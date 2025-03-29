@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  capitalizeFirstLetter,
   formatDate,
   moneyFormat,
   paginationPages,
@@ -62,6 +63,10 @@ const Table = <
           onChange={(e) => onChangeSelectStatus!(e, item._id ?? "")}
         />
       );
+    }
+
+    if (typeof value === "string") {
+      return capitalizeFirstLetter(value);
     }
 
     return value as React.ReactNode;
