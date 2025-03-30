@@ -10,11 +10,13 @@ import { BillsIcon } from "../../svg/BillsIcon";
 import { LogoutIcon } from "../../svg/LogoutIcon";
 import Image from "next/image";
 import React from "react";
+import clsx from "clsx";
 
 export default function Layout({
   children,
+  isNoPadding
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode; isNoPadding?: boolean
 }>) {
   const windowWidth: number = useWindowSize();
   const [isSideBarOpen, setIsSidebarOpen] = useState<boolean>(false);
@@ -145,10 +147,10 @@ export default function Layout({
         </div>
       </aside>
 
-      <div className="p-4 pt-10 sm:ml-64 bg-[#E3EEF6]">
-        <div className="p-4">
-          <div className="mb-4">{children}</div>
-        </div>
+      <div
+        className={clsx("sm:ml-64 bg-[#E3EEF6]", !isNoPadding && "p-4 pt-10 ")}
+      >
+        <div className={clsx("mb-4", !isNoPadding && "p-4")}>{children}</div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useParams, useRouter } from 'next/navigation';
-import { JSX, useCallback, useEffect, useRef, useState } from "react";
+import { JSX, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { fetchBillsMessaging, sendBillNotification } from "../../../../../lib/admin/api/bills/bills-client";
 import { Bill } from "../../../../../lib/admin/api/bills/types";
 import PrimaryButton from "../../../../components/Atoms/buttons/PrimaryButton";
@@ -15,7 +15,7 @@ import {
   TableProps,
 } from "../../../../components/Organisms/table/type";
 import SendIcon from "../../../../components/svg/SendIcon";
-import { billNumbersFiltered } from "../../../../helpers/helpers";
+import { billNumbersFiltered, moneyFormat } from "../../../../helpers/helpers";
 import SecondaryButton from "../../../../components/Atoms/buttons/SecondaryButton";
 import { useToastContext } from "../../../../utils/providers/ToastProvider";
 
@@ -157,6 +157,10 @@ const Lodger = ({
     }
   };
 
+  const totalBillAmount = useMemo(() => {
+    return billSelectedData.reduce((total, bill) => total + bill.bill_amount, 0);
+  }, [billSelectedData]);
+
   return (
     <Layout>
       {/* -------------- Header Table--------------*/}
@@ -194,6 +198,12 @@ const Lodger = ({
             total: 0,
           }}
         />
+        <div className="w-full flex justify-end p-6 gap-5">
+          <p className="text-gray-500 text-base">TOTAL:</p>
+          <p className="text-gray-500 text-base">
+            {moneyFormat(totalBillAmount)}
+          </p>
+        </div>
         <p className="text-gray-500 mt-10 text-sm italic">
           Please settle your bill.
         </p>

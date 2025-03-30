@@ -65,6 +65,10 @@ const Table = <
       );
     }
 
+    if (col.key === "email") {
+      return value as React.ReactNode;
+    }
+
     if (typeof value === "string") {
       return capitalizeFirstLetter(value);
     }

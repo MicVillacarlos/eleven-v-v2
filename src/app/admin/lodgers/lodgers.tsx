@@ -11,7 +11,9 @@ import SearchInput from "../../components/Atoms/input/SearchInput";
 import {
   addLodger,
   deleteLodger,
+  getLodgerDetails,
   getLodgers,
+  updateLodger,
 } from "../../../lib/admin/api/lodgers/lodger-client";
 import {
   AddEditLodger,
@@ -29,6 +31,7 @@ import { getAvailableRooms } from "../../../lib/admin/api/room/room-client";
 import { GetRoomAvailablesObject } from "../../../lib/admin/api/room/types";
 import ModalView from "../../components/Organisms/modal/ModalView";
 import { LodgerViewModalContent } from "./LodgerViewModalContent";
+import moment from "moment";
 
 //---Start---Note: Use dynamic(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const LodgersTable = dynamic(
@@ -46,7 +49,8 @@ const Lodgers = ({
 }: {
   initialLodgers: FetchLodgerType[];
   initialTotal: number;
-}) => {
+  }) => {
+  const [mode, setMode] = useState<string>('add');
   const [pagination, setPagination] = useState({
     current: 1,
     limit: 5,
@@ -54,6 +58,8 @@ const Lodgers = ({
   });
   const [lodgerDataTable, setLodgerDataTable] =
     useState<FetchLodgerType[]>(initialLodgers);
+  
+  const [query, setQuery] = useState<string>("");
 
   const [isViewAddEditFormModal, setIsViewAddEditFormModal] =
     useState<boolean>(false);
@@ -76,6 +82,7 @@ const Lodgers = ({
     company_or_school: "",
     number_of_room_occupants: "",
     room_id: "",
+    lodger_id: ""
   });
 
   /**
@@ -102,7 +109,7 @@ const Lodgers = ({
 
   const fetchData = async () => {
     const { data, count } = await getLodgers(
-      "",
+      query,
       pagination.current,
       pagination.limit
     );
@@ -122,7 +129,7 @@ const Lodgers = ({
     }
 
     fetchData();
-  }, [pagination.current]);
+  }, [pagination.current, query]);
   //------------ Prevents fetch in first render ------------
 
   useEffect(() => {
@@ -139,6 +146,7 @@ const Lodgers = ({
   // ------------------ TABLE FUNCTIONS --------------------
 
   const onClickAddLodger = () => {
+    setMode('add')
     setIsViewAddEditFormModal(true);
   };
 
@@ -166,7 +174,9 @@ const Lodgers = ({
     }));
   }, []);
 
-  const onSearchTable = () => {};
+  const onSearchTable = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
 
   const resetAddEditLodgerData = () => {
     setAddEditLodgerData({
@@ -183,6 +193,7 @@ const Lodgers = ({
       company_or_school: "",
       number_of_room_occupants: "",
       room_id: "",
+      lodger_id: ""
     });
     setIsViewAddEditFormModal(false);
   };
@@ -207,7 +218,25 @@ const Lodgers = ({
     confirmDeleteModal(() => onConfirmDeleteLodger(_id));
   };
 
-  const onClickEditLodgerTable = () => {};
+  const onClickEditLodgerTable = async (lodger: string | FetchLodgerType) => {
+    const { data } = await getLodgerDetails((lodger as FetchLodgerType)._id);
+    const emergencyContactNumber = Number(
+      data.emergency_contact_number.slice(3)
+    );
+    const lodgerContactNumber = Number(data.phone_number.slice(3));
+    const birthday = moment(data.birth_date).format("yyyy-MM-DD");
+
+    setAddEditLodgerData({
+      ...data,
+      emergency_contact_number: emergencyContactNumber,
+      phone_number: lodgerContactNumber,
+      birth_date: birthday,
+      room_id: data.room_details._id,
+      lodger_id: data._id,
+    });
+    setMode("edit");
+    setIsViewAddEditFormModal(true);
+  };
 
   const onHandleChangeform = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -234,30 +263,57 @@ const Lodgers = ({
       company_or_school,
       number_of_room_occupants,
       room_id,
+      lodger_id
     } = addEditLodgerData;
 
     try {
-      const result = await addLodger(
-        first_name,
-        last_name,
-        birth_date,
-        sex,
-        home_address,
-        formatNumberToString(phone_number, "+63"),
-        email,
-        emergency_contact_person,
-        formatNumberToString(emergency_contact_number, "+63"),
-        occupation,
-        company_or_school,
-        formatStringToNumber(number_of_room_occupants),
-        room_id
-      );
+      if (mode === 'edit') {
+        const result = await updateLodger(
+          lodger_id ?? "",
+          first_name,
+          last_name,
+          birth_date,
+          sex,
+          home_address,
+          formatNumberToString(phone_number, "+63"),
+          email,
+          emergency_contact_person,
+          formatNumberToString(emergency_contact_number, "+63"),
+          occupation,
+          company_or_school,
+          formatStringToNumber(number_of_room_occupants),
+          room_id
+        );
 
-      if (result.user) {
-        showToast("Successfully added a new Lodger.", "success");
-        resetAddEditLodgerData();
-        fetchData();
+        if (result.user) {
+          showToast("Successfully added a new Lodger.", "success");
+          resetAddEditLodgerData();
+          setMode('add');
+          fetchData();
+        }
+      } else {
+        const result = await addLodger(
+          first_name,
+          last_name,
+          birth_date,
+          sex,
+          home_address,
+          formatNumberToString(phone_number, "+63"),
+          email,
+          emergency_contact_person,
+          formatNumberToString(emergency_contact_number, "+63"),
+          occupation,
+          company_or_school,
+          formatStringToNumber(number_of_room_occupants),
+          room_id
+        );
+        if (result.user) {
+          showToast("Successfully added a new Lodger.", "success");
+          resetAddEditLodgerData();
+          fetchData();
+        }
       }
+
     } catch (error) {
       const errorMessage =
         (error as { message?: string })?.message ||
@@ -300,9 +356,8 @@ const Lodgers = ({
       {/* -------------- Header Table --------------*/}
       <div className="flex w-full justify-between mb-6 items-center gap-5 mb-5">
         <div className="md:w-1/4">
-          <SearchInput onChangeSearch={onSearchTable} />
+          <SearchInput placeHolder="Search Name" onChangeSearch={onSearchTable} />
         </div>
-        <div className="lg:w-[150px]">{/* <FilterTableButton /> */}</div>
       </div>
       <Suspense fallback={<TableLoading />}>
         <LodgersTable
@@ -317,9 +372,11 @@ const Lodgers = ({
           onClickView={onClickViewLodgerTable}
         />
       </Suspense>
+
       <ModalForm
         content={
           <LodgerAddEditFormContent
+            mode={mode}
             handleChangeForm={onHandleChangeform}
             formData={addEditLodgerData}
             availableRooms={availableRooms}
@@ -328,7 +385,7 @@ const Lodgers = ({
         isOpen={isViewAddEditFormModal}
         onSubmitForm={onSubmitModalForm}
         onCloseModal={onCloseModalForm}
-        title="Add Lodger"
+        title={mode === 'add' ? "Add Lodger" : "Edit Lodger"}
         key={"add_edit_lodger"}
       />
 
