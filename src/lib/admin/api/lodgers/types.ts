@@ -35,6 +35,7 @@ export interface AddEditLodger {
   company_or_school: string;
   number_of_room_occupants: string;
   room_id: string;
+  lodger_id?: string;
 }
 
 export interface LodgerOption {

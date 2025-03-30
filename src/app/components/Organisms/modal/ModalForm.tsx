@@ -10,7 +10,7 @@ interface ModalPropsType {
 }
 
 const ModalForm = (props: ModalPropsType) => {
-  const { title, content, isOpen, onCloseModal, onSubmitForm } = props;
+  const { title, content, isOpen, onCloseModal, onSubmitForm} = props;
 
   return (
     <div

@@ -194,6 +194,9 @@ const Lodger = ({
             total: 0,
           }}
         />
+        <div className="w-full flex justify-end">
+          <p>Total</p>
+        </div>
         <p className="text-gray-500 mt-10 text-sm italic">
           Please settle your bill.
         </p>

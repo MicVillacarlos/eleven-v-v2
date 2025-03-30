@@ -12,12 +12,14 @@ interface LodgerAddEditFormContentProps {
   ) => void;
   formData: AddEditLodger;
   availableRooms: GetRoomAvailablesObject[];
+  mode: string;
 }
 
 const LodgerAddEditFormContent = ({
   handleChangeForm,
   formData,
   availableRooms,
+  mode
 }: LodgerAddEditFormContentProps) => {
   const {
     birth_date,
@@ -164,15 +166,17 @@ const LodgerAddEditFormContent = ({
             value={company_or_school}
             required
           />
-          <SelectInput
-            id="room_id"
-            options={availableRooms}
-            label="Room Number"
-            placeHolder="Room Number"
-            value={room_id}
-            onChange={handleChangeForm}
-            required
-          />
+          {mode === "add" && (
+            <SelectInput
+              id="room_id"
+              options={availableRooms}
+              label="Room Number"
+              placeHolder="Room Number"
+              value={room_id}
+              onChange={handleChangeForm}
+              required
+            />
+          )}
         </div>
       </div>
     </div>

@@ -1,12 +1,6 @@
-import React from "react";
-import Layout from "../../components/Organisms/layout/Layout";
+import Dashboard from "./dashboard";
 
-const Dashboard = () => {
-  return (
-    <Layout>
-      <div>dashbOASrd</div>
-    </Layout>
-  );
-};
+export default async function DashboardPage() {
 
-export default Dashboard;
+  return <Dashboard />;
+}
