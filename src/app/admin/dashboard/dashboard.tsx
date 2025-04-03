@@ -43,34 +43,71 @@ const Dashboard = ({
         <p className="text-white">Here are today&apos;s Summary of Reports.</p>
       </div>
 
+      <div className="pt-10 flex flex-col items-center">
+        <p className="text-gray-500 text-base">Monday - April 1, 2025</p>
+      </div>
+
       <div className="p-5">
         {isClient && billChartData?.length > 0 ? (
-          <div className="border bg-white w-1/3 mt-5 rounded-[5px]">
-            <div className="flex flex-col">
-              <div className="flex justify-center items-center mt-5">
-                <p className="text-gray-500 text-base">
-                  Bills Overview - {moment().format("MMMM YYYY")}
-                </p>
+          <div className="flex flex-wrap justify-center gap-5 w-full">
+            <div className="border bg-white w-50% mt-5 rounded-[5px]">
+              <div className="flex flex-col">
+                <div className="flex justify-center items-center mt-5">
+                  <p className="text-gray-500 text-base">
+                    Rooms - {moment().format("MMMM YYYY")}
+                  </p>
+                </div>
+                <div className="flex justify-between">
+                  <PieChart width={260} height={200}>
+                    <Pie
+                      data={billChartData}
+                      dataKey="value"
+                      nameKey="label"
+                      innerRadius={50}
+                      outerRadius={80}
+                      paddingAngle={3}
+                      animationDuration={500}
+                    >
+                      {billChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                  <div className="flex-col flex w-1/2 justify-center gap-4 pl-5">
+                    {customLabel(billChartData)}
+                  </div>
+                </div>
               </div>
-              <div className="flex flex justify-between">
-                <PieChart width={260} height={200}>
-                  <Pie
-                    data={billChartData}
-                    dataKey="value"
-                    nameKey="label"
-                    innerRadius={50}
-                    outerRadius={80}
-                    paddingAngle={3}
-                    animationDuration={500}
-                  >
-                    {billChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-                <div className="flex-col flex w-1/2 justify-center gap-4 pl-5">
-                  {customLabel(billChartData)}
+            </div>
+
+            <div className="border bg-white w-50% mt-5 rounded-[5px]">
+              <div className="flex flex-col">
+                <div className="flex justify-center items-center mt-5">
+                  <p className="text-gray-500 text-base">
+                    Bills Overview - {moment().format("MMMM YYYY")}
+                  </p>
+                </div>
+                <div className="flex justify-between">
+                  <PieChart width={260} height={200}>
+                    <Pie
+                      data={billChartData}
+                      dataKey="value"
+                      nameKey="label"
+                      innerRadius={50}
+                      outerRadius={80}
+                      paddingAngle={3}
+                      animationDuration={500}
+                    >
+                      {billChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                  <div className="flex-col flex w-1/2 justify-center gap-4 pl-5">
+                    {customLabel(billChartData)}
+                  </div>
                 </div>
               </div>
             </div>
@@ -78,6 +115,17 @@ const Dashboard = ({
         ) : (
           <p className="text-white">No data available</p>
         )}
+      </div>
+
+      <div className="bg-white p-5 flex flex-col mx-auto gap-2 w-[250px] rounded-md shadow">
+        <div className="flex justify-center items-center">
+          <p className="text-gray-500 text-base font-semibold">
+            Birthday Celebrants:
+          </p>
+        </div>
+        <p className="text-gray-500 text-base">Helena Eagan</p>
+        <p className="text-gray-500 text-base">Helley R</p>
+        <p className="text-gray-500 text-base">Britt Lower</p>
       </div>
     </Layout>
   );
