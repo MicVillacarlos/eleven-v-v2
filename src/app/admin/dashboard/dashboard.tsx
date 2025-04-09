@@ -5,14 +5,23 @@ import Text3xl from "../../components/Atoms/text/Text3xl";
 import { billChartDataType } from "../../../lib/admin/api/dashboard/types";
 import { Pie, PieChart, Cell, Tooltip } from "recharts";
 import { capitalizeFirstLetter } from "../../helpers/helpers";
-import moment from "moment";
 
 const Dashboard = ({
   name,
   billChartData,
+  roomData,
+  dayString,
+  day,
+  year,
+  month,
 }: {
   name: string;
   billChartData: billChartDataType[];
+  roomData: billChartDataType[];
+  dayString: string;
+  month: string;
+  day: string;
+  year: string;
 }) => {
   const [isClient, setIsClient] = useState(false);
 
@@ -20,9 +29,9 @@ const Dashboard = ({
     setIsClient(true);
   }, []);
 
-  const customLabel = (billChartData: billChartDataType[]) => {
-    return billChartData.map((item, index) => (
-      <div key={index} className="z-100 flex gap-3 items-center">
+  const customLabel = (data: billChartDataType[]) => {
+    return data.map((item, index) => (
+      <div key={index} className="z-100 flex gap-5 items-center">
         <div
           className="h-8 w-2 rounded"
           style={{ backgroundColor: item.color }}
@@ -36,6 +45,27 @@ const Dashboard = ({
     ));
   };
 
+  const renderPieChart = (data: billChartDataType[]) => {
+    return (
+      <PieChart width={280} height={290}>
+        <Pie
+          data={data}
+          dataKey="value"
+          nameKey="label"
+          innerRadius={70}
+          outerRadius={100}
+          paddingAngle={3}
+          animationDuration={500}
+        >
+          {data.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={entry.color} />
+          ))}
+        </Pie>
+        <Tooltip />
+      </PieChart>
+    );
+  };
+
   return (
     <Layout isNoPadding>
       <div className="bg-[#205072] w-full h-[140px] p-5 flex flex-col justify-center gap-2">
@@ -43,68 +73,38 @@ const Dashboard = ({
         <p className="text-white">Here are today&apos;s Summary of Reports.</p>
       </div>
 
-      <div className="pt-10 flex flex-col items-center">
-        <p className="text-gray-500 text-base">Monday - April 1, 2025</p>
+      <div className="pt-5 flex flex-col items-center">
+        <p className="text-gray-500 text-base">{`${dayString} - ${month} ${day}, ${year}`}</p>
       </div>
 
-      <div className="p-5">
-        {isClient && billChartData?.length > 0 ? (
-          <div className="flex flex-wrap justify-center gap-5 w-full">
-            <div className="border bg-white w-50% mt-5 rounded-[5px]">
+      <div className="px-5">
+        {isClient && (billChartData.length > 0 || roomData.length > 0) ? (
+          <div className="flex gap-5 w-full">
+            <div className="border bg-white w-1/2 mt-5 rounded-[5px]">
               <div className="flex flex-col">
                 <div className="flex justify-center items-center mt-5">
-                  <p className="text-gray-500 text-base">
-                    Rooms - {moment().format("MMMM YYYY")}
+                  <p className="text-gray-500 text-base font-semibold">
+                    Rooms - {month} {year}
                   </p>
                 </div>
                 <div className="flex justify-between">
-                  <PieChart width={260} height={200}>
-                    <Pie
-                      data={billChartData}
-                      dataKey="value"
-                      nameKey="label"
-                      innerRadius={50}
-                      outerRadius={80}
-                      paddingAngle={3}
-                      animationDuration={500}
-                    >
-                      {billChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
+                  {renderPieChart(roomData)}
                   <div className="flex-col flex w-1/2 justify-center gap-4 pl-5">
-                    {customLabel(billChartData)}
+                    {customLabel(roomData)}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="border bg-white w-50% mt-5 rounded-[5px]">
+            <div className="border bg-white w-1/2 mt-5 rounded-[5px]">
               <div className="flex flex-col">
                 <div className="flex justify-center items-center mt-5">
-                  <p className="text-gray-500 text-base">
-                    Bills Overview - {moment().format("MMMM YYYY")}
+                  <p className="text-gray-500 text-base font-semibold">
+                    Bills Overview - {month} {year}
                   </p>
                 </div>
                 <div className="flex justify-between">
-                  <PieChart width={260} height={200}>
-                    <Pie
-                      data={billChartData}
-                      dataKey="value"
-                      nameKey="label"
-                      innerRadius={50}
-                      outerRadius={80}
-                      paddingAngle={3}
-                      animationDuration={500}
-                    >
-                      {billChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
+                  {renderPieChart(billChartData)}
                   <div className="flex-col flex w-1/2 justify-center gap-4 pl-5">
                     {customLabel(billChartData)}
                   </div>
@@ -115,17 +115,6 @@ const Dashboard = ({
         ) : (
           <p className="text-white">No data available</p>
         )}
-      </div>
-
-      <div className="bg-white p-5 flex flex-col mx-auto gap-2 w-[250px] rounded-md shadow">
-        <div className="flex justify-center items-center">
-          <p className="text-gray-500 text-base font-semibold">
-            Birthday Celebrants:
-          </p>
-        </div>
-        <p className="text-gray-500 text-base">Helena Eagan</p>
-        <p className="text-gray-500 text-base">Helley R</p>
-        <p className="text-gray-500 text-base">Britt Lower</p>
       </div>
     </Layout>
   );

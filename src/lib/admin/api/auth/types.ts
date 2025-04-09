@@ -7,7 +7,7 @@ export interface LoginType {
   };
 }
 
-export interface UpdatePasswordType {
+export interface UpdatePasswordTypeResult {
   success: boolean;
   message: string;
 }
