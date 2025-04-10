@@ -79,8 +79,8 @@ const Dashboard = ({
 
       <div className="px-5">
         {isClient && (billChartData.length > 0 || roomData.length > 0) ? (
-          <div className="flex gap-5 w-full">
-            <div className="border bg-white w-1/2 mt-5 rounded-[5px]">
+          <div className="flex flex-col lg:flex-row gap-5 w-full">
+            <div className="border bg-white w-full lg:w-1/2 mt-5 rounded-[5px]">
               <div className="flex flex-col">
                 <div className="flex justify-center items-center mt-5">
                   <p className="text-gray-500 text-base font-semibold">
@@ -96,7 +96,7 @@ const Dashboard = ({
               </div>
             </div>
 
-            <div className="border bg-white w-1/2 mt-5 rounded-[5px]">
+            <div className="border bg-white w-full lg:w-1/2 mt-5 rounded-[5px]">
               <div className="flex flex-col">
                 <div className="flex justify-center items-center mt-5">
                   <p className="text-gray-500 text-base font-semibold">
@@ -113,7 +113,9 @@ const Dashboard = ({
             </div>
           </div>
         ) : (
-          <p className="text-white">No data available</p>
+            <div className="w-full h-[200px] flex justify-center items-center">
+              <p className="text-gray-500">No Data Available</p>
+            </div>
         )}
       </div>
     </Layout>
