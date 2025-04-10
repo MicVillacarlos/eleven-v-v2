@@ -103,3 +103,17 @@ export async function sendBillNotification(lodger_id: string, bill_numbers: numb
   });
   return result;
 }
+
+export async function sendBillOverdueNotification(
+  lodger_id: string,
+  bill_id: string
+): Promise<{ success: boolean, message:string }> {
+  const result = request<{ success: boolean, message:string }>(
+    `/admin/bills/send-overdue-notification-email/${lodger_id}/${bill_id}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
+  return result;
+}

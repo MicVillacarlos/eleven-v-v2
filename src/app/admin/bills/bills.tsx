@@ -13,7 +13,7 @@ import BillAddEditFormContent from "./BillAddEditFormContent";
 import { AddEditBillFormData, Bill } from "../../../lib/admin/api/bills/types";
 import { useConfirmDeleteModal } from "../../utils/providers/ConfirmDeleteModalProvider";
 import { useToastContext } from "../../utils/providers/ToastProvider";
-import { createBill, deleteBill, fetchBills, updateStatusBill } from "../../../lib/admin/api/bills/bills-client";
+import { createBill, deleteBill, fetchBills, sendBillOverdueNotification, updateStatusBill } from "../../../lib/admin/api/bills/bills-client";
 import FilterTableButton from "../../components/Molecules/filters/FilterTableButton";
 import { useConfirmationModal } from "../../utils/providers/ConfirmationModalProvider";
 import { filterOptions } from "../../utils/options/options";
@@ -147,6 +147,10 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
   const onSelectTableFilter = (filter: Record<string, string>) => {
     const { status, type_of_bill } = filter;
     if (status) {
+      setPagination((prevState) => ({
+        ...prevState,
+        current: 1,
+      }));
       setFilter((prevState) => ({
         ...prevState,
         status,
@@ -154,6 +158,10 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
     }
 
     if (type_of_bill) {
+      setPagination((prevState) => ({
+        ...prevState,
+        current: 1,
+      }));
       setFilter((prevState) => ({
         ...prevState,
         type_of_bill,
@@ -194,7 +202,7 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
     confirmDeleteModal(() => onConfirmDeleteBill(_id));
   };
 
-  const onClickMessageBillTable = (data: string | Bill) => {
+  const onClickMessageBillTable = async (data: string | Bill) => {
     if (typeof data === "string") {
       console.error(
         "Invalid data: Expected a Bill object but received a string"
@@ -202,7 +210,27 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
       return;
     }
 
-    const { lodger_id, email_sent_status, bill_number } = data;
+    const { lodger_id, email_sent_status, bill_number, status, _id } = data;
+
+    if (status === 'overdue') {
+      const sendOverdueMail = await sendBillOverdueNotification(lodger_id, _id);
+
+      if (sendOverdueMail.success) {
+        showToast(
+          "A Notification message has already been sent successfully.",
+          "success",
+          5
+        );
+        return;
+      } else {
+        showToast(
+          sendOverdueMail.message,
+          "success",
+          5
+        );
+        return;
+      }
+    }
 
     if (!email_sent_status) {
       router.push(`/admin/bills/${bill_number}/${lodger_id}`);

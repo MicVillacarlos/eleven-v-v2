@@ -70,7 +70,6 @@ const LodgerAddEditFormContent = ({
             placeholder="Birth Date"
             value={birth_date}
             label="Birth Date"
-            required
           />
         </div>
         {/* ---------- column 2 Upper--------- */}
@@ -90,6 +89,7 @@ const LodgerAddEditFormContent = ({
             placeHolder="Sex"
             onChange={handleChangeForm}
             value={sex}
+            required
           />
         </div>
       </div>

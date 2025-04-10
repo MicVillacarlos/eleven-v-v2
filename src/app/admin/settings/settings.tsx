@@ -20,6 +20,7 @@ import RoomUpdatePasswordForm from "./RoomUpdatePasswordForm";
 import { RoomViewModalContent } from "./RoomViewModalContent";
 import { RoomDeleteModalContent } from "./RoomDeleteFormContent";
 import TableLoading from "../../components/Organisms/loaders/TableLoading";
+import AddNewAdminForm from "./AddNewAdminForm";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const RoomTable = dynamic(
@@ -230,8 +231,15 @@ const Settings = ({ initialRooms, initialTotal }: { initialRooms: HouseType[]; i
       <div className="flex w-full justify-between items-center mb-3 mt-20">
         <Text2xl> Admin Change Password</Text2xl>
       </div>
-      <RoomUpdatePasswordForm />
+      <RoomUpdatePasswordForm/>
       {/* -------------- Update Password--------------*/}
+
+      {/* -------------- Add New Admin -------------*/}
+      <div className="flex w-full justify-between items-center mb-3 mt-20">
+        <Text2xl> Add New Admin</Text2xl>
+      </div>
+      <AddNewAdminForm />
+      {/* -------------- Add New Admin --------------*/}
       <ModalForm
         title="Add Room"
         content={
