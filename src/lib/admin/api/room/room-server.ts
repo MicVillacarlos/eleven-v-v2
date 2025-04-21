@@ -7,7 +7,7 @@ export async function fetchRoomsInitial(
   total: number
 ): Promise<GetRoomsApiResponse> {
   return await requestServer(
-    `/admin/room/fetch-rooms/${limit}/${total}?search=${search}`,
+    `/admin/room/${limit}/${total}?search=${search}`,
     "GET"
   );
 }

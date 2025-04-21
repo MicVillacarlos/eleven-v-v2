@@ -1,5 +1,5 @@
 import { request } from "../../base-api-client";
-import { AddEditLodger, GetLodgerResponse, LodgerOption } from "./types";
+import { AddEditLodger, GetLodgerResponse} from "./types";
 
 export async function getLodgers(
   search: string,
@@ -100,14 +100,6 @@ export async function updateLodger(
       }),
     }
   );
-  return result;
-}
-
-export async function getLodgersOption(): Promise<LodgerOption[]> {
-  const result = request<LodgerOption[]>(`/admin/lodgers/dropdown-option`, {
-    method: "GET",
-    credentials: "include",
-  });
   return result;
 }
 

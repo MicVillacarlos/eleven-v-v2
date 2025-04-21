@@ -11,7 +11,7 @@ export async function getRooms(
   total: number
 ): Promise<GetRoomsApiResponse> {
   const result = request<GetRoomsApiResponse>(
-    `/admin/room/fetch-rooms/${limit}/${total}?search=${search}`,
+    `/admin/room/${limit}/${total}?search=${search}`,
     {
       method: "GET",
       credentials: "include",
@@ -25,7 +25,7 @@ export async function addRoom(
   price: number,
   room_number: string
 ): Promise<PostRoomApiResponse> {
-  const result = request<PostRoomApiResponse>(`/admin/room/create-room`, {
+  const result = request<PostRoomApiResponse>(`/admin/room`, {
     method: "POST",
     body: JSON.stringify({ room_type, price, room_number }),
   });
@@ -33,7 +33,7 @@ export async function addRoom(
 }
 
 export async function deleteRooom(id: string): Promise<GetRoomsApiResponse> {
-  const result = request<GetRoomsApiResponse>(`/admin/room/delete-room/${id}`, {
+  const result = request<GetRoomsApiResponse>(`/admin/room/${id}`, {
     method: "DELETE",
     credentials: "include",
   });
@@ -42,7 +42,7 @@ export async function deleteRooom(id: string): Promise<GetRoomsApiResponse> {
 
 export async function getAvailableRooms(): Promise<GetRoomAvailablesApiResponse> {
   const result = request<GetRoomAvailablesApiResponse>(
-    `/admin/room/available-rooms`,
+    `/admin/room/available`,
     {
       method: "GET",
       credentials: "include",

@@ -1,30 +1,28 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { AddEditBillFormData } from "../../../lib/admin/api/bills/types";
 import SelectInput from "../../components/Atoms/input/SelectInput";
 import DividerHorizontal from "../../components/Atoms/others/DividerHorizontal";
-import { LodgerOption } from "../../../lib/admin/api/lodgers/types";
-import { getLodgersOption } from "../../../lib/admin/api/lodgers/lodger-client";
 import DateInput from "../../components/Atoms/input/DateInput";
 import NumberInput from "../../components/Atoms/input/NumberInput";
 import { moneyFormat } from "../../helpers/helpers";
 import { config } from "../../../config/config";
 import moment from "moment";
+import { LodgerOption } from "../../../lib/admin/api/lodgers/types";
 
 interface BillAddEditFormContentProps {
   handleChangeForm: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
   formData: AddEditBillFormData;
+  lodgerOptions: LodgerOption[];
 }
 
 const BillAddEditFormContent = ({
   handleChangeForm,
   formData,
+  lodgerOptions
 }: BillAddEditFormContentProps) => {
-  const [lodgersOptions, setLodgerOptions] = useState<LodgerOption[]>([
-    { name: "", value: "", _id: "" },
-  ]);
 
   const {
     type_of_bill,
@@ -44,15 +42,6 @@ const BillAddEditFormContent = ({
     { _id: "2", value: "water", name: "Water" },
     { _id: "3", value: "rent", name: "Rent" },
   ];
-
-  const fetchLodgerOptions = async () => {
-    const result = await getLodgersOption();
-    setLodgerOptions(result);
-  };
-
-  useEffect(() => {
-    fetchLodgerOptions();
-  }, []);
 
   const calculateBill = useMemo(() => {
     if (
@@ -246,7 +235,7 @@ const BillAddEditFormContent = ({
         <div className="w-1/2">
           <SelectInput
             id="lodger_id"
-            options={lodgersOptions}
+            options={lodgerOptions}
             label="Lodger"
             placeHolder="Lodger"
             onChange={handleChangeForm}
