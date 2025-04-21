@@ -108,11 +108,17 @@ export async function sendBillOverdueNotification(
   lodger_id: string,
   bill_id: string
 ): Promise<{ success: boolean, message:string }> {
-  const result = request<{ success: boolean, message:string }>(
-    `/admin/bills/notification/overdue/${lodger_id}/${bill_id}`,
+  const result = request<{ success: boolean; message: string }>(
+    `/admin/bills/notification/overdue`,
     {
-      method: "GET",
-      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        lodger_id,
+        bill_id,
+      }),
     }
   );
   return result;
