@@ -7,7 +7,7 @@ export async function fetchLodgersInitial(
   total: number
 ): Promise<GetLodgerResponse> {
   return await requestServer(
-    `/admin/lodgers/fetch-lodgers/${limit}/${total}?search=${search}`,
+    `/admin/lodgers/${limit}/${total}?search=${search}`,
     "GET"
   );
 }

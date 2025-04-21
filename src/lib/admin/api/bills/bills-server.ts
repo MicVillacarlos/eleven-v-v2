@@ -9,7 +9,7 @@ export async function fetchBillsInitial(
   type_of_bill: string
 ): Promise<{ count: number; data: Bill[]}> {
   return await requestServer(
-    `/admin/bills/fetch-bills/${limit}/${total}?search=${search}&status=${status}&type_of_bill=${type_of_bill}`,
+    `/admin/bills/${limit}/${total}?search=${search}&status=${status}&type_of_bill=${type_of_bill}`,
     "GET"
   );
 }
@@ -22,7 +22,7 @@ export async function fetchBillsMessagingInitial(
   limit: number
 ): Promise<{ count: number; data: Bill[]; bill_selected: Bill[] }> {
   return await requestServer(
-    `/admin/bills/fetch-bills-messaging/${bill_number}/${id}/${page}/${limit}`,
+    `/admin/bills/${bill_number}/${id}/${page}/${limit}`,
     "GET"
   );
 }

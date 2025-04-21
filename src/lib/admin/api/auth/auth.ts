@@ -17,7 +17,7 @@ export async function updatePassword(
   confirmPassword: string,
   oldPassword: string
 ): Promise<UpdatePasswordTypeResult> {
-  const result = request<UpdatePasswordTypeResult>("/admin/auth/update-password", {
+  const result = request<UpdatePasswordTypeResult>("/admin/auth", {
     method: "PUT",
     body: JSON.stringify({ newPassword, confirmPassword, oldPassword }),
   });
@@ -30,7 +30,7 @@ export async function addNewAdmin(
   last_name: string,
   email: string
 ): Promise<UpdatePasswordTypeResult> {
-  const result = request<UpdatePasswordTypeResult>("/admin/auth/create-admin", {
+  const result = request<UpdatePasswordTypeResult>("/admin/auth", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

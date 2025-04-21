@@ -10,5 +10,5 @@ export async function fetchDashboardInitial(): Promise<{
   day: string;
   year: string;
 }> {
-  return await requestServer(`/admin/dashboard/home-data`, "GET");
+  return await requestServer(`/admin/dashboard/home`, "GET");
 }

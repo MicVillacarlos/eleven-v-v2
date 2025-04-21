@@ -14,7 +14,7 @@ export async function createBill(
   lodger_id: string
 ): Promise<{ success: boolean; bill: Bill }> {
   const result = await request<{ success: boolean; bill: Bill }>(
-    `/admin/bills/create-bill`,
+    `/admin/bills`,
     {
       method: "POST",
       headers: {
@@ -46,7 +46,7 @@ export async function fetchBills(
   type_of_bill: string
 ): Promise<{ count: number; data: Bill[] }> {
   const result = request<{ count: number; data: Bill[] }>(
-    `/admin/bills/fetch-bills/${limit}/${total}?search=${search}&status=${status}&type_of_bill=${type_of_bill}`,
+    `/admin/bills/${limit}/${total}?search=${search}&status=${status}&type_of_bill=${type_of_bill}`,
     {
       method: "GET",
       credentials: "include",
@@ -66,7 +66,7 @@ export async function fetchBillsMessaging(
     data: Bill[];
     bill_selected: Bill[];
   }>(
-    `/admin/bills/fetch-bills-messaging/${bill_number}/${id}/${page}/${limit}`,
+    `/admin/bills/${bill_number}/${id}/${page}/${limit}`,
     {
       method: "GET",
       credentials: "include",
@@ -76,7 +76,7 @@ export async function fetchBillsMessaging(
 }
 
 export async function deleteBill(id: string) {
-  const result = request(`/admin/bills/delete-bill/${id}`, {
+  const result = request(`/admin/bills/${id}`, {
     method: "DELETE",
     credentials: "include",
   });
@@ -84,7 +84,7 @@ export async function deleteBill(id: string) {
 }
 
 export async function updateStatusBill(bill_id: string, status: string) {
-  const result = request(`/admin/bills/update-bill-status/${bill_id}`, {
+  const result = request(`/admin/bills/status/${bill_id}`, {
     method: "PUT",
     body: JSON.stringify({ status }),
   });
@@ -92,7 +92,7 @@ export async function updateStatusBill(bill_id: string, status: string) {
 }
 
 export async function sendBillNotification(lodger_id: string, bill_numbers: number[]) {
-  const result = request(`/admin/bills/send-notification-email/${lodger_id}`, {
+  const result = request(`/admin/bills/notification/${lodger_id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -109,7 +109,7 @@ export async function sendBillOverdueNotification(
   bill_id: string
 ): Promise<{ success: boolean, message:string }> {
   const result = request<{ success: boolean, message:string }>(
-    `/admin/bills/send-overdue-notification-email/${lodger_id}/${bill_id}`,
+    `/admin/bills/notification/overdue/${lodger_id}/${bill_id}`,
     {
       method: "GET",
       credentials: "include",
