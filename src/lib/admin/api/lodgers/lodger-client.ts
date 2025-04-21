@@ -7,7 +7,7 @@ export async function getLodgers(
   total: number
 ): Promise<GetLodgerResponse> {
   const result = request<GetLodgerResponse>(
-    `/admin/lodgers/fetch-lodgers/${limit}/${total}?search=${search}`,
+    `/admin/lodgers/${limit}/${total}?search=${search}`,
     {
       method: "GET",
       credentials: "include",
@@ -17,7 +17,7 @@ export async function getLodgers(
 }
 
 export async function deleteLodger(id: string) {
-  const result = request(`/admin/lodgers/delete-lodger/${id}`, {
+  const result = request(`/admin/lodgers/${id}`, {
     method: "DELETE",
     credentials: "include",
   });
@@ -40,7 +40,7 @@ export async function addLodger(
   room_id: string
 ): Promise<{ user: AddEditLodger }> {
   const result = request<{ user: AddEditLodger }>(
-    `/admin/lodgers/create-lodger`,
+    `/admin/lodgers`,
     {
       method: "POST",
       body: JSON.stringify({
@@ -80,7 +80,7 @@ export async function updateLodger(
   room_id: string
 ): Promise<{ user: AddEditLodger }> {
   const result = request<{ user: AddEditLodger }>(
-    `/admin/lodgers/update-lodger/${lodger_id}`,
+    `/admin/lodgers/${lodger_id}`,
     {
       method: "PUT",
       body: JSON.stringify({
@@ -104,7 +104,7 @@ export async function updateLodger(
 }
 
 export async function getLodgersOption(): Promise<LodgerOption[]> {
-  const result = request<LodgerOption[]>(`/admin/lodgers/get-lodgers-option`, {
+  const result = request<LodgerOption[]>(`/admin/lodgers/dropdown-option`, {
     method: "GET",
     credentials: "include",
   });
@@ -113,7 +113,7 @@ export async function getLodgersOption(): Promise<LodgerOption[]> {
 
 export async function getLodgerDetails(id: string) {
   const result = request(
-    `/admin/lodgers/get-lodger-details/${id}`,
+    `/admin/lodgers/${id}`,
     {
       method: "GET",
       credentials: "include",
