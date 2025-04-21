@@ -18,6 +18,7 @@ import FilterTableButton from "../../components/Molecules/filters/FilterTableBut
 import { useConfirmationModal } from "../../utils/providers/ConfirmationModalProvider";
 import { filterOptions } from "../../utils/options/options";
 import { useRouter } from "next/navigation";
+import { LodgerOption } from "../../../lib/admin/api/lodgers/types";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const BillsTable = dynamic(
@@ -29,7 +30,7 @@ const BillsTable = dynamic(
 ) as <T extends { _id: string; }>(props: TableProps<T>) => JSX.Element;
 //---End---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 
-const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTotal: number }) => {
+const Bills = ({ initialBills, initialTotal, lodgerOptions }: { initialBills: Bill[]; initialTotal: number; lodgerOptions: LodgerOption[] }) => {
   const [isViewAddEditBillModal, setIsViewAddEditBillModal] =
     useState<boolean>(false);
   const [query, setQuery] = useState<string>("");
@@ -378,6 +379,7 @@ const Bills = ({ initialBills, initialTotal }: { initialBills: Bill[]; initialTo
         title={"Add Bill"}
         content={
           <BillAddEditFormContent
+            lodgerOptions={lodgerOptions}
             handleChangeForm={onHandleChangeform}
             formData={billAddEditData}
           />
