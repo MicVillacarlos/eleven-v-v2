@@ -286,7 +286,7 @@ const Lodgers = ({
         );
 
         if (result.user) {
-          showToast("Successfully added a new Lodger.", "success");
+          showToast("Successfully updated a Lodger.", "success");
           resetAddEditLodgerData();
           setMode('add');
           fetchData();
