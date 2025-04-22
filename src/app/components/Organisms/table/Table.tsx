@@ -5,15 +5,15 @@ import {
   moneyFormat,
   paginationPages,
 } from "../../../helpers/helpers";
+import StatusSelectInput from "../../Atoms/input/StatusSelectInput";
 import { DeleteIcon } from "../../svg/DeleteIcon";
 import { EditIcon } from "../../svg/EditIcon";
 import { EmptyBoxIcon } from "../../svg/EmptyBoxIcon";
 import { EyeOnIcon } from "../../svg/EyeOnIcon";
+import { MailIcon } from "../../svg/mailIcon";
 import { NextIcon } from "../../svg/NextIcon";
 import { PreviousIcon } from "../../svg/PreviousIcon";
 import { TableProps } from "./type";
-import StatusSelectInput from "../../Atoms/input/StatusSelectInput";
-import { MailIcon } from "../../svg/MailIcon";
 
 const Table = <
   T extends {
