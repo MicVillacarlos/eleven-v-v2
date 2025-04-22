@@ -1,16 +1,16 @@
-import React, { JSX } from "react";
+import React from "react";
 import CloseIcon from "../../svg/CloseIcon";
 
 interface ModalPropsType {
   widthSize?: string;
-  title: string;
-  content: JSX.Element;
+  title?: string;
+  content: React.ReactNode;
   isOpen: boolean;
   onCloseModal: () => void;
 }
 
 const ModalView = (props: ModalPropsType) => {
-  const { title, content, isOpen, onCloseModal, widthSize } = props;
+  const { title, content, isOpen, onCloseModal } = props;
 
   return (
     <div
@@ -23,9 +23,7 @@ const ModalView = (props: ModalPropsType) => {
     >
       <div
         className={
-          widthSize
-            ? `relative p-4 w-full max-w-${widthSize} max-h-full`
-            : `relative p-4 w-full max-w-2xl max-h-full`
+          `relative p-4 w-full max-w-xl max-h-full`
         }
       >
         <div className="relative rounded-lg shadow-sm bg-white text-black">
@@ -42,7 +40,7 @@ const ModalView = (props: ModalPropsType) => {
             </button>
             {/* {----------------Close Button--------} */}
           </div>
-          <div className="p-4 md:p-5 space-y-4">{content}</div>
+          <div className="pr-4 pl-6  pb-8 md:px-5 space-y-4">{content}</div>
         </div>
       </div>
     </div>

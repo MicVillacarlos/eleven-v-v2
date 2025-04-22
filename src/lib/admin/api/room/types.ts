@@ -6,6 +6,7 @@ export interface Room {
 }
 
 export interface HouseType {
+  _id: string;
   key: Key | null | undefined;
   total_rooms: number;
   rooms: Room[];
@@ -13,10 +14,20 @@ export interface HouseType {
   price: number;
 }
 
-export interface GetRoomApiResponse {
+export interface GetRoomsApiResponse {
   data: HouseType[];
   count: number;
 }
+
+export interface GetRoomAvailablesObject {
+  _id: string;
+  value: string;
+  name: string;
+}
+
+export type GetRoomAvailablesApiResponse = {
+  data: GetRoomAvailablesObject[]
+};
 
 export interface PostRoomApiResponse {
   room: Room;

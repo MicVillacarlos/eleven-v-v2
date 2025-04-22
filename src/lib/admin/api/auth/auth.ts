@@ -1,5 +1,5 @@
-import { request } from "../../base-api";
-import { LoginType, UpdatePasswordType } from "./types";
+import { request } from "../../base-api-client";
+import { LoginType, UpdatePasswordTypeResult } from "./types";
 
 export async function loginUser(
   email: string,
@@ -16,10 +16,27 @@ export async function updatePassword(
   newPassword: string,
   confirmPassword: string,
   oldPassword: string
-): Promise<UpdatePasswordType> {
-  const result = request<UpdatePasswordType>("/admin/auth/update-password", {
+): Promise<UpdatePasswordTypeResult> {
+  const result = request<UpdatePasswordTypeResult>("/admin/auth", {
     method: "PUT",
     body: JSON.stringify({ newPassword, confirmPassword, oldPassword }),
   });
   return result;
 }
+
+
+export async function addNewAdmin(
+  first_name: string,
+  last_name: string,
+  email: string
+): Promise<UpdatePasswordTypeResult> {
+  const result = request<UpdatePasswordTypeResult>("/admin/auth", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ first_name, last_name, email }),
+  });
+  return result;
+}
+

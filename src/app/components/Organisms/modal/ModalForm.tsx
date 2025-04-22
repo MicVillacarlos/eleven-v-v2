@@ -2,7 +2,6 @@ import React, { JSX } from "react";
 import CloseIcon from "../../svg/CloseIcon";
 
 interface ModalPropsType {
-  widthSize?: string;
   title: string;
   content: JSX.Element;
   isOpen: boolean;
@@ -11,8 +10,7 @@ interface ModalPropsType {
 }
 
 const ModalForm = (props: ModalPropsType) => {
-  const { title, content, isOpen, onCloseModal, onSubmitForm, widthSize } =
-    props;
+  const { title, content, isOpen, onCloseModal, onSubmitForm} = props;
 
   return (
     <div
@@ -23,7 +21,7 @@ const ModalForm = (props: ModalPropsType) => {
         isOpen ? "" : "hidden"
       } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full bg-black bg-opacity-50`}
     >
-      <div className={widthSize ? `relative p-4 w-full max-w-${widthSize} max-h-full`: `relative p-4 w-full max-w-2xl max-h-full`}>
+      <div className={`relative p-4 w-full max-h-full max-w-xl`}>
         <div className="relative rounded-lg shadow-sm bg-white text-black">
           <form onSubmit={onSubmitForm}>
             <div className="flex items-center justify-between p-4 md:p-5">
@@ -51,7 +49,7 @@ const ModalForm = (props: ModalPropsType) => {
               <button
                 data-modal-hide="default-modal"
                 type="button"
-                className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
+                className="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-gray-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
                 onClick={onCloseModal}
               >
                 Cancel

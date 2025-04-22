@@ -1,17 +1,13 @@
 import React from "react";
+import clsx from "clsx";
 
 interface LoadingbarProps {
-  height?: number;
-  margin?: number;
+  color?: string;
 }
 
-const Loadingbar = ({ height, margin }: LoadingbarProps) => {
+const Loadingbar: React.FC<LoadingbarProps> = ({ color }) => {
   return (
-    <div
-      className={`animate-pulse h-${height ?? 7} mb-${
-        margin ?? 2
-      } rounded bg-gray-200`}
-    ></div>
+    <div className={clsx("animate-pulse h-9 rounded", color || "bg-gray-300")} />
   );
 };
 

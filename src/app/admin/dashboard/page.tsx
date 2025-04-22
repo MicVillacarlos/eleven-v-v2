@@ -1,12 +1,19 @@
-import React from "react";
-import Layout from "../../components/Organisms/layout/Layout";
+import { fetchDashboardInitial } from "../../../lib/admin/api/dashboard/dashboard-server";
+import Dashboard from "./dashboard";
 
-const Dashboard = () => {
+export default async function DashboardPage() {
+  const { name, billChartData, room, dayString, day, month, year } =
+    await fetchDashboardInitial();
+
   return (
-    <Layout>
-      <div>dashbOASrd</div>
-    </Layout>
+    <Dashboard
+      name={name}
+      billChartData={billChartData}
+      roomData={room}
+      dayString={dayString}
+      day={day}
+      year={year}
+      month={month}
+    />
   );
-};
-
-export default Dashboard;
+}

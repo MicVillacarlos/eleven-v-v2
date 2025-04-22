@@ -1,3 +1,6 @@
+import { config } from "../../config/config";
+import moment from "moment-timezone"
+
 export const paginationPages = (current: number, limit: number, total: number): number[] => {
   const totalPages = Math.ceil(total / limit);
   const maxPagesToShow = 5;
@@ -25,3 +28,23 @@ export const capitalizeFirstLetter = (str: string): string => {
   if (!str) return ""; 
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+export const lowercaseFirstLetter = (str: string): string => {
+  if (!str) return "";
+  return str.charAt(0).toLowerCase() + str.slice(1);
+};
+
+export const formatNumberToString = (number: number, prefix?: string) => {
+  return prefix + number.toString();
+};
+
+export const formatStringToNumber = (string: string) => {
+  return Number(string);
+}
+
+export const formatDate = (date: Date | string) => {
+  return moment(date).tz(config.timezone ?? "UTC").format("MM-DD-YYYY");
+};
+
+export const billNumbersFiltered = (bill_number: string) =>
+  bill_number?.split(",").map((num: string) => Number(num.slice(2)));

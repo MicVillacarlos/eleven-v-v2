@@ -1,25 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TextInput from "../../components/Atoms/input/TextInput";
 import NumberInput from "../../components/Atoms/input/NumberInput";
 
-interface AddRoomFormContentProps {
+interface RoomAddFormContentProps {
   handleChangeForm: (e: React.ChangeEvent<HTMLInputElement>) => void;
   roomType: string;
   roomNumber: number;
   price: number;
 }
 
-const AddRoomFormContent = ({
+const RoomAddFormContent = ({
   handleChangeForm,
   roomType,
   roomNumber,
   price,
-}: AddRoomFormContentProps) => {
+}: RoomAddFormContentProps) => {
+
+  useEffect(() => {
+    
+  }, []);
+  
   return (
     <>
       <TextInput
-        label="Room Type"
-        placeholder={"Room Type"}
+        label="House Type"
+        placeholder={"House Type"}
         id={"room_type"}
         handleChange={handleChangeForm}
         value={roomType}
@@ -47,4 +52,4 @@ const AddRoomFormContent = ({
   );
 };
 
-export default AddRoomFormContent;
+export default RoomAddFormContent;
