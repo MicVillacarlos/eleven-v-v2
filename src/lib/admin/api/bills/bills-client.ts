@@ -85,7 +85,7 @@ export async function deleteBill(id: string) {
 
 export async function updateStatusBill(bill_id: string, status: string) {
   const result = request(`/admin/bills/status/${bill_id}`, {
-    method: "PUT",
+    method: "PATCH",
     body: JSON.stringify({ status }),
   });
   return result;
@@ -93,7 +93,7 @@ export async function updateStatusBill(bill_id: string, status: string) {
 
 export async function sendBillNotification(lodger_id: string, bill_numbers: number[]) {
   const result = request(`/admin/bills/notification/${lodger_id}`, {
-    method: "PUT",
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
