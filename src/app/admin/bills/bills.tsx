@@ -19,6 +19,8 @@ import { useConfirmationModal } from "../../utils/providers/ConfirmationModalPro
 import { filterOptions } from "../../utils/options/options";
 import { useRouter } from "next/navigation";
 import { LodgerOption } from "../../../lib/admin/api/lodgers/types";
+import ModalView from "../../components/Organisms/modal/ModalView";
+import { BillViewModalContent } from "./BillViewModalContent";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const BillsTable = dynamic(
@@ -30,11 +32,21 @@ const BillsTable = dynamic(
 ) as <T extends { _id: string; }>(props: TableProps<T>) => JSX.Element;
 //---End---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 
-const Bills = ({ initialBills, initialTotal, lodgerOptions }: { initialBills: Bill[]; initialTotal: number; lodgerOptions: LodgerOption[] }) => {
+const Bills = ({
+  initialBills,
+  initialTotal,
+  lodgerOptions,
+}: {
+  initialBills: Bill[];
+  initialTotal: number;
+  lodgerOptions: LodgerOption[];
+}) => {
   const [isViewAddEditBillModal, setIsViewAddEditBillModal] =
     useState<boolean>(false);
   const [query, setQuery] = useState<string>("");
   const [billsTableData, setBillsTableData] = useState<Bill[]>(initialBills);
+  const [viewBillData, setViewBillData] = useState<Bill | null>(null);
+  const [isViewBillModal, setIsViewBillModal] = useState<boolean>(false);
 
   const [billAddEditData, setBillAddEditData] = useState<AddEditBillFormData>({
     type_of_bill: "",
@@ -69,6 +81,11 @@ const Bills = ({ initialBills, initialTotal, lodgerOptions }: { initialBills: Bi
     { key: "due_date", label: "Due Date", type: "date" },
     { key: "type_of_bill", label: "Bill Type" },
     { key: "status", label: "Status", type: "status_select" },
+    {
+      key: "email_sent_status",
+      label: "Email Reminder",
+      type: "email_sent_status",
+    },
     { key: "bill_amount", label: "Amount", type: "money", justify: "right" },
   ];
 
@@ -108,7 +125,7 @@ const Bills = ({ initialBills, initialTotal, lodgerOptions }: { initialBills: Bi
       total: count,
     }));
   };
-  
+
   //--Prevents fetch in first render
   const isFirstRender = useRef(true);
   useEffect(() => {
@@ -213,7 +230,7 @@ const Bills = ({ initialBills, initialTotal, lodgerOptions }: { initialBills: Bi
 
     const { lodger_id, email_sent_status, bill_number, status, _id } = data;
 
-    if (status === 'overdue') {
+    if (status === "overdue") {
       const sendOverdueMail = await sendBillOverdueNotification(lodger_id, _id);
 
       if (sendOverdueMail.success) {
@@ -224,11 +241,7 @@ const Bills = ({ initialBills, initialTotal, lodgerOptions }: { initialBills: Bi
         );
         return;
       } else {
-        showToast(
-          sendOverdueMail.message,
-          "success",
-          5
-        );
+        showToast(sendOverdueMail.message, "success", 5);
         return;
       }
     }
@@ -326,6 +339,17 @@ const Bills = ({ initialBills, initialTotal, lodgerOptions }: { initialBills: Bi
     );
   };
 
+  const onCloseViewModal = () => {
+    setIsViewBillModal(false);
+    setViewBillData(null);
+  };
+
+
+  const onClickView = (data: string | Bill) => {
+    setIsViewBillModal(true)
+    setViewBillData(data as Bill)
+  };
+
   return (
     <Layout>
       {/* -------------- Header Table--------------*/}
@@ -369,7 +393,7 @@ const Bills = ({ initialBills, initialTotal, lodgerOptions }: { initialBills: Bi
           handlePrevNavigation={handleNextPagination}
           onSelectTablePage={onSelectTablePage}
           pagination={pagination}
-          onClickView={() => {}}
+          onClickView={onClickView}
           onClickMessage={onClickMessageBillTable}
           onClickDelete={onClickDeleteBillTable}
           onChangeSelectStatus={onChangeSelectStatus}
@@ -387,6 +411,16 @@ const Bills = ({ initialBills, initialTotal, lodgerOptions }: { initialBills: Bi
         isOpen={isViewAddEditBillModal}
         onCloseModal={onCloseAddEditBillModal}
         onSubmitForm={onSubmitAddEditBill}
+      />
+
+      {/**
+       **View Modal for Lodger
+       */}
+      <ModalView
+        title={viewBillData?.bill_number}
+        content={<BillViewModalContent bill={viewBillData} />}
+        isOpen={isViewBillModal}
+        onCloseModal={onCloseViewModal}
       />
     </Layout>
   );

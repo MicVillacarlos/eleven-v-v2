@@ -1,7 +1,7 @@
 export interface Column<T> {
   key: keyof T;
   label: string;
-  type?: "money" | "date" | "status_select";
+  type?: "money" | "date" | "status_select"|"email_sent_status";
   justify?: "center" | "left" | "right";
   render?: (row: T) => React.ReactNode;
 }
