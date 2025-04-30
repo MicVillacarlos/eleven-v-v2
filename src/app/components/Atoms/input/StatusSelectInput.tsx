@@ -36,7 +36,7 @@ const StatusSelectInput = ({
         value={value}
         onChange={onChange}
         className={clsx(
-          "h-8 w-full rounded-full border-r-8 border-transparent px-2 text-center text-sm outline outline-gray-300 text-white ",
+          "h-8 w-full rounded-full border-r-8 border-transparent px-2 text-center text-sm outline outline-gray-300 text-white min-w-24",
           bgColor
         )}
       >

@@ -55,6 +55,11 @@ const Table = <
       return formatDate(value as string | Date);
     }
 
+
+    if (col.type === "email_sent_status") {
+      return value === true ? "Sent" : "-";
+    }
+
     if (col.type === "status_select") {
       return (
         <StatusSelectInput
