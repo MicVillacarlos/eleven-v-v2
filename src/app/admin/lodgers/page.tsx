@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { fetchLodgersInitial } from "../../../lib/admin/api/lodgers/lodger-server";
 import Lodgers from "./lodgers";
 
