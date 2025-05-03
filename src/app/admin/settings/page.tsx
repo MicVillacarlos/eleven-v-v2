@@ -1,6 +1,7 @@
+export const dynamic = "force-dynamic";
+
 import { fetchRoomsInitial } from "../../../lib/admin/api/room/room-server";
 import Settings from "./settings";
-
 
 export default async function SettingsPage() {
   const { data: initialRooms, count: initialTotal } = await fetchRoomsInitial(

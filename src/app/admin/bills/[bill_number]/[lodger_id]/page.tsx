@@ -2,20 +2,30 @@ import { fetchBillsMessagingInitial } from "../../../../../lib/admin/api/bills/b
 import { billNumbersFiltered } from "../../../../helpers/helpers";
 import Lodger from "./lodger";
 interface LodgerMessagingProps {
-  params: {
-    bill_number: string;
-    lodger_id: string;
-  };
+  params: Promise<{ bill_number: string; lodger_id: string }>;
 }
 
-export default async function LodgerId({params}:LodgerMessagingProps) {
-  const { bill_number, lodger_id } = params;
+export default async function generateMetaData({
+  params,
+}: LodgerMessagingProps) {
+  const { bill_number, lodger_id } = await params;
 
   const {
     data: initialBills,
     count: initialTotal,
     bill_selected: billSelected,
-  } = await fetchBillsMessagingInitial(billNumbersFiltered(bill_number), lodger_id, 1, 5);
+  } = await fetchBillsMessagingInitial(
+    billNumbersFiltered(bill_number),
+    lodger_id,
+    1,
+    5
+  );
 
-  return <Lodger initialBills={initialBills} initialTotal={initialTotal} billSelected={billSelected} />;
+  return (
+    <Lodger
+      initialBills={initialBills}
+      initialTotal={initialTotal}
+      billSelected={billSelected}
+    />
+  );
 }
