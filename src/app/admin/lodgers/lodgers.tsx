@@ -129,6 +129,7 @@ const Lodgers = ({
     }
 
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.current, query]);
   //------------ Prevents fetch in first render ------------
 

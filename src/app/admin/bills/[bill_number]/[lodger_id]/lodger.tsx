@@ -93,6 +93,7 @@ const Lodger = ({
     }
 
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.current, billNumberSelected]);
   //------------ Prevents fetch in first render ------------
   
