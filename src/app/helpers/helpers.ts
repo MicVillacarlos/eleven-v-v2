@@ -43,7 +43,9 @@ export const formatStringToNumber = (string: string) => {
 }
 
 export const formatDate = (date: Date | string) => {
-  return moment(date).tz(config.timezone ?? "UTC").format("MM-DD-YYYY");
+  return moment(date)
+    .tz(config.timezone ?? "UTC")
+    .format("MMM D, yyyy");
 };
 
 export const billNumbersFiltered = (bill_number: string) =>

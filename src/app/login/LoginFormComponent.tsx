@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { MailIcon } from "../components/svg/MailIcon";
 import { loginUser } from "../../lib/admin/api/auth/auth";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
@@ -10,6 +9,7 @@ import { EyeOnIcon } from "../components/svg/EyeOnIcon";
 import PrimaryButton from "../components/Atoms/buttons/PrimaryButton";
 import { useToastContext } from "../utils/providers/ToastProvider";
 import { LogoIcon } from "../components/svg/LogoIcon";
+import { MailIcon } from "../components/svg/mailIcon";
 
 const LoginPageFormComponent = () => {
   const [email, setEmail] = useState<string>("");

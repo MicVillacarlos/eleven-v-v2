@@ -53,7 +53,7 @@ const Lodgers = ({
   const [mode, setMode] = useState<string>('add');
   const [pagination, setPagination] = useState({
     current: 1,
-    limit: 5,
+    limit: 10,
     total: initialTotal,
   });
   const [lodgerDataTable, setLodgerDataTable] =
@@ -286,7 +286,7 @@ const Lodgers = ({
         );
 
         if (result.user) {
-          showToast("Successfully added a new Lodger.", "success");
+          showToast("Successfully updated a Lodger.", "success");
           resetAddEditLodgerData();
           setMode('add');
           fetchData();
