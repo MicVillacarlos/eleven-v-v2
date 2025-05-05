@@ -135,6 +135,7 @@ const Bills = ({
     }
 
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.current, query, filter]);
   //--Prevents fetch in first render
 

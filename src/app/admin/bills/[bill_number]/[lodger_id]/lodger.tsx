@@ -18,6 +18,7 @@ import SendIcon from "../../../../components/svg/SendIcon";
 import { billNumbersFiltered, moneyFormat } from "../../../../helpers/helpers";
 import SecondaryButton from "../../../../components/Atoms/buttons/SecondaryButton";
 import { useToastContext } from "../../../../utils/providers/ToastProvider";
+import Spinner from "../../../../components/Atoms/loading/Spinner";
 
 //---Start---Note: Use `dynamic`(Next Js for Lazy Loading) for components fetching data. This is for optimization
 const BillTable = dynamic(
@@ -39,6 +40,7 @@ const Lodger = ({
   billSelected: Bill[];
 }) => {
   const params = useParams();
+  const [isLoadingButton, setIsLoadingButton] = useState<boolean>(false);
   const [billsTableData, setBillsTableData] = useState<Bill[]>(initialBills);
   const [billSelectedData, setBillSelectedData] = useState<Bill[]>(billSelected);
   const [billNumberSelected, setBillNumberSelected] = useState<number[]>(billNumbersFiltered(params.bill_number as string));
@@ -93,6 +95,7 @@ const Lodger = ({
     }
 
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.current, billNumberSelected]);
   //------------ Prevents fetch in first render ------------
   
@@ -144,12 +147,14 @@ const Lodger = ({
         params.lodger_id as string,
         billNumberSelected
       );
-
+      setIsLoadingButton(true);
       if (result.success) {
         showToast("Bill Notification successfully sent.", "success");
+        setIsLoadingButton(false);
         router.push("/admin/bills");
       }
     } catch (error) {
+      setIsLoadingButton(false);
       const errorMessage =
       (error as { message?: string })?.message ||
       "An unexpected error occurred.";
@@ -222,7 +227,13 @@ const Lodger = ({
         )}
         <div className="w-250 mt-5">
           <PrimaryButton onClick={onSendBillHandler}>
-            Send Bill <SendIcon size={18} />
+            {isLoadingButton ? (
+              <Spinner />
+            ) : (
+              <>
+                Send Bill <SendIcon />
+              </>
+            )}
           </PrimaryButton>
         </div>
       </div>

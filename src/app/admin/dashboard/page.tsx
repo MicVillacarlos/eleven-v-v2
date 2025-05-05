@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { fetchDashboardInitial } from "../../../lib/admin/api/dashboard/dashboard-server";
 import Dashboard from "./dashboard";
 
