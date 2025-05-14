@@ -18,7 +18,7 @@ export async function updatePassword(
   oldPassword: string
 ): Promise<UpdatePasswordTypeResult> {
   const result = request<UpdatePasswordTypeResult>("/admin/auth", {
-    method: "PUT",
+    method: "PATCH",
     body: JSON.stringify({ newPassword, confirmPassword, oldPassword }),
   });
   return result;
