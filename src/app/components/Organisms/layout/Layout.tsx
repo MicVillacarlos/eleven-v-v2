@@ -14,9 +14,10 @@ import clsx from "clsx";
 
 export default function Layout({
   children,
-  isNoPadding
+  isNoPadding,
 }: Readonly<{
-  children: React.ReactNode; isNoPadding?: boolean
+  children: React.ReactNode;
+  isNoPadding?: boolean;
 }>) {
   const windowWidth: number = useWindowSize();
   const [isSideBarOpen, setIsSidebarOpen] = useState<boolean>(false);
@@ -41,9 +42,12 @@ export default function Layout({
     router.push("/login");
   };
 
-  const iconColor = useCallback((path: string) => {
-    return pathname.startsWith(path) ?  "#205072" : "#7996AA";
-  }, [pathname]);
+  const iconColor = useCallback(
+    (path: string) => {
+      return pathname.startsWith(path) ? "#205072" : "#7996AA";
+    },
+    [pathname]
+  );
 
   const SideBarOptions = [
     {
@@ -73,7 +77,7 @@ export default function Layout({
   ];
 
   return (
-    <div className="bg-[#E3EEF6] h-lvh">
+    <div className="bg-[#E3EEF6] min-h-screen">
       {/* ----------SIDE BAR CLOSE (to refactor)-------- */}
       <button
         data-drawer-target="logo-sidebar"
@@ -88,7 +92,7 @@ export default function Layout({
       {/* ----------SIDE BAR OPEN-------- */}
       <aside
         id="logo-sidebar"
-        className={`fixed top-0 left-0 z-40 w-64 h-lvh transition-transform bg-white ${
+        className={`fixed top-0 left-0 z-40 w-64 min-h-screen transition-transform bg-white ${
           isSideBarOpen ? "translate-x-0" : "-translate-x-full"
         } sm:translate-x-0`}
         aria-label="Sidebar"
@@ -148,7 +152,10 @@ export default function Layout({
       </aside>
 
       <div
-        className={clsx("sm:ml-64 bg-[#E3EEF6]", !isNoPadding && "p-4 pt-10 ")}
+        className={clsx(
+          "sm:ml-64 bg-[#E3EEF6] min-h-screen",
+          !isNoPadding && "p-4 pt-10"
+        )}
       >
         <div className={clsx("mb-4", !isNoPadding && "p-4")}>{children}</div>
       </div>
